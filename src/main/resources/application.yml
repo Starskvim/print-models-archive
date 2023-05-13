@@ -6,6 +6,7 @@ spring:
     mongodb:
       authentication-database: archive
       port: 27017
+      database: PrintModelsArchive
   webflux:
     base-path: /archive
 
