@@ -4,9 +4,9 @@ import java.time.LocalDate
 
 data class PrintModelZip (
 
-    val fileName: String?,
-    val path: String?,
-    val format: String?,
-    val size: Double?,
-    val ratio: Int?
+    var fileName: String?,
+    var path: String?,
+    var format: String?,
+    var size: Double?,
+    var ratio: Int?
 )

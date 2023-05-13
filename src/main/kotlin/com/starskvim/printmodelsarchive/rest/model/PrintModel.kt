@@ -4,13 +4,13 @@ import java.time.LocalDate
 
 data class PrintModel(
 
-    val modelName: String?,
-    val path: String?,
-    val rate: String?,
-    val nsfw: Boolean?,
-    val zips: List<PrintModelZip>?,
-    val oths: List<PrintModelOth>?,
-    override val id: String?,
-    override val createdAt: LocalDate?,
-    override val modifiedAt: LocalDate?,
+    var modelName: String?,
+    var path: String?,
+    var rate: String?,
+    var nsfw: Boolean?,
+    var zips: List<PrintModelZip>?,
+    var oths: List<PrintModelOth>?,
+    override var id: String?,
+    override var createdAt: LocalDate?,
+    override var modifiedAt: LocalDate?,
 ) : Auditable(id, createdAt, modifiedAt)

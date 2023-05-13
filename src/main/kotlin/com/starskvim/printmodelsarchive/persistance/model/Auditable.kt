@@ -7,9 +7,9 @@ import java.time.LocalDate
 abstract class Auditable(
 
     @Id
-    open val id: String?,
-    @Field
-    open val createdAt: LocalDate?,
-    @Field
-    open val modifiedAt: LocalDate?
+    open var id: String?,
+    @Field(name = "created_at")
+    open var createdAt: LocalDate?,
+    @Field(name = "modified_at")
+    open var modifiedAt: LocalDate?
 )

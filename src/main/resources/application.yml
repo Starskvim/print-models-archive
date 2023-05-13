@@ -1,7 +1,13 @@
 server:
-  servlet:
-    context-path: /archive
   port: 8081
+
+spring:
+  data:
+    mongodb:
+      authentication-database: archive
+      port: 27017
+  webflux:
+    base-path: /archive
 
 scan:
   addressSer: G:\[Model]\save

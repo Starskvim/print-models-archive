@@ -4,9 +4,9 @@ import java.time.LocalDate
 
 data class PrintModelOthData(
 
-    val fileName: String? = null,
-    val path: String? = null,
-    val format: String? = null,
-    val size: Double? = null,
-    val preview: String? = null
+    var fileName: String? = null,
+    var path: String? = null,
+    var format: String? = null,
+    var size: Double? = null,
+    var preview: String? = null
 )
