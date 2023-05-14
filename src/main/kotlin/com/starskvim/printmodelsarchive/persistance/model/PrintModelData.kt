@@ -12,11 +12,12 @@ data class PrintModelData(
 
     var modelName: String?,
     var path: String?,
-    var rate: String?,
+    var category: String?,
+    var rate: Int?,
     var nsfw: Boolean?,
-    var zips: List<PrintModelZipData>?,
-    var oths: List<PrintModelOthData>?,
+    var zips: MutableList<PrintModelZipData>?,
+    var oths: MutableList<PrintModelOthData>?,
     override var id: String?,
     override var createdAt: LocalDate?,
     override var modifiedAt: LocalDate?,
-    ) : Auditable(id, createdAt, modifiedAt)
+) : Auditable(id, createdAt, modifiedAt)

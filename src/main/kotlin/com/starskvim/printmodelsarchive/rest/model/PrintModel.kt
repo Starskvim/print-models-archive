@@ -6,7 +6,8 @@ data class PrintModel(
 
     var modelName: String?,
     var path: String?,
-    var rate: String?,
+    var category: String?,
+    var rate: Int?,
     var nsfw: Boolean?,
     var zips: List<PrintModelZip>?,
     var oths: List<PrintModelOth>?,
