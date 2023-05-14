@@ -10,6 +10,11 @@ spring:
   webflux:
     base-path: /archive
 
+s3:
+  endpoint: http://127.0.0.1:9099
+  secretKey: minioadmin
+  accessKey: minioadmin
+
 scan:
   addressSer: G:\[Model]\save
   address1: D:\[Patreon]\[Figure]

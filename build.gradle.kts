@@ -38,6 +38,8 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-aop:3.0.5")
 	implementation("org.apache.commons:commons-collections4:4.4")
 	implementation("commons-codec:commons-codec:1.15")
+	implementation("org.springframework.boot:spring-boot-starter-web")
+	implementation("io.minio:minio:8.2.2")
 	kapt("org.mapstruct:mapstruct-processor:1.5.4.Final")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
