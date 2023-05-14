@@ -27,7 +27,6 @@ class CreatePrintModelService(
     fun test() {
         val buckets: List<Bucket> = client.listBuckets()
         for (bucket in buckets) {
-            bucket
             println(bucket.name())
         }
     }

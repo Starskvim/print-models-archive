@@ -12,6 +12,10 @@ object Constants {
         const val PRINT_MODEL_DATA = "PrintModelData"
     }
 
+    object Bucket {
+        const val PRINT_MODEL_IMAGE = "print-model-image"
+    }
+
     object ModelCategory {
         const val FIGURE = "[Figure]"
         const val PACK = "[Pack]"
