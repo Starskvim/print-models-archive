@@ -38,6 +38,7 @@ class InitializeArchiveTask(
     private var fileDone: AtomicInteger = AtomicInteger(0)
 
 ) : Executable {
+
     override suspend fun execute() {
         filesCount = files.size
         coroutineScope {
@@ -65,7 +66,7 @@ class InitializeArchiveTask(
 
     }
 
-    private suspend fun createModel(file: File, modelName: String): PrintModelData {
+    private fun createModel(file: File, modelName: String): PrintModelData {
         val modelCategory = getPrintModelCategory(file)
         val myRate = getMyRateForModel(modelName)
         val nsfwFlag = isHaveTrigger(file.absolutePath, NSFW_TRIGGERS)
@@ -109,7 +110,7 @@ class InitializeArchiveTask(
         linkZipWithModel(modelName, zip)
     }
 
-    private suspend fun linkZipWithModel(modelName: String, zip: PrintModelZipData) {
+    private fun linkZipWithModel(modelName: String, zip: PrintModelZipData) {
         for (model in models) {
             if (model.modelName == modelName) {
                 model.zips?.add(zip)
@@ -135,13 +136,13 @@ class InitializeArchiveTask(
     suspend fun addImageInS3(file: File, format: String, modelName: String): String? {
         if (IMAGE_FORMATS_TRIGGERS.contains(format)) {
             val storageName = getStorageName(modelName, file.name)
-            minioService.saveImage(file, storageName)
+            minioService.saveImageWithCompressing(file, storageName)
             return storageName
         }
         return null
     }
 
-    suspend fun linkOthWithModel(modelName: String, oth: PrintModelOthData) {
+    fun linkOthWithModel(modelName: String, oth: PrintModelOthData) {
         for (model in models) {
             if (model.modelName == modelName) {
                 model.oths?.add(oth)

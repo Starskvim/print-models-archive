@@ -23,21 +23,14 @@ class ImageService {
             return ""
         }
         return if (isNeedCompression) {
-            getCompressedImgFromDisk(path, quality)
+            val baos = getCompressedImgFromDisk(path, quality)
+            return String(Base64.encodeBase64(baos.toByteArray()), StandardCharsets.UTF_8)
         } else {
             getFullImgFromDisk(path)
         }
     }
 
-    private suspend fun getFullImgFromDisk(path: String): String {
-        val inputStreamReader = FileInputStream(path)
-        val file = File(path)
-        val bytes = ByteArray(file.length().toInt())
-        inputStreamReader.read(bytes)
-        return String(Base64.encodeBase64(bytes), StandardCharsets.UTF_8)
-    }
-
-    private suspend fun getCompressedImgFromDisk(path: String, quality: Float): String {
+    suspend fun getCompressedImgFromDisk(path: String, quality: Float): ByteArrayOutputStream {
         val input = File(path)
         val image = ImageIO.read(input)
         val iter = ImageIO.getImageWritersByFormatName("JPG")
@@ -61,6 +54,14 @@ class ImageService {
                 println(ioe.message)
             }
         }
-        return String(Base64.encodeBase64(baos.toByteArray()), StandardCharsets.UTF_8)
+        return baos
+    }
+
+    private suspend fun getFullImgFromDisk(path: String): String {
+        val inputStreamReader = FileInputStream(path)
+        val file = File(path)
+        val bytes = ByteArray(file.length().toInt())
+        inputStreamReader.read(bytes)
+        return String(Base64.encodeBase64(bytes), StandardCharsets.UTF_8)
     }
 }
