@@ -15,6 +15,7 @@ data class PrintModelData(
     var category: String?,
     var rate: Int?,
     var nsfw: Boolean?,
+    var categories: MutableList<String>?,
     var zips: MutableList<PrintModelZipData>?,
     var oths: MutableList<PrintModelOthData>?,
     override var id: String?,

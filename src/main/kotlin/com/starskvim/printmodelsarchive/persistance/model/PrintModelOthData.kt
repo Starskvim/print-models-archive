@@ -6,5 +6,8 @@ data class PrintModelOthData(
     var path: String?,
     var format: String?,
     var size: Double?,
-    var preview: String?
-)
+    var storageName: String?
+) {
+
+    suspend fun isImage(): Boolean = storageName != null
+}

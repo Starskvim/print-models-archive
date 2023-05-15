@@ -4,6 +4,7 @@ import com.starskvim.printmodelsarchive.persistance.MinioDataService
 import com.starskvim.printmodelsarchive.persistance.PrintModelDataService
 import com.starskvim.printmodelsarchive.persistance.model.PrintModelData
 import org.springframework.web.bind.annotation.*
+import java.io.File
 
 @RestController
 @RequestMapping("/test")
@@ -21,7 +22,8 @@ class Test(
 
     @PostMapping("/postS3")
     suspend fun testS3(@RequestBody test: TestPath) {
-        minioDataService.saveObject(test.path)
+        val file = File(test.path)
+        minioDataService.saveObject(file, file.name)
     }
 
     @GetMapping("/postS3")

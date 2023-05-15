@@ -24,13 +24,12 @@ class MinioDataService(
 ) {
 
     @LoggTime
-    suspend fun saveObject(path: String) {
-        val file = File(path)
+    suspend fun saveObject(file: File, name: String) {
         try {
             val res = client.putObject(
                 PutObjectArgs.builder()
                     .bucket(PRINT_MODEL_IMAGE)
-                    .`object`(file.name)
+                    .`object`(name)
                     .stream(file.inputStream(), file.length(), -1)
                     .build()
             )

@@ -9,6 +9,7 @@ data class PrintModel(
     var category: String?,
     var rate: Int?,
     var nsfw: Boolean?,
+    var categories: List<String>?,
     var zips: List<PrintModelZip>?,
     var oths: List<PrintModelOth>?,
     override var id: String?,
