@@ -1,5 +1,6 @@
 package com.starskvim.printmodelsarchive.domain.create
 
+import com.starskvim.printmodelsarchive.domain.CategoriesInfoService
 import com.starskvim.printmodelsarchive.domain.Executable
 import com.starskvim.printmodelsarchive.domain.MinioService
 import com.starskvim.printmodelsarchive.persistance.PrintModelDataService
@@ -30,6 +31,7 @@ class InitializeArchiveTask(
 
     private val dataService: PrintModelDataService,
     private val minioService: MinioService,
+    private val categoriesInfoService: CategoriesInfoService,
     private var files: Collection<File>,
 
     private var models: CopyOnWriteArrayList<PrintModelData> = CopyOnWriteArrayList<PrintModelData>(), // before its set
@@ -45,10 +47,12 @@ class InitializeArchiveTask(
             files.map { file -> async { createModels(file) } }.awaitAll()
         }
         files = emptyList()
+        categoriesInfoService.initializeCategoriesInfo(models)
         val modelsPages = partition(models, 100)
         models.clear()
         for (page in modelsPages) {
             dataService.saveAll(models)
+            page.clear()
         }
     }
 
@@ -96,7 +100,7 @@ class InitializeArchiveTask(
         }
     }
 
-    private suspend fun createZip(file: File, modelName: String) {
+    private fun createZip(file: File, modelName: String) {
         val size = getSizeFileDouble(file)
         val format = getExtension(file.name)
         val ratio = 0 // TODO implement

@@ -11,7 +11,6 @@ import io.minio.http.Method
 import org.apache.commons.codec.binary.Base64
 import org.springframework.stereotype.Service
 import java.io.File
-import java.io.FileInputStream
 import java.io.IOException
 import java.io.InputStream
 import java.nio.charset.StandardCharsets
@@ -35,22 +34,6 @@ class MinioDataService(
                     .build()
             )
             println(res)
-        } catch (ex: IOException) {
-            throw IllegalStateException(ex.message)
-        } catch (ex: MinioException) {
-            throw IllegalStateException(ex.message)
-        }
-    }
-
-    suspend fun savePrintModelImage(imageName: String, size: Long, image: FileInputStream) {
-        try {
-            val res = client.putObject(
-                PutObjectArgs.builder()
-                    .bucket(PRINT_MODEL_IMAGE)
-                    .`object`(imageName)
-                    .stream(image, size, -1)
-                    .build()
-            )
         } catch (ex: IOException) {
             throw IllegalStateException(ex.message)
         } catch (ex: MinioException) {
