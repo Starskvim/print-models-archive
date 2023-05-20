@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.w3.org/1999/xhtml"
+      lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MODELS</title>
+    <!--  Иконка вкладки  -->
+    <link rel="shortcut icon" th:href="@{/img/favicon.png}" type="image/png">
+    <!--                  -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+
+
+    <script src="https://code.jquery.com/jquery-3.4.0.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="../static/css/style.css" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div class="container-fluid myNavBarAllDiv">
+    <table class="table table-sm myNavBarTab">
+        <tr>
+            <th>
+                <a th:href="@{/models?size=40&page=0}"
+                   class="form-horizontal">
+                    <div style="margin-bottom: 14px; width: 25%" class="input-group myButtonHead myNavBarDiv">
+                        <button type="submit" class="btn btn-primary myNavBarBut">Home Page
+                        </button>
+                    </div>
+                </a>
+            </th>
+            <th>
+                <form th:action="@{/models/zips}"
+                      method="get" target=»_blank» class="form-horizontal">
+                    <div style="margin-bottom: 14px; width: 25%" class="input-group myButtonHead myNavBarDiv">
+                        <button type="submit" class="btn btn-primary myNavBarBut">Zip Page
+                        </button>
+                        <input type="hidden" name="size" th:value="200">
+                        <input type="hidden" name="sort" value="archiveRatio,desc">
+                    </div>
+                </form>
+            </th>
+            <th>
+                <form th:action="@{/models/tags}"
+                      method="get" target=»_blank» class="form-horizontal">
+                    <div style="margin-bottom: 14px; width: 25%" class="input-group myButtonHead myNavBarDiv">
+                        <button type="submit" class="btn btn-primary myNavBarBut">Tags Page
+                        </button>
+                        <!--                        <input type="hidden" name="size" th:value="200">-->
+                        <!--                        <input type="hidden" name="sort" value="archiveRatio,desc">-->
+                    </div>
+                </form>
+            </th>
+            <th>
+                <form th:action="@{/models/good}"
+                      method="get" target=»_blank» class="form-horizontal myButtonHead ">
+                    <div style="margin-bottom: 14px; width: 14%" class="input-group myNavBarDiv">
+                        <button type="submit" class="btn btn-primary myNavBarBut">Test
+                        </button>
+                    </div>
+                </form>
+            </th>
+            <th>
+                <form th:action="@{/admin}"
+                      method="get" target=»_blank» class="form-horizontal myButtonHead">
+                    <div style="margin-bottom: 14px; width: 25%" class="input-group myNavBarDiv">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-watcher"></i></span>
+                        <button type="submit" class="btn btn-primary">Admin Page
+                        </button>
+                    </div>
+                </form>
+            </th>
+            <th sec:authorize="isAuthenticated()">
+                <div style="background: transparent; display: flex;" th:text="${#authentication.name}">
+
+                </div>
+            </th>
+
+        </tr>
+    </table>
+</div>
+
+
+<div class="container">
+    <table class="table table-hover">
+        <tr>
+            <th>
+                <div id="carousel" class="carousel slide" data-ride="carousel">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+
+                            <a th:href="@{'/models/tag?tag=[Titan-Forge%20Miniatures]'}" target=»_blank»
+                               text="[Titan-Forge Miniatures]"></a>
+
+                        </div>
+
+                        <div th:each="tagName : ${modelTagList}" class="carousel-item">
+
+                            <a th:href="@{'/models/tag?tag=' + ${tagName}}" target=»_blank»
+                               th:text="${tagName.toString()}"></a>
+
+                        </div>
+                    </div>
+                </div>
+            </th>
+        </tr>
+    </table>
+</div>
+
+<div class="container">
+    <form th:action="@{/models}"
+          method="get" class="form-horizontal">
+        <table class="table table-hover">
+            <tr>
+                <th>
+                    <div style="margin-bottom: 0px; vertical-align: middle" class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-watcher"></i></span>
+                        <select class="form-control" th:name="wordCategory" id="FormControlSelect">
+                            <option type="text" th:value="${wordCategory != null} ? ${wordCategory}"
+                                    th:text="${wordCategory != null} ? ${wordCategory}">Category
+                            </option>
+                            <option type="text" value="">All</option>
+                            <option type="text" th:value="[Figure]">Figure</option>
+                            <option type="text" th:value="[Pack]">Pack</option>
+                            <option type="text" th:value="[OtherFDM]">OtherFDM</option>
+                        </select>
+
+                        <input type="text" th:value="${wordName != null} ? ${wordName}" th:name="wordName"
+                               placeholder="by Name (*)" class="form-control"/>
+
+                        <input type="hidden" name="size" th:value="40">
+                        <input type="hidden" name="sort" value="id,desc">
+
+                        <button type="submit" class="btn btn-primary">Search</button>
+                    </div>
+                </th>
+                <th th:with="var2 = ${allPage}">
+                    <span style="vertical-align: middle" th:text="${'Всего страниц ' + var2}"></span>
+                </th>
+            </tr>
+        </table>
+
+        <table class="table table-hover">
+            <tr>
+                <th th:each="pageNumber : ${pageNumbers}" th:with="var = ${pageNumber + 1}">
+                    <button th:class="${pageNumber == currentPage}? 'btn btn-success' : 'btn btn-info'" type="submit"
+                            th:name="page"
+                            th:value="${pageNumber}"
+                            th:text="${var}"></button>
+                </th>
+            </tr>
+        </table>
+    </form>
+</div>
+
+
+<div class="container">
+    <table class="table table-hover">
+        <thead>
+        <span th:text="${'Всего моделей на странице ' + models.getContent().size()}"></span>
+        <br>
+        <tr>
+            <th>Preview</th>
+            <th>Category</th>
+            <th>modelName</th>
+            <th>Действия</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="model : ${models.getContent()}">
+            <th>
+                <img th:src="'data:image/png;base64,' + ${model.compressPreview}" alt="None"
+                     class="imagePreveiw"/>
+            </th>
+            <td th:text="${model.modelCategory}"></td>
+            <td th:text="${model.modelName}"></td>
+            <td class="Link">
+                <a th:href="@{'/models/model-obj/' + ${model.id}}" target=»_blank» th:text="Просмотр"></a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+
+<div class="container">
+    <form th:action="@{/models}"
+          method="get" class="form-horizontal">
+
+        <table class="table table-hover">
+            <tr>
+                <th th:each="pageNumber : ${pageNumbers}" th:with="var = ${pageNumber + 1}">
+                    <button th:class="${pageNumber == currentPage}? 'btn btn-success' : 'btn btn-info'" type="submit"
+                            th:name="page"
+                            th:value="${pageNumber}"
+                            th:text="${var}"></button>
+                </th>
+            </tr>
+        </table>
+
+        <table class="table table-hover">
+            <tr>
+                <th>
+                    <div style="margin-bottom: 0px; vertical-align: middle" class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-watcher"></i></span>
+                        <select class="form-control" th:name="wordCategory" id="FormControlSelect">
+                            <option type="text" th:value="${wordCategory != null} ? ${wordCategory}"
+                                    th:text="${wordCategory != null} ? ${wordCategory}">Category
+                            </option>
+                            <option type="text" value="">All</option>
+                            <option type="text" th:value="[Figure]">Figure</option>
+                            <option type="text" th:value="[Pack]">Pack</option>
+                            <option type="text" th:value="[OtherFDM]">OtherFDM</option>
+                        </select>
+
+                        <input type="text" th:value="${wordName != null} ? ${wordName}" th:name="wordName"
+                               placeholder="by Name (*)" class="form-control"/>
+
+                        <input type="hidden" name="size" th:value="40">
+                        <input type="hidden" name="sort" value="id,desc">
+
+                        <button type="submit" class="btn btn-primary">Search</button>
+                    </div>
+                </th>
+                <th th:with="var2 = ${allPage}">
+                    <span style="vertical-align: middle" th:text="${'Всего страниц ' + var2}"></span>
+                </th>
+            </tr>
+
+        </table>
+
+    </form>
+</div>
+
+
+<!--<canvas id="canvas" width="1400" height="600"></canvas>-->
+<!--<script th:src="@{/js/scriptWARP.js}"></script>-->
+
+<svg id="stage" width="1400" height="600"></svg>
+<script src='https://unpkg.co/gsap@3/dist/gsap.min.js'></script>
+<script th:src="@{/js/scriptRandom.js}"></script>
+
+</body>
+</html>

@@ -44,4 +44,9 @@ object Constants {
         val BACKSLASH = "\\\\".toRegex()
         val SQUARE_BRACKETS = """.*\[.*\].*""".toRegex()
     }
+
+    object Fields {
+        const val MODEL_NAME = "modelName"
+        const val CATEGORIES = "categories"
+    }
 }

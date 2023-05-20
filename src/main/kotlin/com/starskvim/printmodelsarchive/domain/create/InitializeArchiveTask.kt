@@ -1,7 +1,6 @@
 package com.starskvim.printmodelsarchive.domain.create
 
 import com.starskvim.printmodelsarchive.domain.CategoriesInfoService
-import com.starskvim.printmodelsarchive.domain.Executable
 import com.starskvim.printmodelsarchive.domain.MinioService
 import com.starskvim.printmodelsarchive.persistance.PrintModelDataService
 import com.starskvim.printmodelsarchive.persistance.model.PrintModelData
@@ -16,6 +15,7 @@ import com.starskvim.printmodelsarchive.utils.CreateUtils.getPrintModelCategory
 import com.starskvim.printmodelsarchive.utils.CreateUtils.getSizeFileDouble
 import com.starskvim.printmodelsarchive.utils.CreateUtils.getStorageName
 import com.starskvim.printmodelsarchive.utils.CreateUtils.isHaveTrigger
+import com.starskvim.printmodelsarchive.utils.Executable
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope

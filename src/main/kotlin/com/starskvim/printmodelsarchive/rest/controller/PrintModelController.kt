@@ -1,5 +1,9 @@
 package com.starskvim.printmodelsarchive.rest.controller
 
+import com.starskvim.printmodelsarchive.domain.CategoriesInfoService
+import com.starskvim.printmodelsarchive.domain.PrintModelService
+import com.starskvim.printmodelsarchive.rest.model.request.PrintModelSearchParams
+import com.starskvim.printmodelsarchive.utils.PageUtils.getPagesCount
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -11,14 +15,27 @@ import org.springframework.web.bind.annotation.RequestParam
 @RequestMapping("/models")
 class PrintModelController(
 
-) {
+    private val service: PrintModelService,
+    private val categoriesInfoService: CategoriesInfoService,
+
+
+    ) {
     @GetMapping("/")
-    fun getModels(
+    suspend fun getModels(
         model: Model,
         pageable: Pageable,
-        @RequestParam("name") wordName: String,
-        @RequestParam("category") category: String,
-    ) {
-
+        @RequestParam("wordName", required = false) wordName: String,
+        @RequestParam("wordCategory", required = false) category: String,
+    ): String {
+        val modelsPage = service.getPrintModelsPage(PrintModelSearchParams(wordName, category), pageable)
+        val categories = categoriesInfoService.getAllCategories()
+        model.addAttribute("modelTagList", categories)
+        model.addAttribute("models", modelsPage)
+        model.addAttribute("allPage", modelsPage.totalPages)
+        model.addAttribute("wordName", wordName)
+        model.addAttribute("wordCategory", category)
+        model.addAttribute("currentPage", pageable.pageNumber)
+        model.addAttribute("pageNumbers", getPagesCount(pageable.pageNumber, modelsPage.totalPages))
+        return "models"
     }
 }

@@ -15,4 +15,11 @@ class CategoriesInfoDataService(
     suspend fun saveCategoriesInfo(categoriesInfo: CategoriesInfoData): CategoriesInfoData {
         return mongoTemplate.save(categoriesInfo).awaitSingle()
     }
+
+    suspend fun getAllCategories(): List<String> {
+        val result = mongoTemplate.findAll(CategoriesInfoData::class.java)
+            .collectList()
+            .awaitSingle() ?: emptyList<CategoriesInfoData>()
+        return result[0].categories ?: emptyList()
+    }
 }

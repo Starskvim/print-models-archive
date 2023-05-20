@@ -9,4 +9,6 @@ abstract class PrintModelMapper {
 
     abstract fun dataToApi(source: PrintModelData): PrintModel
 
+    abstract fun dataToApi(source: List<PrintModelData>): List<PrintModel>
+
 }
