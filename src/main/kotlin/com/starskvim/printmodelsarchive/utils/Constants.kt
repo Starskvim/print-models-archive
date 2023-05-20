@@ -2,8 +2,6 @@ package com.starskvim.printmodelsarchive.utils
 
 object Constants {
 
-    const val PRINT_MODELS = "print_models"
-
     const val API_MODELS = "/api/models"
     const val MODELS = "/models"
     const val CREATE_ARCHIVE = "/create-archive"
@@ -13,8 +11,14 @@ object Constants {
         const val HYPHEN = "-"
     }
 
+    object Document {
+        const val CATEGORIES_INFO = "categories_info"
+        const val PRINT_MODELS = "print_models"
+    }
+
     object TypeAlias {
         const val PRINT_MODEL_DATA = "PrintModelData"
+        const val CATEGORIES_INFO_DATA = "CategoriesInfoData"
     }
 
     object Bucket {
@@ -48,5 +52,7 @@ object Constants {
     object Fields {
         const val MODEL_NAME = "modelName"
         const val CATEGORIES = "categories"
+        const val ZIPS = "zips"
+        const val OTHS = "oths"
     }
 }

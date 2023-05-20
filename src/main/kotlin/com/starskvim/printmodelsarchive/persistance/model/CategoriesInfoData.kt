@@ -1,11 +1,13 @@
 package com.starskvim.printmodelsarchive.persistance.model
 
+import com.starskvim.printmodelsarchive.utils.Constants.Document.CATEGORIES_INFO
+import com.starskvim.printmodelsarchive.utils.Constants.TypeAlias.CATEGORIES_INFO_DATA
 import org.springframework.data.annotation.TypeAlias
 import org.springframework.data.mongodb.core.mapping.Document
 import java.time.LocalDate
 
-@TypeAlias("CategoriesInfoData")
-@Document("categories_info_data")
+@TypeAlias(CATEGORIES_INFO_DATA)
+@Document(CATEGORIES_INFO)
 data class CategoriesInfoData(
 
     var categories: MutableList<String>?,

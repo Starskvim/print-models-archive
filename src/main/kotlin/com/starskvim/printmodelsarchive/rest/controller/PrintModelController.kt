@@ -16,8 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam
 class PrintModelController(
 
     private val service: PrintModelService,
-    private val categoriesInfoService: CategoriesInfoService,
-
+    private val categoriesInfoService: CategoriesInfoService
 
     ) {
     @GetMapping("/")

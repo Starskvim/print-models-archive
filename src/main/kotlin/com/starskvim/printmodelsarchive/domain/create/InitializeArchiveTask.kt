@@ -34,6 +34,7 @@ class InitializeArchiveTask(
     private val categoriesInfoService: CategoriesInfoService,
     private var files: Collection<File>,
 
+    // TODO  concurrent create bug
     private var models: CopyOnWriteArrayList<PrintModelData> = CopyOnWriteArrayList<PrintModelData>(), // before its set
     private val modelNames: CopyOnWriteArraySet<String> = CopyOnWriteArraySet<String>(),
     private var filesCount: Int = 0,
@@ -149,14 +150,14 @@ class InitializeArchiveTask(
     fun linkOthWithModel(modelName: String, oth: PrintModelOthData) {
         for (model in models) {
             if (model.modelName == modelName) {
-                model.oths.add(oth)
+                model.oths!!.add(oth)
                 break
             }
         }
     }
 
     private fun linkPreview(model: PrintModelData) {
-        for (oth in model.oths) {
+        for (oth in model.oths!!) {
             if (oth.isImage()) {
                 model.preview = oth.storageName
                 break

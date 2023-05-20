@@ -28,6 +28,6 @@ class PrintModelDataService(
         .awaitFirstOrNull()
 
     suspend fun getPrintModels(searchParams: PrintModelSearchParams, pageable: Pageable): Page<PrintModelData> {
-        return searchDataService.getPrintModels(searchParams, pageable)
+        return searchDataService.getPrintModelsPage(searchParams, pageable)
     }
 }

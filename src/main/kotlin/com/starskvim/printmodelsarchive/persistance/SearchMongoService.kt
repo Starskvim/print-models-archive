@@ -25,4 +25,9 @@ interface SearchMongoService {
         }
         return query
     }
+
+    fun addExcludeFieldsCriteria(query: Query, vararg fields: String): Query {
+        for (field in fields) query.fields().exclude(field)
+        return query
+    }
 }
