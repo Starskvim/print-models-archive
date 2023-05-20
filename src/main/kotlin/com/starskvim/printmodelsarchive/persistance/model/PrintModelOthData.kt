@@ -9,5 +9,5 @@ data class PrintModelOthData(
     var storageName: String?
 ) {
 
-    suspend fun isImage(): Boolean = storageName != null
+    fun isImage(): Boolean = storageName != null
 }

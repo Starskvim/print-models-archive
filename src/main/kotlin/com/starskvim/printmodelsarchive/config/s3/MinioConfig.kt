@@ -10,11 +10,11 @@ import org.springframework.context.annotation.Configuration
 class MinioConfig(
 
     @Value("\${s3.endpoint}")
-    private val endpoint: String,
+    val endpoint: String,
     @Value("\${s3.secretKey}")
-    private val secretKey: String,
+    val secretKey: String,
     @Value("\${s3.accessKey}")
-    private val accessKey: String
+    val accessKey: String
 
 ) {
 

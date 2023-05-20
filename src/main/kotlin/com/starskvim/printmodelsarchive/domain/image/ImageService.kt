@@ -1,5 +1,6 @@
 package com.starskvim.printmodelsarchive.domain.image
 
+import com.starskvim.printmodelsarchive.config.s3.MinioConfig
 import org.apache.commons.codec.binary.Base64
 import org.springframework.stereotype.Service
 import java.awt.image.BufferedImage
@@ -16,7 +17,15 @@ import javax.swing.ImageIcon
 
 
 @Service
-class ImageService {
+class ImageService(
+
+    private val minioConfig: MinioConfig
+
+) {
+
+    suspend fun getUrlForImage(fileName: String): String {
+        return minioConfig.endpoint + "/" + fileName
+    }
 
     suspend fun getBase64Img(path: String?, isNeedCompression: Boolean, quality: Float): String {
         if (path == null) {

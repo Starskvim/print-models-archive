@@ -10,6 +10,7 @@ import java.time.LocalDate
 @Document(PRINT_MODELS)
 data class PrintModelData(
 
+    var preview: String?,
     var modelName: String?,
     var path: String?,
     var category: String?,
@@ -17,8 +18,12 @@ data class PrintModelData(
     var nsfw: Boolean?,
     var categories: MutableList<String>?,
     var zips: MutableList<PrintModelZipData>?,
-    var oths: MutableList<PrintModelOthData>?,
+    var oths: MutableList<PrintModelOthData>,
     override var id: String?,
     override var createdAt: LocalDate?,
     override var modifiedAt: LocalDate?,
-) : Auditable(id, createdAt, modifiedAt)
+) : Auditable(id, createdAt, modifiedAt) {
+
+
+    fun hasPreview(): Boolean = preview != null
+}

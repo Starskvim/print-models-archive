@@ -4,6 +4,7 @@ import java.time.LocalDate
 
 data class PrintModel(
 
+    var preview: String?,
     var modelName: String?,
     var path: String?,
     var category: String?,

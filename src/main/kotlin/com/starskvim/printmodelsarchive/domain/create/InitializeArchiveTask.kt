@@ -43,9 +43,8 @@ class InitializeArchiveTask(
 
     override suspend fun execute() {
         filesCount = files.size
-        coroutineScope {
-            files.map { file -> async { createModels(file) } }.awaitAll()
-        }
+        coroutineScope { files.map { file -> async { createModels(file) } }.awaitAll() }
+        models.forEach { linkPreview(it) }
         files = emptyList()
         categoriesInfoService.initializeCategoriesInfo(models)
         val modelsPages = partition(models, 100)
@@ -75,6 +74,7 @@ class InitializeArchiveTask(
         val myRate = getMyRateForModel(modelName)
         val nsfwFlag = isHaveTrigger(file.absolutePath, NSFW_TRIGGERS)
         val printModel = PrintModelData(
+            null,
             modelName,
             file.parent,
             modelCategory,
@@ -149,7 +149,16 @@ class InitializeArchiveTask(
     fun linkOthWithModel(modelName: String, oth: PrintModelOthData) {
         for (model in models) {
             if (model.modelName == modelName) {
-                model.oths?.add(oth)
+                model.oths.add(oth)
+                break
+            }
+        }
+    }
+
+    private fun linkPreview(model: PrintModelData) {
+        for (oth in model.oths) {
+            if (oth.isImage()) {
+                model.preview = oth.storageName
                 break
             }
         }
