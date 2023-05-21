@@ -1,5 +1,6 @@
 package com.starskvim.printmodelsarchive.domain.create
 
+import com.starskvim.printmodelsarchive.aop.LoggTime
 import com.starskvim.printmodelsarchive.domain.CategoriesInfoService
 import com.starskvim.printmodelsarchive.domain.MinioService
 import com.starskvim.printmodelsarchive.persistance.PrintModelDataService
@@ -16,6 +17,7 @@ import com.starskvim.printmodelsarchive.utils.CreateUtils.getSizeFileDouble
 import com.starskvim.printmodelsarchive.utils.CreateUtils.getStorageName
 import com.starskvim.printmodelsarchive.utils.CreateUtils.isHaveTrigger
 import com.starskvim.printmodelsarchive.utils.Executable
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
@@ -43,11 +45,12 @@ class InitializeArchiveTask(
     private var filesCount: Int = 0
     private var fileDone: AtomicInteger = AtomicInteger(0)
 
+    @LoggTime
     override suspend fun execute() {
         filesCount = files.size
         coroutineScope {
             files.map { file ->
-                async {
+                async(Dispatchers.IO) {
                     createModels(file)
                 }
             }.awaitAll()
@@ -56,9 +59,7 @@ class InitializeArchiveTask(
         files = emptyList()
         categoriesInfoService.initializeCategoriesInfo(models)
         val modelsPages = partition(models, 100)
-        for (page in modelsPages) {
-            dataService.saveAll(page)
-        }
+        modelsPages.forEach { dataService.saveAll(it) }
     }
 
     suspend fun createModels(file: File) {
