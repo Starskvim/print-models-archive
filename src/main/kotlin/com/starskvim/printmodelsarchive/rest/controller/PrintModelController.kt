@@ -37,4 +37,14 @@ class PrintModelController(
         model.addAttribute("pageNumbers", getPagesCount(pageable.pageNumber, modelsPage.totalPages))
         return "models"
     }
+
+    @GetMapping("/model")
+    suspend fun getModel(
+        model: Model,
+        @RequestParam("modelId", required = false) modelId: String
+    ): String {
+        val result = service.getPrintModelById(modelId)
+        model.addAttribute("printModel", result)
+        return "model"
+    }
 }

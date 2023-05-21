@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/api/service")
-class AdminApiController(
+class ArchiveAdminApiController(
 
     private val createService: CreatePrintModelService
 

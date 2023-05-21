@@ -2,7 +2,6 @@ package com.starskvim.printmodelsarchive.domain.create
 
 import com.starskvim.printmodelsarchive.aop.LoggTime
 import mu.KLogging
-import org.apache.commons.io.FileUtils
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import java.io.File
@@ -23,10 +22,9 @@ class FolderScanService(
     @LoggTime
     fun getFilesFromDisk(): Collection<File> {
         val start = System.currentTimeMillis()
-        val files = mutableListOf<File>()
-        files.addAll(FileUtils.streamFiles(File(addressFigure), true, null).toList())
-        files.addAll(FileUtils.streamFiles(File(addressOther), true, null).toList())
-        files.addAll(FileUtils.streamFiles(File(addressPack), true, null).toList())
+        val files = File(addressFigure).walk().toMutableList()
+        files.addAll(File(addressOther).walk().toList())
+        files.addAll(File(addressPack).walk().toList())
         val end = System.currentTimeMillis()
         logger.info { "ScanRepository SIZE ${files.size}, TIME ${end - start}" }
         return files

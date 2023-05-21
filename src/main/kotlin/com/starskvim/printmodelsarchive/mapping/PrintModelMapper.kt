@@ -17,9 +17,9 @@ abstract class PrintModelMapper {
     private lateinit var imageService: ImageService
 
     @Mapping(target = "preview", ignore = true)
-    abstract fun dataToApi(source: PrintModelData): PrintModel
+    abstract fun dataToApi(source: PrintModelData?): PrintModel?
 
-    abstract fun dataToApi(source: List<PrintModelData>): List<PrintModel>
+    abstract fun dataToApi(source: List<PrintModelData?>): List<PrintModel?>
 
     @AfterMapping
     fun setPreview(source: PrintModelData, @MappingTarget target: PrintModel) {

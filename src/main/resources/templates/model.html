@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" lang="en"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>Model page</title>
+    <!--  Иконка вкладки  -->
+    <link rel="shortcut icon" th:href="@{/img/favicon.png}" type="image/png">
+    <!--                  -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+
+    <!--  Оформление  -->
+    <!--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">-->
+    <link rel="stylesheet" href="../static/css/style.css" th:href="@{/css/style.css}">
+
+</head>
+<body>
+
+
+<div class="container-fluid myNavBarAllDiv">
+    <table class="table table-sm myNavBarTab">
+        <tr>
+            <th>
+                <form th:action="@{/models}"
+                      method="get" class="form-horizontal">
+                    <div style="margin-bottom: 14px; width: 10%" class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-watcher"></i></span>
+                        <button type="submit" class="btn btn-primary myButtonHead">Home Page
+                        </button>
+                    </div>
+                </form>
+            </th>
+            <th>
+                <form th:action="@{'/admin/serialization/' + ${printModel.id}}"
+                      method="get" class="form-horizontal">
+                    <div style="margin-bottom: 14px; width: 10%" class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-watcher"></i></span>
+                        <button type="submit" class="btn btn-primary myButtonHead">Serialize DTO
+                        </button>
+                    </div>
+                </form>
+            </th>
+            <th>
+                <form th:action="@{'/models/model-obj/' + ${printModel.id} + '/post-on-web'}"
+                      method="get" class="form-horizontal">
+                    <div style="margin-bottom: 14px; width: 10%" class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-watcher"></i></span>
+                        <button type="submit" class="btn btn-primary myButtonHead">Post on WEB
+                        </button>
+                    </div>
+                </form>
+            </th>
+            <th>
+                <form th:action="@{'/models/model-obj/' + ${printModel.id} + '/delete'}"
+                      method="post" class="form-horizontal">
+                    <div style="margin-bottom: 14px; width: 10%" class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-watcher"></i></span>
+                        <button type="submit" class="btn btn-primary myButtonHead">Delete
+                        </button>
+                    </div>
+                </form>
+            </th>
+        </tr>
+    </table>
+</div>
+
+
+<div class="container">
+    <table class="table table-hover">
+        <thead>
+
+        <tr>
+            <th>ID</th>
+            <th>Category</th>
+            <th>modelName</th>
+            <th>modelDirectory</th>
+            <th>Open</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td th:text="${printModel.id}"></td>
+            <td th:text="${printModel.modelCategory}"></td>
+            <td th:text="${printModel.modelName}"></td>
+            <td th:text="${printModel.modelDirectory}"></td>
+
+            <td>
+                <iframe name="dummyframe" id="dummyframe" style="display: none;"></iframe>
+                <form th:action="@{/models/open}" target="dummyframe">
+                    <div style="margin-bottom: 14px; width: 10%" class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-watcher"></i></span>
+                        <button type="submit" th:name="path" th:value="${printModel.modelDirectory}"
+                                class="btn btn-primary">
+                            Open
+                        </button>
+                    </div>
+                </form>
+            </td>
+
+        </tr>
+        </tbody>
+
+        <!--        <span th:text="${'Всего файлов - ' + printPrintModelOthList.size() + ' + ' + printPrintModelZipList.size()}"></span>-->
+        <!--        <br>-->
+
+    </table>
+
+
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Format</th>
+            <th>Size</th>
+            <th>Compress</th>
+            <th>Address</th>
+            <th>Open</th>
+
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="fileZip : ${printModelZipList}">
+            <td th:text="${fileZip.id}"></td>
+            <td th:text="${fileZip.nameModelZip}"></td>
+            <td th:text="${fileZip.zipFormat}"></td>
+            <td th:text="${fileZip.zipSize + ' mb.'}"></td>
+            <td th:text="${fileZip.archiveRatio + ' %.'}"></td>
+            <td th:text="${fileZip.zipAddress}"></td>
+
+
+            <td>
+                <iframe name="dummyframe" id="dummyframe" style="display: none;"></iframe>
+                <form th:action="@{/models/open}" target="dummyframe">
+                    <div style="margin-bottom: 14px; width: 10%" class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-watcher"></i></span>
+                        <button type="submit" th:name="path" th:value="${fileZip.zipAddress}"
+                                class="btn btn-primary">
+                            Open
+                        </button>
+                    </div>
+                </form>
+            </td>
+
+
+        </tr>
+        </tbody>
+    </table>
+
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Format</th>
+            <th>Size</th>
+            <th>Open</th>
+
+
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="fileOth : ${printModelOthList}">
+            <td th:text="${fileOth.id}"></td>
+            <td th:text="${fileOth.nameModelOth}"></td>
+            <td th:text="${fileOth.othFormat}"></td>
+            <td th:text="${fileOth.othSize + ' mb.'}"></td>
+
+            <td>
+                <iframe name="dummyframe" id="dummyframe" style="display: none;"></iframe>
+                <form th:action="@{/models/open}" target="dummyframe">
+                    <div style="margin-bottom: 14px; width: 10%" class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-watcher"></i></span>
+                        <button type="submit" th:name="path" th:value="${fileOth.othAddress}"
+                                class="btn btn-primary">
+                            Open
+                        </button>
+                    </div>
+                </form>
+            </td>
+
+        </tr>
+        </tbody>
+    </table>
+
+    <tr th:each="fileOth : ${printModelOthList}">
+        <th>
+            <img th:src="'data:image/png;base64,' + ${fileOth.previewOth}" alt="Red dot" class="imageFull"/>
+        </th>
+    </tr>
+
+</div>
+
+
+<!--<div class="container">-->
+<!--    <table class="table table-hover">-->
+<!--        <tr>-->
+<!--            <th>-->
+<!--                <div id="carousel" class="carousel slide" data-ride="carousel">-->
+
+<!--                    <div class="carousel-inner">-->
+<!--                        <div class="carousel-item active">-->
+<!--                            <img th:src="'data:image/png;base64,' + ${printPrintModelOthList.get(0).fullPreview}" alt="Red dot" class="imageFull d-block w-100"/>-->
+<!--                        </div>-->
+
+<!--                        <div th:each="fileOTH : ${printPrintModelOthList}" class="carousel-item">-->
+<!--                            <img th:src="'data:image/png;base64,' + ${fileOth.fullPreview}" alt="Red dot" class="imageFull d-block w-100"/>-->
+<!--                        </div>-->
+
+<!--                    </div>-->
+<!--                    &lt;!&ndash; Элементы управления &ndash;&gt;-->
+<!--                    <a class="carousel-control-prev" href="#carousel" role="button" data-slide="prev">-->
+<!--                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>-->
+<!--                        <span class="sr-only">Предыдущий</span>-->
+<!--                    </a>-->
+<!--                    <a class="carousel-control-next" href="#carousel" role="button" data-slide="next">-->
+<!--                        <span class="carousel-control-next-icon" aria-hidden="true"></span>-->
+<!--                        <span class="sr-only">Следующий</span>-->
+<!--                    </a>-->
+<!--                </div>-->
+<!--            </th>-->
+<!--        </tr>-->
+<!--    </table>-->
+<!--</div>-->
+
+
+<!--<canvas id="canvas" width="1400" height="600"></canvas>-->
+<!--<script th:src="@{/js/scriptWARP.js}"></script>-->
+<svg id="stage"></svg>
+<script src='https://unpkg.co/gsap@3/dist/gsap.min.js'></script>
+<script th:src="@{/js/scriptRandom.js}"></script>
+
+</body>
+</html>

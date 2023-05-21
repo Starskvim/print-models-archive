@@ -50,6 +50,7 @@ object Constants {
     }
 
     object Fields {
+        const val ID = "_id"
         const val MODEL_NAME = "modelName"
         const val CATEGORIES = "categories"
         const val ZIPS = "zips"

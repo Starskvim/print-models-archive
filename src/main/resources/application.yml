@@ -9,6 +9,17 @@ spring:
       database: PrintModelsArchive
   webflux:
     base-path: /archive
+  thymeleaf:
+    prefix: file:src/main/resources/templates/
+
+logging:
+  level:
+    org:
+      springframework:
+        data:
+          mongodb:
+            core:
+              ReactiveMongoTemplate: DEBUG
 
 s3:
   endpoint: http://127.0.0.1:9099
@@ -16,7 +27,6 @@ s3:
   accessKey: minioadmin
 
 scan:
-  addressSer: G:\[Model]\save
-  address1: D:\[Patreon]\[Figure]
-  address2: D:\[Patreon]\[Other]
-  address3: D:\[Patreon]\[Pack]
+  address1: F:\[Patreon]\[Unsorted]
+  address2: F:\[Patreon]\[test]
+  address3: F:\[Patreon]\[test]

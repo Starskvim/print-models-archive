@@ -21,4 +21,9 @@ class PrintModelService(
         val dataPage = dataService.getPrintModels(searchParams, pageable)
         return PageImpl(mapper.dataToApi(dataPage.content), pageable, dataPage.totalElements)
     }
+
+    suspend fun getPrintModelById(modelId: String): PrintModel? {
+        val model = dataService.getPrintModelById(modelId)
+        return mapper.dataToApi(model)
+    }
 }

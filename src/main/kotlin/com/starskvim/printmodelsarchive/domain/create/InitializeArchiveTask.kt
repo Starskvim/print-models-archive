@@ -34,24 +34,29 @@ class InitializeArchiveTask(
     private val categoriesInfoService: CategoriesInfoService,
     private var files: Collection<File>,
 
-    // TODO  concurrent create bug
-    private var models: CopyOnWriteArrayList<PrintModelData> = CopyOnWriteArrayList<PrintModelData>(), // before its set
-    private val modelNames: CopyOnWriteArraySet<String> = CopyOnWriteArraySet<String>(),
-    private var filesCount: Int = 0,
-    private var fileDone: AtomicInteger = AtomicInteger(0)
-
 ) : Executable {
+
+    // TODO  concurrent create bug
+    private var models: CopyOnWriteArrayList<PrintModelData> = CopyOnWriteArrayList<PrintModelData>() // before its set
+    private val modelNames: CopyOnWriteArraySet<String> = CopyOnWriteArraySet<String>()
+    private var filesCount: Int = 0
+    private var fileDone: AtomicInteger = AtomicInteger(0)
 
     override suspend fun execute() {
         filesCount = files.size
-        coroutineScope { files.map { file -> async { createModels(file) } }.awaitAll() }
+        coroutineScope {
+            files.map { file ->
+                async {
+                    createModels(file)
+                }
+            }.awaitAll()
+        }
         models.forEach { linkPreview(it) }
         files = emptyList()
         categoriesInfoService.initializeCategoriesInfo(models)
         val modelsPages = partition(models, 100)
-        models.clear()
         for (page in modelsPages) {
-            dataService.saveAll(models)
+            dataService.saveAll(page)
             page.clear()
         }
     }

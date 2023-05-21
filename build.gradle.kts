@@ -34,18 +34,14 @@ dependencies {
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("io.github.microutils:kotlin-logging-jvm:3.0.5")
 	implementation("org.mapstruct:mapstruct:1.5.4.Final")
+	kapt("org.mapstruct:mapstruct-processor:1.5.4.Final")
 	implementation("commons-io:commons-io:2.11.0")
 	implementation("org.springframework.boot:spring-boot-starter-aop:3.0.5")
 	implementation("org.apache.commons:commons-collections4:4.4")
 	implementation("commons-codec:commons-codec:1.15")
-	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("io.minio:minio:8.2.2")
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0")
-	kapt("org.mapstruct:mapstruct-processor:1.5.4.Final")
-	developmentOnly("org.springframework.boot:spring-boot-devtools")
-	annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
-	testImplementation("org.springframework.boot:spring-boot-starter-test")
-	testImplementation("io.projectreactor:reactor-test")
+	implementation("org.springframework.boot:spring-boot-starter-thymeleaf:3.0.5")
 }
 
 kapt {

@@ -30,4 +30,8 @@ class PrintModelDataService(
     suspend fun getPrintModels(searchParams: PrintModelSearchParams, pageable: Pageable): Page<PrintModelData> {
         return searchDataService.getPrintModelsPage(searchParams, pageable)
     }
+
+    suspend fun getPrintModelById(modelId: String): PrintModelData? {
+        return searchDataService.findById(modelId)
+    }
 }
