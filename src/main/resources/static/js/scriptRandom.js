@@ -61,12 +61,12 @@ window.onload = window.onresize = () => {
 };
 
 window.onclick = () => {
-    randBG();
-    gsap.set(".p", {
-        attr: {
-            fill: () => "#" + randFromVarArr(colors)
-        }
-    });
+    createShapes(gsap.utils.random(25, 75, 1));
+    // gsap.set(".p", {
+    //     attr: {
+    //         fill: () => "#" + randFromVarArr(colors)
+    //     }
+    // });
 };
 
 // window.onmousemove = () => {

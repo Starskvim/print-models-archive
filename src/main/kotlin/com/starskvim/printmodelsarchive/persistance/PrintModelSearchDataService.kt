@@ -3,7 +3,6 @@ package com.starskvim.printmodelsarchive.persistance
 import com.starskvim.printmodelsarchive.persistance.model.PrintModelData
 import com.starskvim.printmodelsarchive.rest.model.request.PrintModelSearchParams
 import com.starskvim.printmodelsarchive.utils.Constants.Fields.CATEGORIES
-import com.starskvim.printmodelsarchive.utils.Constants.Fields.ID
 import com.starskvim.printmodelsarchive.utils.Constants.Fields.MODEL_NAME
 import com.starskvim.printmodelsarchive.utils.Constants.Fields.OTHS
 import com.starskvim.printmodelsarchive.utils.Constants.Fields.ZIPS
@@ -25,9 +24,7 @@ class PrintModelSearchDataService(
 ) : SearchMongoService {
 
     suspend fun findById(modelId: String): PrintModelData? {
-        val query = Query()
-        addIsCriteria(query, ID, ObjectId(modelId))
-        return template.find(query, PrintModelData::class.java).awaitFirstOrNull()
+        return template.findById(ObjectId(modelId), PrintModelData::class.java).awaitFirstOrNull()
     }
 
     suspend fun getPrintModelsPage(searchParams: PrintModelSearchParams, pageable: Pageable): Page<PrintModelData> {

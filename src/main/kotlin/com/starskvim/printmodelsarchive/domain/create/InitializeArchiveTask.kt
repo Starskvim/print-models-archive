@@ -23,6 +23,7 @@ import mu.KLogging
 import org.apache.commons.collections4.ListUtils.partition
 import org.apache.commons.io.FilenameUtils.getExtension
 import java.io.File
+import java.time.LocalDate.now
 import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.CopyOnWriteArraySet
 import java.util.concurrent.atomic.AtomicInteger
@@ -57,7 +58,6 @@ class InitializeArchiveTask(
         val modelsPages = partition(models, 100)
         for (page in modelsPages) {
             dataService.saveAll(page)
-            page.clear()
         }
     }
 
@@ -81,6 +81,7 @@ class InitializeArchiveTask(
         val nsfwFlag = isHaveTrigger(file.absolutePath, NSFW_TRIGGERS)
         val printModel = PrintModelData(
             null,
+            null,
             modelName,
             file.parent,
             modelCategory,
@@ -89,8 +90,7 @@ class InitializeArchiveTask(
             getAllPrintModelCategories(file.path),
             mutableListOf(),
             mutableListOf(),
-            null,
-            null,
+            now(),
             null
         )
         modelNames.add(modelName)

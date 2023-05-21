@@ -4,6 +4,7 @@ import com.starskvim.printmodelsarchive.persistance.CategoriesInfoDataService
 import com.starskvim.printmodelsarchive.persistance.model.CategoriesInfoData
 import com.starskvim.printmodelsarchive.persistance.model.PrintModelData
 import org.springframework.stereotype.Service
+import java.time.LocalDate.now
 import java.util.*
 import java.util.concurrent.CopyOnWriteArrayList
 
@@ -24,10 +25,10 @@ class CategoriesInfoService(
         val categories = mutableListOf<String>()
         categories.addAll(uniqCategories)
         val categoriesInfo = CategoriesInfoData(
+            null,
             categories,
             categoriesCount,
-            null,
-            null,
+            now(),
             null
         )
         return dataService.saveCategoriesInfo(categoriesInfo)

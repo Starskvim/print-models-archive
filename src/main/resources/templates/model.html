@@ -34,26 +34,6 @@
                 </form>
             </th>
             <th>
-                <form th:action="@{'/admin/serialization/' + ${printModel.id}}"
-                      method="get" class="form-horizontal">
-                    <div style="margin-bottom: 14px; width: 10%" class="input-group">
-                        <span class="input-group-addon"><i class="glyphicon glyphicon-watcher"></i></span>
-                        <button type="submit" class="btn btn-primary myButtonHead">Serialize DTO
-                        </button>
-                    </div>
-                </form>
-            </th>
-            <th>
-                <form th:action="@{'/models/model-obj/' + ${printModel.id} + '/post-on-web'}"
-                      method="get" class="form-horizontal">
-                    <div style="margin-bottom: 14px; width: 10%" class="input-group">
-                        <span class="input-group-addon"><i class="glyphicon glyphicon-watcher"></i></span>
-                        <button type="submit" class="btn btn-primary myButtonHead">Post on WEB
-                        </button>
-                    </div>
-                </form>
-            </th>
-            <th>
                 <form th:action="@{'/models/model-obj/' + ${printModel.id} + '/delete'}"
                       method="post" class="form-horizontal">
                     <div style="margin-bottom: 14px; width: 10%" class="input-group">
@@ -83,28 +63,12 @@
         <tbody>
         <tr>
             <td th:text="${printModel.id}"></td>
-            <td th:text="${printModel.modelCategory}"></td>
+            <td th:text="${printModel.category}"></td>
             <td th:text="${printModel.modelName}"></td>
-            <td th:text="${printModel.modelDirectory}"></td>
-
-            <td>
-                <iframe name="dummyframe" id="dummyframe" style="display: none;"></iframe>
-                <form th:action="@{/models/open}" target="dummyframe">
-                    <div style="margin-bottom: 14px; width: 10%" class="input-group">
-                        <span class="input-group-addon"><i class="glyphicon glyphicon-watcher"></i></span>
-                        <button type="submit" th:name="path" th:value="${printModel.modelDirectory}"
-                                class="btn btn-primary">
-                            Open
-                        </button>
-                    </div>
-                </form>
-            </td>
+            <td th:text="${printModel.path}"></td>
 
         </tr>
         </tbody>
-
-        <!--        <span th:text="${'Всего файлов - ' + printPrintModelOthList.size() + ' + ' + printPrintModelZipList.size()}"></span>-->
-        <!--        <br>-->
 
     </table>
 
@@ -112,7 +76,6 @@
     <table class="table table-hover">
         <thead>
         <tr>
-            <th>ID</th>
             <th>Name</th>
             <th>Format</th>
             <th>Size</th>
@@ -123,13 +86,12 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="fileZip : ${printModelZipList}">
-            <td th:text="${fileZip.id}"></td>
-            <td th:text="${fileZip.nameModelZip}"></td>
-            <td th:text="${fileZip.zipFormat}"></td>
-            <td th:text="${fileZip.zipSize + ' mb.'}"></td>
-            <td th:text="${fileZip.archiveRatio + ' %.'}"></td>
-            <td th:text="${fileZip.zipAddress}"></td>
+        <tr th:each="fileZip : ${printModel.zips}">
+            <td th:text="${fileZip.fileName}"></td>
+            <td th:text="${fileZip.format}"></td>
+            <td th:text="${fileZip.size + ' mb.'}"></td>
+            <td th:text="${fileZip.ratio + ' %.'}"></td>
+            <td th:text="${fileZip.path}"></td>
 
 
             <td>
@@ -137,7 +99,7 @@
                 <form th:action="@{/models/open}" target="dummyframe">
                     <div style="margin-bottom: 14px; width: 10%" class="input-group">
                         <span class="input-group-addon"><i class="glyphicon glyphicon-watcher"></i></span>
-                        <button type="submit" th:name="path" th:value="${fileZip.zipAddress}"
+                        <button type="submit" th:name="path" th:value="${fileZip.path}"
                                 class="btn btn-primary">
                             Open
                         </button>
@@ -158,23 +120,21 @@
             <th>Format</th>
             <th>Size</th>
             <th>Open</th>
-
-
         </tr>
         </thead>
+
         <tbody>
-        <tr th:each="fileOth : ${printModelOthList}">
-            <td th:text="${fileOth.id}"></td>
-            <td th:text="${fileOth.nameModelOth}"></td>
-            <td th:text="${fileOth.othFormat}"></td>
-            <td th:text="${fileOth.othSize + ' mb.'}"></td>
+        <tr th:each="fileOth : ${printModel.oths}">
+            <td th:text="${fileOth.fileName}"></td>
+            <td th:text="${fileOth.format}"></td>
+            <td th:text="${fileOth.size + ' mb.'}"></td>
 
             <td>
                 <iframe name="dummyframe" id="dummyframe" style="display: none;"></iframe>
                 <form th:action="@{/models/open}" target="dummyframe">
                     <div style="margin-bottom: 14px; width: 10%" class="input-group">
                         <span class="input-group-addon"><i class="glyphicon glyphicon-watcher"></i></span>
-                        <button type="submit" th:name="path" th:value="${fileOth.othAddress}"
+                        <button type="submit" th:name="path" th:value="${fileOth.path}"
                                 class="btn btn-primary">
                             Open
                         </button>
@@ -186,46 +146,13 @@
         </tbody>
     </table>
 
-    <tr th:each="fileOth : ${printModelOthList}">
+    <tr th:each="fileOth : ${printModel.oths}">
         <th>
-            <img th:src="'data:image/png;base64,' + ${fileOth.previewOth}" alt="Red dot" class="imageFull"/>
+            <img th:src="${fileOth.preview}" alt="Red dot" class="imageFull"/>
         </th>
     </tr>
 
 </div>
-
-
-<!--<div class="container">-->
-<!--    <table class="table table-hover">-->
-<!--        <tr>-->
-<!--            <th>-->
-<!--                <div id="carousel" class="carousel slide" data-ride="carousel">-->
-
-<!--                    <div class="carousel-inner">-->
-<!--                        <div class="carousel-item active">-->
-<!--                            <img th:src="'data:image/png;base64,' + ${printPrintModelOthList.get(0).fullPreview}" alt="Red dot" class="imageFull d-block w-100"/>-->
-<!--                        </div>-->
-
-<!--                        <div th:each="fileOTH : ${printPrintModelOthList}" class="carousel-item">-->
-<!--                            <img th:src="'data:image/png;base64,' + ${fileOth.fullPreview}" alt="Red dot" class="imageFull d-block w-100"/>-->
-<!--                        </div>-->
-
-<!--                    </div>-->
-<!--                    &lt;!&ndash; Элементы управления &ndash;&gt;-->
-<!--                    <a class="carousel-control-prev" href="#carousel" role="button" data-slide="prev">-->
-<!--                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>-->
-<!--                        <span class="sr-only">Предыдущий</span>-->
-<!--                    </a>-->
-<!--                    <a class="carousel-control-next" href="#carousel" role="button" data-slide="next">-->
-<!--                        <span class="carousel-control-next-icon" aria-hidden="true"></span>-->
-<!--                        <span class="sr-only">Следующий</span>-->
-<!--                    </a>-->
-<!--                </div>-->
-<!--            </th>-->
-<!--        </tr>-->
-<!--    </table>-->
-<!--</div>-->
-
 
 <!--<canvas id="canvas" width="1400" height="600"></canvas>-->
 <!--<script th:src="@{/js/scriptWARP.js}"></script>-->

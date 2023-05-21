@@ -19,7 +19,7 @@ class PrintModelController(
     private val categoriesInfoService: CategoriesInfoService
 
     ) {
-    @GetMapping("/")
+    @GetMapping
     suspend fun getModels(
         model: Model,
         pageable: Pageable,
