@@ -3,6 +3,7 @@ package com.starskvim.printmodelsarchive.domain
 import com.starskvim.printmodelsarchive.persistance.CategoriesInfoDataService
 import com.starskvim.printmodelsarchive.persistance.model.CategoriesInfoData
 import com.starskvim.printmodelsarchive.persistance.model.PrintModelData
+import com.starskvim.printmodelsarchive.utils.Constants.Document.CATEGORIES_INFO
 import org.springframework.stereotype.Service
 import java.time.LocalDate.now
 import java.util.*
@@ -25,7 +26,7 @@ class CategoriesInfoService(
         val categories = mutableListOf<String>()
         categories.addAll(uniqCategories)
         val categoriesInfo = CategoriesInfoData(
-            null,
+            CATEGORIES_INFO,
             categories,
             categoriesCount,
             now(),

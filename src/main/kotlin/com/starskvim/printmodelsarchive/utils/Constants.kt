@@ -9,6 +9,7 @@ object Constants {
     object Service {
         const val PLUS = "+"
         const val HYPHEN = "-"
+        const val EMPTY = ""
     }
 
     object Document {

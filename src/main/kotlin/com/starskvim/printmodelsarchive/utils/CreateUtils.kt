@@ -5,6 +5,7 @@ import com.starskvim.printmodelsarchive.utils.Constants.ModelCategory.OTHER
 import com.starskvim.printmodelsarchive.utils.Constants.ModelCategory.PACK
 import com.starskvim.printmodelsarchive.utils.Constants.Regexp.BACKSLASH
 import com.starskvim.printmodelsarchive.utils.Constants.Regexp.SQUARE_BRACKETS
+import com.starskvim.printmodelsarchive.utils.Constants.Service.EMPTY
 import com.starskvim.printmodelsarchive.utils.Constants.Service.HYPHEN
 import com.starskvim.printmodelsarchive.utils.Constants.Service.PLUS
 import org.springframework.util.StringUtils
@@ -64,4 +65,6 @@ object CreateUtils {
     fun getStorageName(modelName: String, fileName: String): String {
         return modelName + HYPHEN + fileName
     }
+
+    fun clearModelName(name: String): String = name.replace(PLUS, EMPTY)
 }

@@ -10,6 +10,7 @@ import com.starskvim.printmodelsarchive.persistance.model.PrintModelZipData
 import com.starskvim.printmodelsarchive.utils.Constants.Triggers.IMAGE_FORMATS_TRIGGERS
 import com.starskvim.printmodelsarchive.utils.Constants.Triggers.NSFW_TRIGGERS
 import com.starskvim.printmodelsarchive.utils.Constants.Triggers.ZIP_FORMATS
+import com.starskvim.printmodelsarchive.utils.CreateUtils.clearModelName
 import com.starskvim.printmodelsarchive.utils.CreateUtils.getAllPrintModelCategories
 import com.starskvim.printmodelsarchive.utils.CreateUtils.getMyRateForModel
 import com.starskvim.printmodelsarchive.utils.CreateUtils.getPrintModelCategory
@@ -76,14 +77,16 @@ class InitializeArchiveTask(
 
     }
 
-    private fun createModel(file: File, modelName: String): PrintModelData {
+    private fun createModel(file: File, folderName: String): PrintModelData {
+        val modelName = clearModelName(folderName)
         val modelCategory = getPrintModelCategory(file)
-        val myRate = getMyRateForModel(modelName)
+        val myRate = getMyRateForModel(folderName)
         val nsfwFlag = isHaveTrigger(file.absolutePath, NSFW_TRIGGERS)
         val printModel = PrintModelData(
             null,
             null,
             modelName,
+            folderName,
             file.parent,
             modelCategory,
             myRate,
@@ -94,7 +97,7 @@ class InitializeArchiveTask(
             now(),
             null
         )
-        modelNames.add(modelName)
+        modelNames.add(folderName)
         models.add(printModel)
         return printModel
     }
@@ -153,9 +156,9 @@ class InitializeArchiveTask(
         return null
     }
 
-    fun linkOthWithModel(modelName: String, oth: PrintModelOthData) {
+    fun linkOthWithModel(folderName: String, oth: PrintModelOthData) {
         for (model in models) {
-            if (model.modelName == modelName) {
+            if (model.folderName == folderName) {
                 model.oths!!.add(oth)
                 break
             }

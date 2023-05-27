@@ -15,6 +15,7 @@ data class PrintModelData(
     var id: String?,
     var preview: String?,
     var modelName: String?,
+    var folderName: String?,
     var path: String?,
     var category: String?,
     var rate: Int?,

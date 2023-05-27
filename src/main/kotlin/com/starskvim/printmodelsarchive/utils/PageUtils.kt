@@ -1,9 +1,16 @@
 package com.starskvim.printmodelsarchive.utils
 
+import org.springframework.data.domain.Pageable
+import org.springframework.ui.ConcurrentModel
+import org.springframework.ui.Model
 import kotlin.math.max
 import kotlin.math.min
 
 object PageUtils {
+
+    fun getRequestPageable(pageable: Pageable?): Pageable = pageable ?: Pageable.ofSize(20)
+
+    fun getRequestModel(model: Model?): Model = model ?: ConcurrentModel()
 
     fun getPagesCount(current: Int, totalPages: Int): List<Int> {
         val pageNumbers = mutableListOf<Int>()

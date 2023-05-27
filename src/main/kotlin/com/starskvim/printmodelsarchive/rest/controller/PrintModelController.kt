@@ -4,6 +4,8 @@ import com.starskvim.printmodelsarchive.domain.CategoriesInfoService
 import com.starskvim.printmodelsarchive.domain.PrintModelService
 import com.starskvim.printmodelsarchive.rest.model.request.PrintModelSearchParams
 import com.starskvim.printmodelsarchive.utils.PageUtils.getPagesCount
+import com.starskvim.printmodelsarchive.utils.PageUtils.getRequestModel
+import com.starskvim.printmodelsarchive.utils.PageUtils.getRequestPageable
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -21,11 +23,13 @@ class PrintModelController(
     ) {
     @GetMapping
     suspend fun getModels(
-        model: Model,
-        pageable: Pageable,
-        @RequestParam("wordName", required = false) wordName: String,
-        @RequestParam("wordCategory", required = false) category: String,
+        requestModel: Model?,
+        requestPageable: Pageable?,
+        @RequestParam("wordName", required = false) wordName: String?,
+        @RequestParam("wordCategory", required = false) category: String?,
     ): String {
+        val pageable = getRequestPageable(requestPageable)
+        val model = getRequestModel(requestModel)
         val modelsPage = service.getPrintModelsPage(PrintModelSearchParams(wordName, category), pageable)
         val categories = categoriesInfoService.getAllCategories()
         model.addAttribute("modelTagList", categories)
