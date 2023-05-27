@@ -20,7 +20,7 @@ class FolderScanService(
     ) {
 
     @LoggTime
-    fun getFilesFromDisk(): Collection<File> {
+    fun getFilesFromDisk(): MutableCollection<File> {
         val start = System.currentTimeMillis()
         val files = File(addressFigure).walk().toMutableList()
         files.addAll(File(addressOther).walk().toList())

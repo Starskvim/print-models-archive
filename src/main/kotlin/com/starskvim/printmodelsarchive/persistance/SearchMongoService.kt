@@ -12,9 +12,9 @@ interface SearchMongoService {
         return query
     }
 
-    fun addIsLikeCriteria(query: Query, field: String, value: String?): Query { // TODO **?
+    fun addIsLikeCriteria(query: Query, field: String, value: String?): Query {
         if (value != null) {
-            query.addCriteria(Criteria.where(field).regex(value, "i"))
+            query.addCriteria(Criteria.where(field).regex(".*${value}.*", "i"))
         }
         return query
     }

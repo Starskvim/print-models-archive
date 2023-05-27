@@ -1,0 +1,23 @@
+server:
+  port: 8081
+
+spring:
+  data:
+    mongodb:
+      authentication-database: archive
+      port: 27017
+      database: PrintModelsArchive
+  webflux:
+    base-path: /archive
+  thymeleaf:
+    prefix: file:src/main/resources/templates/
+
+s3:
+  endpoint: http://127.0.0.1:9099
+  secretKey: minioadmin
+  accessKey: minioadmin
+
+scan:
+  address1:
+  address2:
+  address3:

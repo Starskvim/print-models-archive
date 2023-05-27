@@ -7,7 +7,6 @@ import com.starskvim.printmodelsarchive.utils.Constants.Document.CATEGORIES_INFO
 import org.springframework.stereotype.Service
 import java.time.LocalDate.now
 import java.util.*
-import java.util.concurrent.CopyOnWriteArrayList
 
 @Service
 class CategoriesInfoService(
@@ -16,7 +15,7 @@ class CategoriesInfoService(
 
 ) {
 
-    suspend fun initializeCategoriesInfo(models: CopyOnWriteArrayList<PrintModelData>): CategoriesInfoData {
+    suspend fun initializeCategoriesInfo(models: MutableCollection<PrintModelData>): CategoriesInfoData {
         val modelsCategories = mutableListOf<String>()
         for (model in models) modelsCategories.addAll(model.categories!!)
         val uniqCategories = mutableSetOf<String>()

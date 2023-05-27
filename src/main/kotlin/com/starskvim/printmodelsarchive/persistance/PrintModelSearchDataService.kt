@@ -32,9 +32,10 @@ class PrintModelSearchDataService(
         addIsLikeCriteria(query, MODEL_NAME, searchParams.modelName)
         addInCriteria(query, CATEGORIES, searchParams.category)
         addExcludeFieldsCriteria(query, ZIPS, OTHS)
+        val totalCount = template.count(query, PrintModelData::class.java).awaitSingleOrNull()
         query.with(pageable)
         val result = template.find(query, PrintModelData::class.java).collectList().awaitSingleOrNull()
-        return createPage(result?.toList() ?: emptyList(), query, pageable)
+        return PageImpl(result?.toList() ?: emptyList(), pageable, totalCount ?: 0)
     }
 
     private suspend fun createPage(

@@ -27,7 +27,7 @@ import org.apache.commons.collections4.ListUtils.partition
 import org.apache.commons.io.FilenameUtils.getExtension
 import java.io.File
 import java.time.LocalDate.now
-import java.util.concurrent.CopyOnWriteArrayList
+import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CopyOnWriteArraySet
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -36,15 +36,14 @@ class InitializeArchiveTask(
     private val dataService: PrintModelDataService,
     private val minioService: MinioService,
     private val categoriesInfoService: CategoriesInfoService,
-    private var files: Collection<File>,
+    private var files: MutableCollection<File>,
 
-) : Executable {
+    ) : Executable {
 
-    // TODO  concurrent create bug
-    private var models: CopyOnWriteArrayList<PrintModelData> = CopyOnWriteArrayList<PrintModelData>() // before its set
-    private val modelNames: CopyOnWriteArraySet<String> = CopyOnWriteArraySet<String>()
-    private var filesCount: Int = 0
-    private var fileDone: AtomicInteger = AtomicInteger(0)
+    private var models = ConcurrentHashMap<String, PrintModelData>()
+    private val modelNames = CopyOnWriteArraySet<String>()
+    private var filesCount = 0
+    private var fileDone = AtomicInteger(0)
 
     @LoggTime
     override suspend fun execute() {
@@ -56,10 +55,12 @@ class InitializeArchiveTask(
                 }
             }.awaitAll()
         }
-        models.forEach { linkPreview(it) }
-        files = emptyList()
-        categoriesInfoService.initializeCategoriesInfo(models)
-        val modelsPages = partition(models, 100)
+        models.values.forEach { linkPreview(it) }
+        files.clear()
+        categoriesInfoService.initializeCategoriesInfo(models.values)
+        val modelsList = mutableListOf<PrintModelData>()
+        modelsList.addAll(models.values)
+        val modelsPages = partition(modelsList, 100)
         modelsPages.forEach { dataService.saveAll(it) }
     }
 
@@ -98,7 +99,8 @@ class InitializeArchiveTask(
             null
         )
         modelNames.add(folderName)
-        models.add(printModel)
+        if (models.contains(folderName)) return printModel
+        models[folderName] = printModel
         return printModel
     }
 
@@ -124,13 +126,8 @@ class InitializeArchiveTask(
         linkZipWithModel(modelName, zip)
     }
 
-    private fun linkZipWithModel(modelName: String, zip: PrintModelZipData) {
-        for (model in models) {
-            if (model.modelName == modelName) {
-                model.zips?.add(zip)
-                break
-            }
-        }
+    private fun linkZipWithModel(folderName: String, zip: PrintModelZipData) {
+        models[folderName]?.zips?.add(zip)
     }
 
     private suspend fun createOth(file: File, modelName: String): PrintModelOthData {
@@ -157,12 +154,7 @@ class InitializeArchiveTask(
     }
 
     fun linkOthWithModel(folderName: String, oth: PrintModelOthData) {
-        for (model in models) {
-            if (model.folderName == folderName) {
-                model.oths!!.add(oth)
-                break
-            }
-        }
+        models[folderName]?.oths?.add(oth)
     }
 
     private fun linkPreview(model: PrintModelData) {
