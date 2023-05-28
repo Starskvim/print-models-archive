@@ -8,15 +8,16 @@ plugins {
 	kotlin("kapt") version "1.7.22"
 	kotlin("plugin.spring") version "1.7.22"
 }
-
 group = "com.starskvim"
 version = "0.0.1-SNAPSHOT"
+jib.to.image = "archive-app"
 java.sourceCompatibility = JavaVersion.VERSION_17
 
 configurations {
 	compileOnly {
 		extendsFrom(configurations.annotationProcessor.get())
 	}
+
 }
 
 repositories {
