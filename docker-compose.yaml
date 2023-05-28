@@ -9,6 +9,7 @@ services:
       - mongo_data:/data/db
   s3:
     image: minio/minio:latest
+    restart: always
     ports:
       - "9000:9000"
       - "9099:9099"
