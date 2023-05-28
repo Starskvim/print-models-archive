@@ -1,7 +1,10 @@
 package com.starskvim.printmodelsarchive.persistance
 
 import com.starskvim.printmodelsarchive.persistance.model.CategoriesInfoData
+import com.starskvim.printmodelsarchive.utils.Constants.Document.CATEGORIES_INFO
+import kotlinx.coroutines.reactive.awaitFirstOrNull
 import kotlinx.coroutines.reactive.awaitSingle
+import org.bson.types.ObjectId
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate
 import org.springframework.stereotype.Service
 
@@ -17,9 +20,9 @@ class CategoriesInfoDataService(
     }
 
     suspend fun getAllCategories(): List<String> {
-        val result = mongoTemplate.findAll(CategoriesInfoData::class.java)
-            .collectList()
-            .awaitSingle() ?: emptyList<CategoriesInfoData>()
-        return result[0].categories ?: emptyList()
+        val result =
+            mongoTemplate.findById(ObjectId(CATEGORIES_INFO), CategoriesInfoData::class.java).awaitFirstOrNull()
+                ?: return emptyList()
+        return result.categories ?: emptyList()
     }
 }
