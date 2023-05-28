@@ -4,16 +4,14 @@ server:
 spring:
   data:
     mongodb:
-      authentication-database: archive
-      port: 27017
-      database: PrintModelsArchive
+      uri: mongodb://mongo:27017/archive
   webflux:
     base-path: /archive
   thymeleaf:
     prefix: file:src/main/resources/templates/
 
-s3:
-  endpoint: http://127.0.0.1:9099
+minio:
+  endpoint: http:/minio:9099
   secretKey: minioadmin
   accessKey: minioadmin
 

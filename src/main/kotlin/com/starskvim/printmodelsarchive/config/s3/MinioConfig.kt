@@ -4,7 +4,7 @@ import io.minio.MinioClient
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.context.annotation.Bean
 
-@ConfigurationProperties(prefix = "s3")
+@ConfigurationProperties(prefix = "minio")
 data class MinioConfig(
 
     val endpoint: String,

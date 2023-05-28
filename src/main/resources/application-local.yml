@@ -4,9 +4,8 @@ server:
 spring:
   data:
     mongodb:
-      authentication-database: archive
       port: 27017
-      database: PrintModelsArchive
+      database: archive
   webflux:
     base-path: /archive
   thymeleaf:
@@ -21,7 +20,7 @@ logging:
             core:
               ReactiveMongoTemplate: DEBUG
 
-s3:
+minio:
   endpoint: http://127.0.0.1:9099
   secretKey: minioadmin
   accessKey: minioadmin
