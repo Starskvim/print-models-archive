@@ -4,8 +4,7 @@ server:
 spring:
   data:
     mongodb:
-      port: 27017
-      database: archive
+      uri: mongodb://localhost:27017/archive
   webflux:
     base-path: /archive
   thymeleaf:

@@ -3,10 +3,12 @@ package com.starskvim.printmodelsarchive.domain.create
 import com.starskvim.printmodelsarchive.aop.LoggTime
 import com.starskvim.printmodelsarchive.domain.CategoriesInfoService
 import com.starskvim.printmodelsarchive.domain.MinioService
+import com.starskvim.printmodelsarchive.domain.TaskProgressService
 import com.starskvim.printmodelsarchive.persistance.PrintModelDataService
 import com.starskvim.printmodelsarchive.persistance.model.PrintModelData
 import com.starskvim.printmodelsarchive.persistance.model.PrintModelOthData
 import com.starskvim.printmodelsarchive.persistance.model.PrintModelZipData
+import com.starskvim.printmodelsarchive.utils.Constants.Task.INITIALIZE_ARCHIVE_TASK
 import com.starskvim.printmodelsarchive.utils.Constants.Triggers.IMAGE_FORMATS_TRIGGERS
 import com.starskvim.printmodelsarchive.utils.Constants.Triggers.NSFW_TRIGGERS
 import com.starskvim.printmodelsarchive.utils.Constants.Triggers.ZIP_FORMATS
@@ -36,6 +38,7 @@ class InitializeArchiveTask(
     private val dataService: PrintModelDataService,
     private val minioService: MinioService,
     private val categoriesInfoService: CategoriesInfoService,
+    private val taskProgressService: TaskProgressService,
     private var files: MutableCollection<File>,
 
     ) : Executable {
@@ -75,7 +78,7 @@ class InitializeArchiveTask(
         }
         fileDone.incrementAndGet()
         logger.info { "$fileDone/$filesCount - now add - ${file.name}" }
-
+        incrementProgress("$fileDone/$filesCount - now add - ${file.name}")
     }
 
     private fun createModel(file: File, folderName: String): PrintModelData {
@@ -164,6 +167,10 @@ class InitializeArchiveTask(
                 break
             }
         }
+    }
+
+    private suspend fun incrementProgress(currentTask: String) {
+        taskProgressService.incrementTask(INITIALIZE_ARCHIVE_TASK, currentTask, filesCount)
     }
 
     companion object : KLogging()

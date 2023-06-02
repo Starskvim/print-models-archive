@@ -3,8 +3,9 @@ package com.starskvim.printmodelsarchive.utils
 import com.starskvim.printmodelsarchive.utils.Constants.ModelCategory.FIGURE
 import com.starskvim.printmodelsarchive.utils.Constants.ModelCategory.OTHER
 import com.starskvim.printmodelsarchive.utils.Constants.ModelCategory.PACK
-import com.starskvim.printmodelsarchive.utils.Constants.Regexp.BACKSLASH
-import com.starskvim.printmodelsarchive.utils.Constants.Regexp.SQUARE_BRACKETS
+import com.starskvim.printmodelsarchive.utils.Constants.Regexp.BACKSLASH_REG
+import com.starskvim.printmodelsarchive.utils.Constants.Regexp.CLEAR_NAME_REG
+import com.starskvim.printmodelsarchive.utils.Constants.Regexp.SQUARE_BRACKETS_REG
 import com.starskvim.printmodelsarchive.utils.Constants.Service.EMPTY
 import com.starskvim.printmodelsarchive.utils.Constants.Service.HYPHEN
 import com.starskvim.printmodelsarchive.utils.Constants.Service.PLUS
@@ -23,9 +24,9 @@ object CreateUtils {
 
     fun getAllPrintModelCategories(path: String): MutableList<String> {
         val categories = mutableListOf<String>()
-        val splitString = path.split(BACKSLASH)
+        val splitString = path.split(BACKSLASH_REG)
         for (word in splitString) {
-            if (SQUARE_BRACKETS.matches(word)) {
+            if (SQUARE_BRACKETS_REG.matches(word)) {
                 val stringBuilder = StringBuilder()
                 var status = false
                 for (ch in word.toCharArray()) {
@@ -66,5 +67,5 @@ object CreateUtils {
         return modelName + HYPHEN + fileName
     }
 
-    fun clearModelName(name: String): String = name.replace(PLUS, EMPTY)
+    fun clearModelName(name: String): String = name.replace(CLEAR_NAME_REG, EMPTY)
 }

@@ -2,12 +2,20 @@ package com.starskvim.printmodelsarchive.utils
 
 object Constants {
 
-    const val API_MODELS = "/api/models"
-    const val MODELS = "/models"
-    const val CREATE_ARCHIVE = "/create-archive"
+    object Url {
+        const val API_MODELS = "/api/models"
+        const val MODELS = "/models"
+        const val CREATE_ARCHIVE = "/create-archive"
+        const val GET_PROGRESS_TASK = "/progress-task"
+    }
+
+    object Task {
+        const val INITIALIZE_ARCHIVE_TASK = "Initialize archive task"
+    }
 
     object Service {
         const val PLUS = "+"
+        const val UNDERLINE = "_"
         const val HYPHEN = "-"
         const val EMPTY = ""
     }
@@ -46,8 +54,9 @@ object Constants {
     }
 
     object Regexp {
-        val BACKSLASH = "\\\\".toRegex()
-        val SQUARE_BRACKETS = """.*\[.*\].*""".toRegex()
+        val BACKSLASH_REG = "\\\\".toRegex()
+        val SQUARE_BRACKETS_REG = """.*\[.*\].*""".toRegex()
+        val CLEAR_NAME_REG = "[+|_]".toRegex()
     }
 
     object Fields {

@@ -18,7 +18,7 @@ function sleep(ms) {
 }
 
 getResponse = async () => {
-    let response = await fetch("http://localhost:8189/3Dmodels/update-progress-bar");
+    let response = await fetch("http://localhost:8081/archive/api/service/progress-task");
 
     if (response.ok) {
         let obj = await response.json()
@@ -29,7 +29,8 @@ getResponse = async () => {
 }
 
 getResponseStats = async () => {
-    let response = await fetch("http://localhost:8189/3Dmodels/stats");
+    let response = await fetch("http://localhost:8081/archive/api/service/statistics");
+
     if (response.ok) {
         let obj = await response.json()
         return obj
@@ -38,19 +39,19 @@ getResponseStats = async () => {
     }
 }
 
-const test = async () => {
-    let progressOBJ = await getResponse()
-    let progress = progressOBJ.currentCount
-    let task = progressOBJ.currentTask
+const getProgress = async () => {
+    let progressResponse = await getResponse()
+    let progress = progressResponse.currentCount
+    let task = progressResponse.currentTask
 
     elem3.classList.remove("invisibleLoad")
 
     // console.log(progressOBJ)
 
     while (progress < 100) {
-        progressOBJ = await getResponse()
-        progress = progressOBJ.currentCount
-        task = progressOBJ.currentTask
+        progressResponse = await getResponse()
+        progress = progressResponse.currentCount
+        task = progressResponse.currentTask
         elem4.style.width = progress + "%";
         elem4.innerHTML = progress + "%";
         console.log(progress)

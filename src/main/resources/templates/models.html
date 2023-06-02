@@ -33,52 +33,13 @@
                 </a>
             </th>
             <th>
-                <form th:action="@{/models/zips}"
-                      method="get" target=»_blank» class="form-horizontal">
-                    <div style="margin-bottom: 14px; width: 25%" class="input-group myButtonHead myNavBarDiv">
-                        <button type="submit" class="btn btn-primary myNavBarBut">Zip Page
-                        </button>
-                        <input type="hidden" name="size" th:value="200">
-                        <input type="hidden" name="sort" value="archiveRatio,desc">
-                    </div>
-                </form>
-            </th>
-            <th>
-                <form th:action="@{/models/tags}"
-                      method="get" target=»_blank» class="form-horizontal">
-                    <div style="margin-bottom: 14px; width: 25%" class="input-group myButtonHead myNavBarDiv">
-                        <button type="submit" class="btn btn-primary myNavBarBut">Tags Page
-                        </button>
-                        <!--                        <input type="hidden" name="size" th:value="200">-->
-                        <!--                        <input type="hidden" name="sort" value="archiveRatio,desc">-->
-                    </div>
-                </form>
-            </th>
-            <th>
-                <form th:action="@{/models/good}"
-                      method="get" target=»_blank» class="form-horizontal myButtonHead ">
-                    <div style="margin-bottom: 14px; width: 14%" class="input-group myNavBarDiv">
-                        <button type="submit" class="btn btn-primary myNavBarBut">Test
-                        </button>
-                    </div>
-                </form>
-            </th>
-            <th>
-                <form th:action="@{/admin}"
-                      method="get" target=»_blank» class="form-horizontal myButtonHead">
+                <form th:action="@{/service}" method="get" target=»_blank» class="form-horizontal myButtonHead">
                     <div style="margin-bottom: 14px; width: 25%" class="input-group myNavBarDiv">
                         <span class="input-group-addon"><i class="glyphicon glyphicon-watcher"></i></span>
-                        <button type="submit" class="btn btn-primary">Admin Page
-                        </button>
+                        <button type="submit" class="btn btn-primary">Admin Page</button>
                     </div>
                 </form>
             </th>
-            <!--            <th sec:authorize="isAuthenticated()">-->
-            <!--                <div style="background: transparent; display: flex;" th:text="${#authentication.name}">-->
-
-            <!--                </div>-->
-            <!--            </th>-->
-
         </tr>
     </table>
 </div>
@@ -91,7 +52,7 @@
                 <div id="carousel" class="carousel slide" data-ride="carousel">
                     <div class="carousel-inner">
                         <div class="carousel-item active">
-                            <a th:href="@{'/models/tag?tag=[Titan-Forge%20Miniatures]'}" target=»_blank»
+                            <a th:href="@{'/models/tag?tag=Titan-Forge%20Miniatures'}" target=»_blank»
                                text="[Titan-Forge Miniatures]"></a>
                         </div>
 
@@ -142,10 +103,12 @@
         <table class="table table-hover">
             <tr>
                 <th th:each="pageNumber : ${pageNumbers}" th:with="var = ${pageNumber + 1}">
-                    <button th:class="${pageNumber == currentPage}? 'btn btn-success' : 'btn btn-info'" type="submit"
+                    <button
+                            th:class="${pageNumber == currentPage}? 'btn btn-success' : 'btn btn-info'" type="submit"
                             th:name="page"
                             th:value="${pageNumber}"
-                            th:text="${var}"></button>
+                            th:text="${var}">
+                    </button>
                 </th>
             </tr>
         </table>
