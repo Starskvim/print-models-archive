@@ -20,7 +20,7 @@ import com.starskvim.printmodelsarchive.utils.CreateUtils.getSizeFileDouble
 import com.starskvim.printmodelsarchive.utils.CreateUtils.getStorageName
 import com.starskvim.printmodelsarchive.utils.CreateUtils.isHaveTrigger
 import com.starskvim.printmodelsarchive.utils.Executable
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
@@ -31,6 +31,7 @@ import java.io.File
 import java.time.LocalDate.now
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CopyOnWriteArraySet
+import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicInteger
 
 class InitializeArchiveTask(
@@ -51,9 +52,12 @@ class InitializeArchiveTask(
     @LoggTime
     override suspend fun execute() {
         filesCount = files.size
+        val dispatcher = Executors
+            .newFixedThreadPool(6)
+            .asCoroutineDispatcher()
         coroutineScope {
             files.map { file ->
-                async(Dispatchers.IO) {
+                async(dispatcher) {
                     createModels(file)
                 }
             }.awaitAll()
