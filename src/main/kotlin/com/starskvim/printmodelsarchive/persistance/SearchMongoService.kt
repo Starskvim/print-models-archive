@@ -19,8 +19,8 @@ interface SearchMongoService {
         return query
     }
 
-    fun addInCriteria(query: Query, field: String, value: Any?): Query {
-        if (value != null) {
+    fun addInCriteria(query: Query, field: String, value: String?): Query {
+        if (!value.isNullOrBlank()) {
             query.addCriteria(Criteria.where(field).`in`(value))
         }
         return query

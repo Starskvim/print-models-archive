@@ -24,7 +24,7 @@ class ImageService(
 ) {
 
     suspend fun getUrlForImage(fileName: String): String {
-        return minioConfig.endpoint + "/print-model-image/" + fileName
+        return minioConfig.external + "/print-model-image/" + fileName
     }
 
     suspend fun getBase64Img(path: String?, isNeedCompression: Boolean, quality: Float): String {

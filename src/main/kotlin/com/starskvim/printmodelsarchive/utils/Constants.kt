@@ -6,6 +6,7 @@ object Constants {
         const val API_MODELS = "/api/models"
         const val MODELS = "/models"
         const val CREATE_ARCHIVE = "/create-archive"
+        const val CHECK_FOLDERS = "/check-folders"
         const val GET_PROGRESS_TASK = "/progress-task"
     }
 

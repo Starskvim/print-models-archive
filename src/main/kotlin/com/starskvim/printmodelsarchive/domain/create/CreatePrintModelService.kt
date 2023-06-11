@@ -5,6 +5,7 @@ import com.starskvim.printmodelsarchive.domain.CategoriesInfoService
 import com.starskvim.printmodelsarchive.domain.MinioService
 import com.starskvim.printmodelsarchive.domain.TaskProgressService
 import com.starskvim.printmodelsarchive.persistance.PrintModelDataService
+import mu.KLogging
 import org.springframework.stereotype.Service
 
 @Service
@@ -23,4 +24,11 @@ class CreatePrintModelService(
         val files = scanService.getFilesFromDisk()
         InitializeArchiveTask(dataService, minioService, categoriesInfoService, taskProgressService, files).execute()
     }
+
+    fun checkFolders() {
+        val files = scanService.getFilesFromDisk()
+        logger.info { "Files found: ${files.size}" }
+    }
+
+    companion object : KLogging()
 }

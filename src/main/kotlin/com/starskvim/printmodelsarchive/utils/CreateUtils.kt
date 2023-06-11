@@ -28,12 +28,11 @@ object CreateUtils {
         for (word in splitString) {
             if (SQUARE_BRACKETS_REG.matches(word)) {
                 val stringBuilder = StringBuilder()
-                var status = false
                 for (ch in word.toCharArray()) {
-                    when {
-                        ch == '[' -> status = true
-                        status > true -> stringBuilder.append(ch)
-                        ch == ']' -> status = true
+                    when (ch) {
+                        '[' -> continue
+                        ']' -> break
+                        else -> stringBuilder.append(ch)
                     }
                 }
                 categories.add(stringBuilder.toString())

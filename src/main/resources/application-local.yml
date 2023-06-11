@@ -21,6 +21,7 @@ logging:
 
 minio:
   endpoint: http://127.0.0.1:9099
+  external: http://127.0.0.1:9099
   secretKey: minioadmin
   accessKey: minioadmin
 

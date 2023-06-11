@@ -4,6 +4,7 @@ import com.starskvim.printmodelsarchive.domain.TaskProgressService
 import com.starskvim.printmodelsarchive.domain.create.CreatePrintModelService
 import com.starskvim.printmodelsarchive.rest.model.response.ProgressResponse
 import com.starskvim.printmodelsarchive.utils.Constants.Task.INITIALIZE_ARCHIVE_TASK
+import com.starskvim.printmodelsarchive.utils.Constants.Url.CHECK_FOLDERS
 import com.starskvim.printmodelsarchive.utils.Constants.Url.CREATE_ARCHIVE
 import com.starskvim.printmodelsarchive.utils.Constants.Url.GET_PROGRESS_TASK
 import org.springframework.http.HttpStatus
@@ -21,6 +22,10 @@ class ArchiveAdminApiController(
     @ResponseStatus(value = HttpStatus.OK)
     @PostMapping(CREATE_ARCHIVE)
     suspend fun createArchive() = createService.initializeArchive()
+
+    @ResponseStatus(value = HttpStatus.OK)
+    @GetMapping(CHECK_FOLDERS)
+    suspend fun checkFolders() = createService.checkFolders()
 
     @ResponseStatus(value = HttpStatus.OK)
     @GetMapping(GET_PROGRESS_TASK)

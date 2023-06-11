@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean
 data class MinioConfig(
 
     val endpoint: String,
+    val external: String,
     val secretKey: String,
     val accessKey: String
 
