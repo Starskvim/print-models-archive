@@ -69,6 +69,7 @@ class InitializeArchiveTask(
         modelsList.addAll(models.values)
         val modelsPages = partition(modelsList, 100)
         modelsPages.forEach { dataService.saveAll(it) }
+        dispatcher.close()
     }
 
     suspend fun createModels(file: File) {
