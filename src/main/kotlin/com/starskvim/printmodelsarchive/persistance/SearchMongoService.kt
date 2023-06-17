@@ -30,4 +30,11 @@ interface SearchMongoService {
         for (field in fields) query.fields().exclude(field)
         return query
     }
+
+    fun addGteCriteria(query: Query, field: String, value: Int?): Query {
+        if (value != null) {
+            query.addCriteria(Criteria.where(field).gte(value))
+        }
+        return query
+    }
 }

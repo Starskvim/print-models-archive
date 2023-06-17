@@ -90,6 +90,9 @@
 
                         </select>
 
+                        <input type="text" th:value="${rate != null} ? ${rate}" th:name="rate"
+                               placeholder="by Rate (*)" class="form-control"/>
+
                         <input type="text" th:value="${wordName != null} ? ${wordName}" th:name="wordName"
                                placeholder="by Name (*)" class="form-control"/>
 
@@ -128,8 +131,9 @@
         <br>
         <tr>
             <th>Preview</th>
-            <th>Category</th>
-            <th>modelName</th>
+            <th>Global Category</th>
+            <th>Name</th>
+            <th>Rate</th>
             <th>Действия</th>
         </tr>
         </thead>
@@ -141,6 +145,7 @@
             </td>
             <td th:text="${model.category}"></td>
             <td th:text="${model.modelName}"></td>
+            <td th:text="${model.rate}"></td>
             <td class="Link">
                 <a th:href="@{'/models/model?modelId=' + ${model.id}}" target=»_blank» th:text="Просмотр"></a>
             </td>

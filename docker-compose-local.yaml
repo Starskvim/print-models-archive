@@ -4,6 +4,7 @@ services:
   archive:
     image: archive-app:latest
     container_name: 'archive-app'
+    restart: always
     depends_on:
       - mongo
       - minio

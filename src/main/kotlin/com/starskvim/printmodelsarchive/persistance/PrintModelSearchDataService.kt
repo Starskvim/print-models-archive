@@ -5,6 +5,7 @@ import com.starskvim.printmodelsarchive.rest.model.request.PrintModelSearchParam
 import com.starskvim.printmodelsarchive.utils.Constants.Fields.CATEGORIES
 import com.starskvim.printmodelsarchive.utils.Constants.Fields.MODEL_NAME
 import com.starskvim.printmodelsarchive.utils.Constants.Fields.OTHS
+import com.starskvim.printmodelsarchive.utils.Constants.Fields.RATE
 import com.starskvim.printmodelsarchive.utils.Constants.Fields.ZIPS
 import kotlinx.coroutines.reactive.awaitFirstOrNull
 import kotlinx.coroutines.reactor.awaitSingleOrNull
@@ -31,6 +32,7 @@ class PrintModelSearchDataService(
         val query = Query()
         addIsLikeCriteria(query, MODEL_NAME, searchParams.modelName)
         addInCriteria(query, CATEGORIES, searchParams.category)
+        addGteCriteria(query, RATE, searchParams.rate)
         addExcludeFieldsCriteria(query, ZIPS, OTHS)
         val totalCount = template.count(query, PrintModelData::class.java).awaitSingleOrNull()
         query.with(pageable)

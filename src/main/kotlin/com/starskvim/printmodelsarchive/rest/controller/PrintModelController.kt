@@ -27,16 +27,18 @@ class PrintModelController(
         requestPageable: Pageable?,
         @RequestParam("wordName", required = false) wordName: String?,
         @RequestParam("wordCategory", required = false) category: String?,
+        @RequestParam("rate", required = false) rate: Int?
     ): String {
         val pageable = getRequestPageable(requestPageable)
         val model = getRequestModel(requestModel)
-        val modelsPage = service.getPrintModelsPage(PrintModelSearchParams(wordName, category), pageable)
+        val modelsPage = service.getPrintModelsPage(PrintModelSearchParams(wordName, category, rate), pageable)
         val categories = categoriesInfoService.getAllCategories()
         model.addAttribute("modelTagList", categories)
         model.addAttribute("models", modelsPage)
         model.addAttribute("allPage", modelsPage.totalPages)
         model.addAttribute("wordName", wordName)
         model.addAttribute("wordCategory", category)
+        model.addAttribute("rate", rate)
         model.addAttribute("currentPage", pageable.pageNumber)
         model.addAttribute("pageNumbers", getPagesCount(pageable.pageNumber, modelsPage.totalPages))
         return "models"

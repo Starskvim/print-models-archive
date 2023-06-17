@@ -4,5 +4,6 @@ data class PrintModelSearchParams(
 
     val modelName: String?,
     val category: String?,
+    val rate: Int?
 
-    )
+)

@@ -56,6 +56,7 @@ object Constants {
 
     object Regexp {
         val BACKSLASH_REG = "\\\\".toRegex()
+        val SLASH_REG = "/".toRegex()
         val SQUARE_BRACKETS_REG = """.*\[.*\].*""".toRegex()
         val CLEAR_NAME_REG = "[+|_]".toRegex()
     }
@@ -66,5 +67,6 @@ object Constants {
         const val CATEGORIES = "categories"
         const val ZIPS = "zips"
         const val OTHS = "oths"
+        const val RATE = "rate"
     }
 }
