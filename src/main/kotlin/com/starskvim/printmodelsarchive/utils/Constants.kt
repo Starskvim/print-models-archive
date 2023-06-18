@@ -36,9 +36,9 @@ object Constants {
     }
 
     object ModelCategory {
-        const val FIGURE = "[Figure]"
-        const val PACK = "[Pack]"
-        const val OTHER = "[Other]"
+        const val FIGURE = "Figure"
+        const val PACK = "Pack"
+        const val OTHER = "Other"
     }
 
     object Triggers {
