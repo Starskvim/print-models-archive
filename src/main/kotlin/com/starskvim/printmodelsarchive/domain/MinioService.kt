@@ -16,7 +16,7 @@ class MinioService(
     @LoggTime
     suspend fun saveImageWithCompressing(file: File, storageName: String) {
         try {
-            val baos = imageService.getCompressedImgFromDisk(file.path, 0.2f) // TODO config
+            val baos = imageService.getCompressedImgFromDisk(file.path, 0.8f) // TODO config
             val bytes = baos.toByteArray()
             minioDataService.savePrintModelImage(storageName, bytes.size.toLong(), bytes.inputStream())
         } catch (ex: Exception) {
