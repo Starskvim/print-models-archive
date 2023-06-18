@@ -11,9 +11,9 @@ services:
     ports:
       - 8081:8081
     volumes:
-      - "/run/media/maikl/hdd8-1/Archive/Figure:/figure"
-      - "/run/media/maikl/hdd8-1/Archive/Pack:/pack"
-      - "/run/media/maikl/hdd8-1/Archive/Other:/other"
+      - "/run/media/maikl/hdd8-1/Archive/Figure:/Pigure"
+      - "/run/media/maikl/hdd8-1/Archive/Pack:/Pack"
+      - "/run/media/maikl/hdd8-1/Archive/Other:/Other"
 
   mongo:
     image: mongo

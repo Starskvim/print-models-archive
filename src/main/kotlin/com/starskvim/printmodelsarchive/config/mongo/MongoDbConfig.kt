@@ -5,12 +5,15 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.starskvim.printmodelsarchive.config.mongo.converter.LocalDateReadConverter
 import com.starskvim.printmodelsarchive.config.mongo.converter.LocalDateWriteConverter
 import org.bson.Document
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.convert.converter.Converter
 import org.springframework.data.convert.ReadingConverter
 import org.springframework.data.convert.WritingConverter
+import org.springframework.data.mongodb.core.convert.MappingMongoConverter
 import org.springframework.data.mongodb.core.convert.MongoCustomConversions
+
 
 @Configuration
 class MongoDbConfig(

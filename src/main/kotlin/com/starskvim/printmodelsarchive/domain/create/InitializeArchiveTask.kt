@@ -30,6 +30,7 @@ import org.apache.commons.io.FilenameUtils.getExtension
 import java.io.File
 import java.time.LocalDate.now
 import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.CopyOnWriteArraySet
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicInteger
@@ -53,7 +54,7 @@ class InitializeArchiveTask(
     override suspend fun execute() {
         filesCount = files.size
         val dispatcher = Executors
-            .newFixedThreadPool(6)
+            .newFixedThreadPool(8) // TODO CONFIG
             .asCoroutineDispatcher()
         coroutineScope {
             files.map { file ->
@@ -101,8 +102,8 @@ class InitializeArchiveTask(
             myRate,
             nsfwFlag,
             getAllPrintModelCategories(file.path),
-            mutableListOf(),
-            mutableListOf(),
+            CopyOnWriteArrayList(),
+            CopyOnWriteArrayList(),
             now(),
             null
         )

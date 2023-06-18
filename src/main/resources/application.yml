@@ -10,15 +10,6 @@ spring:
   thymeleaf:
     prefix: file:src/main/resources/templates/
 
-logging:
-  level:
-    org:
-      springframework:
-        data:
-          mongodb:
-            core:
-              ReactiveMongoTemplate: DEBUG
-
 minio:
   endpoint: http:/minio:9099
   external: http://192.168.0.114:9099
@@ -26,6 +17,6 @@ minio:
   accessKey: minioadmin
 
 scan:
-  address1: /figure
-  address2: /pack
-  address3: /other
+  address1: /Pigure
+  address2: /Pack
+  address3: /Other
