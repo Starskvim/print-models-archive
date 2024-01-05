@@ -13,15 +13,14 @@ class CategoriesInfoService(
     private val dataService: CategoriesInfoDataService
 ) {
 
-    suspend fun initializeCategoriesInfo(
-        models: MutableCollection<PrintModelData>
-    ): CategoriesInfoData {
+    // todo add main category in child
+    suspend fun initializeCategoriesInfo(models: MutableCollection<PrintModelData>): CategoriesInfoData {
         val modelsCategories = mutableListOf<String>()
         for (model in models) modelsCategories.addAll(model.categories!!)
         val uniqCategories = mutableSetOf<String>()
         uniqCategories.addAll(modelsCategories)
         val categoriesCount = mutableMapOf<String, Int>()
-        for (category in uniqCategories) categoriesCount[category] = Collections.frequency(uniqCategories, category)
+        for (category in uniqCategories) categoriesCount[category] = Collections.frequency(uniqCategories, category) // todo not work
         val categories = mutableListOf<String>()
         categories.addAll(uniqCategories)
         val categoriesInfo = CategoriesInfoData(

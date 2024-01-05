@@ -6,6 +6,7 @@ import org.springframework.data.annotation.Id
 import org.springframework.data.annotation.TypeAlias
 import org.springframework.data.mongodb.core.mapping.Document
 import java.time.LocalDate
+import java.util.concurrent.CopyOnWriteArrayList
 
 @TypeAlias(PRINT_MODEL_DATA)
 @Document(PRINT_MODELS)
@@ -21,9 +22,9 @@ data class PrintModelData(
     var rate: Int?,
     var nsfw: Boolean?,
     var categories: MutableList<String>?,
-    var zips: MutableList<PrintModelZipData>?,
-    var oths: MutableList<PrintModelOthData>?,
-    override var createdAt: LocalDate?,
+    var zips: CopyOnWriteArrayList<PrintModelZipData>?, //TODO DOMAIN
+    var oths: CopyOnWriteArrayList<PrintModelOthData>?, //TODO DOMAIN
+    override var createdAt: LocalDate?, // todo time + index
     override var modifiedAt: LocalDate?,
 ) : Auditable(createdAt, modifiedAt) {
 
