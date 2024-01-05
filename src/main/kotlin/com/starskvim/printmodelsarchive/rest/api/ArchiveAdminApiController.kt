@@ -7,21 +7,21 @@ import com.starskvim.printmodelsarchive.utils.Constants.Task.INITIALIZE_ARCHIVE_
 import com.starskvim.printmodelsarchive.utils.Constants.Url.CHECK_FOLDERS
 import com.starskvim.printmodelsarchive.utils.Constants.Url.CREATE_ARCHIVE
 import com.starskvim.printmodelsarchive.utils.Constants.Url.GET_PROGRESS_TASK
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/service")
 class ArchiveAdminApiController(
-
     private val createService: CreatePrintModelService,
     private val taskProgressService: TaskProgressService
-
 ) {
 
     @ResponseStatus(value = HttpStatus.OK)
     @PostMapping(CREATE_ARCHIVE)
-    suspend fun createArchive() = createService.initializeArchive()
+    suspend fun createArchive() = coroutineScope { launch { createService.initializeArchive() } }
 
     @ResponseStatus(value = HttpStatus.OK)
     @GetMapping(CHECK_FOLDERS)

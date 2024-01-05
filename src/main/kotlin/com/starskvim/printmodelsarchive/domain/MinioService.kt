@@ -8,10 +8,8 @@ import java.io.File
 
 @Service
 class MinioService(
-
     private val minioDataService: MinioDataService,
     private val imageService: ImageService
-
 ) {
     @LoggTime
     suspend fun saveImageWithCompressing(file: File, storageName: String) {

@@ -29,3 +29,8 @@ scan:
   address1: F:\[Patreon]\[Unsorted]
   address2: F:\[Patreon]\[test]
   address3: F:\[Patreon]\[test]
+
+springdoc:
+  show-actuator: true
+  api-docs.enabled: true
+  swagger-ui.enabled: true

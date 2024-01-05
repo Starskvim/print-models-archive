@@ -2,6 +2,7 @@ package com.starskvim.printmodelsarchive.persistance.model
 
 data class PrintModelOthData(
 
+    var parentFileName: String,
     var fileName: String?,
     var path: String?,
     var format: String?,

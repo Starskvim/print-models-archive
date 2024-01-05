@@ -11,18 +11,21 @@ import org.springframework.stereotype.Service
 
 @Service
 class PrintModelService(
-
     private val dataService: PrintModelDataService,
     private val mapper: PrintModelMapper
-
 ) {
 
-    suspend fun getPrintModelsPage(searchParams: PrintModelSearchParams, pageable: Pageable): Page<PrintModel> {
+    suspend fun getPrintModelsPage(
+        searchParams: PrintModelSearchParams,
+        pageable: Pageable
+    ): Page<PrintModel> {
         val dataPage = dataService.getPrintModels(searchParams, pageable)
         return PageImpl(mapper.dataToApi(dataPage.content), pageable, dataPage.totalElements)
     }
 
-    suspend fun getPrintModelById(modelId: String): PrintModel? {
+    suspend fun getPrintModelById(
+        modelId: String
+    ): PrintModel? {
         val model = dataService.getPrintModelById(modelId)
         return mapper.dataToApi(model)
     }

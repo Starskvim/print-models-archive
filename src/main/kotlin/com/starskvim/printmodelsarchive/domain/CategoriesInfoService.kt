@@ -10,12 +10,12 @@ import java.util.*
 
 @Service
 class CategoriesInfoService(
-
     private val dataService: CategoriesInfoDataService
-
 ) {
 
-    suspend fun initializeCategoriesInfo(models: MutableCollection<PrintModelData>): CategoriesInfoData {
+    suspend fun initializeCategoriesInfo(
+        models: MutableCollection<PrintModelData>
+    ): CategoriesInfoData {
         val modelsCategories = mutableListOf<String>()
         for (model in models) modelsCategories.addAll(model.categories!!)
         val uniqCategories = mutableSetOf<String>()

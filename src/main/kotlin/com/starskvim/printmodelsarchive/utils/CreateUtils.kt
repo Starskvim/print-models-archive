@@ -15,10 +15,10 @@ import java.io.File
 
 object CreateUtils {
 
-    fun getPrintModelCategory(file: File): String {
+    fun getPrintModelCategory(path: String): String {
         return when {
-            file.path.contains(FIGURE) -> FIGURE
-            file.path.contains(PACK) -> PACK
+            path.contains(FIGURE) -> FIGURE
+            path.contains(PACK) -> PACK
             else -> OTHER
         }
     }

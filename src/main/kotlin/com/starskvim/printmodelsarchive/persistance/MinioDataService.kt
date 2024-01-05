@@ -18,9 +18,7 @@ import java.nio.charset.StandardCharsets
 
 @Service
 class MinioDataService(
-
     private val client: MinioClient
-
 ) {
 
     @LoggTime

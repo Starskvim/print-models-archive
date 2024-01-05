@@ -29,3 +29,12 @@ scan:
   address1: /figure
   address2: /pack
   address3: /other
+
+archive-properties:
+  saveBatch: 100
+  coroutineBatch: 100
+
+springdoc:
+  show-actuator: false
+  api-docs.enabled: false
+  swagger-ui.enabled: false

@@ -8,9 +8,7 @@ import java.util.concurrent.ConcurrentHashMap
 
 @Service
 class TaskProgressService(
-
     private val progressHolder: ConcurrentHashMap<String, Progress> = ConcurrentHashMap<String, Progress>()
-
 ) {
 
     suspend fun getProgressTask(task: String): ProgressResponse {
