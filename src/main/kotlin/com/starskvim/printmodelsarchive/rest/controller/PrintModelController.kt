@@ -32,8 +32,8 @@ class PrintModelController(
         val pageable = getRequestPageable(requestPageable)
         val model = getRequestModel(requestModel)
         val modelsPage = service.getPrintModelsPage(PrintModelSearchParams(wordName, category, rate), pageable)
-        val categories = categoriesInfoService.getAllCategories() // TODO sort and down panel
-        model.addAttribute("modelTagList", categories)
+        val categories = categoriesInfoService.getAllCategories()
+        model.addAttribute("categories", categories)
         model.addAttribute("models", modelsPage)
         model.addAttribute("allPage", modelsPage.totalPages)
         model.addAttribute("wordName", wordName)

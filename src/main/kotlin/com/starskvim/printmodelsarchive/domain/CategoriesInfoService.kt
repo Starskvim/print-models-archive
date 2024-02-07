@@ -3,6 +3,7 @@ package com.starskvim.printmodelsarchive.domain
 import com.starskvim.printmodelsarchive.persistance.CategoriesInfoDataService
 import com.starskvim.printmodelsarchive.persistance.model.CategoriesInfoData
 import com.starskvim.printmodelsarchive.persistance.model.PrintModelData
+import com.starskvim.printmodelsarchive.rest.model.Category
 import com.starskvim.printmodelsarchive.utils.Constants.Document.CATEGORIES_INFO
 import org.springframework.stereotype.Service
 import java.time.LocalDate.now
@@ -33,5 +34,5 @@ class CategoriesInfoService(
         return dataService.saveCategoriesInfo(categoriesInfo)
     }
 
-    suspend fun getAllCategories(): List<String> = dataService.getAllCategories()
+    suspend fun getAllCategories(): List<Category> = dataService.getAllCategories()
 }

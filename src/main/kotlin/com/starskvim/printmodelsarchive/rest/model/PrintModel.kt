@@ -4,6 +4,9 @@ import java.time.LocalDate
 
 data class PrintModel(
 
+    override var id: String?,
+    override var createdAt: LocalDate?,
+    override var modifiedAt: LocalDate?,
     var preview: String?,
     var modelName: String?,
     var folderName: String?,
@@ -14,7 +17,5 @@ data class PrintModel(
     var categories: List<String>?,
     var zips: List<PrintModelZip>?,
     var oths: List<PrintModelOth>?,
-    override var id: String?,
-    override var createdAt: LocalDate?,
-    override var modifiedAt: LocalDate?,
-) : Auditable(id, createdAt, modifiedAt)
+
+    ) : Auditable(id, createdAt, modifiedAt)

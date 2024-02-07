@@ -30,6 +30,7 @@ import org.apache.commons.io.FilenameUtils.getExtension
 import org.springframework.stereotype.Service
 import java.io.File
 import java.time.LocalDate
+import java.util.concurrent.CopyOnWriteArrayList
 
 @Service
 class CreatePrintModelService(
@@ -124,8 +125,8 @@ class CreatePrintModelService(
             myRate,
             nsfwFlag,
             getAllPrintModelCategories(file.path),
-            mutableListOf(),
-            mutableListOf(),
+            CopyOnWriteArrayList<PrintModelZipData>(),
+            CopyOnWriteArrayList<PrintModelOthData>(),
             LocalDate.now(),
             null
         )

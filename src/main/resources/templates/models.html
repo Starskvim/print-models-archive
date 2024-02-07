@@ -56,9 +56,10 @@
                                text="[Titan-Forge Miniatures]"></a>
                         </div>
 
-                        <div th:each="tagName : ${modelTagList}" class="carousel-item">
-                            <a th:href="@{'/models?wordCategory=' + ${tagName}}" target=»_blank»
-                               th:text="${tagName.toString()}"></a>
+                        <div th:each="category : ${categories}" class="carousel-item">
+                            <a th:href="@{'/models?wordCategory=' + ${category.name}}" target=»_blank»
+                               th:text="${category.name + ' - ' + category.count}">
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -68,46 +69,38 @@
 </div>
 
 <div class="container">
-    <form th:action="@{/models}"
-          method="get" class="form-horizontal">
+    <form th:action="@{/models}" method="get" class="form-horizontal">
         <table class="table table-hover">
             <tr>
                 <th>
                     <div style="margin-bottom: 0px; vertical-align: middle" class="input-group">
                         <span class="input-group-addon"><i class="glyphicon glyphicon-watcher"></i></span>
-                        <select class="form-control" th:name="wordCategory" id="FormControlSelect">
-
+                        <select class="form-control" th:name="wordCategory" id="FormControlSelectUp">
                             <option type="text" th:value="${wordCategory != null} ? ${wordCategory}"
                                     th:text="${wordCategory != null} ? ${wordCategory}">Category
                             </option>
                             <option type="text" value="">All</option>
-                            <div th:each="tagName : ${modelTagList}" class="glyphicon glyphicon-watcher">
+                            <div th:each="category : ${categories}" class="glyphicon glyphicon-watcher">
                                 <option type="text"
-                                        th:value="${tagName.toString()}"
-                                        th:text="${tagName.toString()}"
+                                        th:value="${category.name}"
+                                        th:text="${category.name + ' - ' + category.count}"
                                 ></option>
                             </div>
-
                         </select>
-
-                        <input type="text" th:value="${rate != null} ? ${rate}" th:name="rate"
-                               placeholder="by Rate (*)" class="form-control"/>
-
+                        <input type="text" th:value="${rate != null} ? ${rate}" th:name="rate" placeholder="by Rate (*)"
+                               class="form-control"/>
                         <input type="text" th:value="${wordName != null} ? ${wordName}" th:name="wordName"
                                placeholder="by Name (*)" class="form-control"/>
-
                         <input type="hidden" name="size" th:value="40">
                         <input type="hidden" name="sort" value="id,desc">
-
                         <button type="submit" class="btn btn-primary">Search</button>
                     </div>
                 </th>
-                <th th:with="var2 = ${allPage}">
-                    <span style="vertical-align: middle" th:text="${'Всего страниц ' + var2}"></span>
+                <th th:with="allPageCount = ${allPage}">
+                    <span style="vertical-align: middle" th:text="${'Всего страниц ' + allPageCount}"></span>
                 </th>
             </tr>
         </table>
-
         <table class="table table-hover">
             <tr>
                 <th th:each="pageNumber : ${pageNumbers}" th:with="var = ${pageNumber + 1}">
@@ -156,8 +149,39 @@
 
 
 <div class="container">
-    <form th:action="@{/models}"
-          method="get" class="form-horizontal">
+    <form th:action="@{/models}" method="get" class="form-horizontal">
+
+        <table class="table table-hover">
+            <tr>
+                <th>
+                    <div style="margin-bottom: 0px; vertical-align: middle" class="input-group">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-watcher"></i></span>
+                        <select class="form-control" th:name="wordCategory" id="FormControlSelectDown">
+                            <option type="text" th:value="${wordCategory != null} ? ${wordCategory}"
+                                    th:text="${wordCategory != null} ? ${wordCategory}">Category
+                            </option>
+                            <option type="text" value="">All</option>
+                            <div th:each="category : ${categories}" class="glyphicon glyphicon-watcher">
+                                <option type="text"
+                                        th:value="${category.name}"
+                                        th:text="${category.name + ' - ' + category.count}"
+                                ></option>
+                            </div>
+                        </select>
+                        <input type="text" th:value="${rate != null} ? ${rate}" th:name="rate" placeholder="by Rate (*)"
+                               class="form-control"/>
+                        <input type="text" th:value="${wordName != null} ? ${wordName}" th:name="wordName"
+                               placeholder="by Name (*)" class="form-control"/>
+                        <input type="hidden" name="size" th:value="40">
+                        <input type="hidden" name="sort" value="id,desc">
+                        <button type="submit" class="btn btn-primary">Search</button>
+                    </div>
+                </th>
+                <th th:with="allPageCount = ${allPage}">
+                    <span style="vertical-align: middle" th:text="${'Всего страниц ' + allPageCount}"></span>
+                </th>
+            </tr>
+        </table>
 
         <table class="table table-hover">
             <tr>

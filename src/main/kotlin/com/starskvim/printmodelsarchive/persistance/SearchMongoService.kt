@@ -1,5 +1,7 @@
 package com.starskvim.printmodelsarchive.persistance
 
+import org.springframework.data.domain.Sort.Direction
+import org.springframework.data.domain.Sort.by
 import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
 
@@ -37,4 +39,10 @@ interface SearchMongoService {
         }
         return query
     }
+
+    fun addSort(
+        query: Query,
+        direction: Direction,
+        field: String
+    ) = query.apply { with(by(direction, field)) }
 }

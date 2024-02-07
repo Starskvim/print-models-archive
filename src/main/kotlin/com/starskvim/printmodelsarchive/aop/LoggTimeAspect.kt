@@ -4,21 +4,24 @@ import mu.KLogging
 import org.aspectj.lang.ProceedingJoinPoint
 import org.aspectj.lang.annotation.Around
 import org.aspectj.lang.annotation.Aspect
-import org.aspectj.lang.reflect.MethodSignature
 import org.springframework.stereotype.Component
-import kotlin.reflect.cast
 
 @Aspect
 @Component
 class LoggTimeAspect {
 
-    @Around("@annotation(LoggTime)")
-    fun around(point: ProceedingJoinPoint): Any {
+    @Around("execution(public * *(..)) && @annotation(annotation)")
+    fun around(
+        point: ProceedingJoinPoint,
+        annotation: LoggTime
+    ): Any {
         val start = System.currentTimeMillis()
-        val result = point.proceed()
-        val end = System.currentTimeMillis()
-        logger.info { "Method execute ${point.signature.name} TIME: ${end - start}" }
-        return result
+        try {
+            return point.proceed()
+        } finally {
+            val end = System.currentTimeMillis()
+            logger.info { "Method execute ${point.signature.name} TIME: ${end - start}" }
+        }
     }
 
     companion object : KLogging()
