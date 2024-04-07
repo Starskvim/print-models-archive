@@ -4,7 +4,7 @@ import com.starskvim.printmodelsarchive.domain.model.OpExceptionResult
 import mu.KLogger
 
 
-object WrapUtil {
+object WrapUtils {
 
     inline fun <S, R> wrapException(
         source: S?,
