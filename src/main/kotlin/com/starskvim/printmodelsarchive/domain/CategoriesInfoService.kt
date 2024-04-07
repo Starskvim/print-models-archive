@@ -5,9 +5,12 @@ import com.starskvim.printmodelsarchive.persistance.model.CategoriesInfoData
 import com.starskvim.printmodelsarchive.persistance.model.PrintModelData
 import com.starskvim.printmodelsarchive.rest.model.Category
 import com.starskvim.printmodelsarchive.utils.Constants.Document.CATEGORIES_INFO
+import org.jgrapht.graph.DefaultDirectedGraph
+import org.jgrapht.graph.DefaultEdge
 import org.springframework.stereotype.Service
 import java.time.LocalDate.now
 import java.util.*
+
 
 @Service
 class CategoriesInfoService(
@@ -28,11 +31,25 @@ class CategoriesInfoService(
             CATEGORIES_INFO,
             categories,
             categoriesCount,
+            null,
             now(),
             null
         )
         return dataService.saveCategoriesInfo(categoriesInfo)
     }
+
+    // todo test
+    private suspend fun createCatalog(models: MutableCollection<PrintModelData>) {
+        val directedGraph = DefaultDirectedGraph<Any, DefaultEdge>(
+            DefaultEdge::class.java
+        )
+        directedGraph.addVertex("v1")
+        directedGraph.addVertex("v2")
+        directedGraph.addVertex("v3")
+        directedGraph.addEdge("v1", "v2")
+    }
+
+    suspend fun deleteAll() = dataService.deleteAll()
 
     suspend fun getAllCategories(): List<Category> = dataService.getAllCategories()
 }

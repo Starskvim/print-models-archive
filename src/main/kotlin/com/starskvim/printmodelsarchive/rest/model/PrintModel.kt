@@ -16,6 +16,6 @@ data class PrintModel(
     var nsfw: Boolean?,
     var categories: List<String>?,
     var zips: List<PrintModelZip>?,
-    var oths: List<PrintModelOth>?,
+    var oths: List<PrintModelOth>?
 
-    ) : Auditable(id, createdAt, modifiedAt)
+) : Auditable(id, createdAt, modifiedAt)

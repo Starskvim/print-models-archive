@@ -32,6 +32,7 @@ import java.io.File
 import java.time.LocalDate
 import java.util.concurrent.CopyOnWriteArrayList
 
+// todo separate logic
 @Service
 class CreatePrintModelService(
     private val scanService: FolderScanService,
@@ -53,6 +54,11 @@ class CreatePrintModelService(
         val files = scanService.getFilesFromDisk()
         val context = InitializeArchiveTaskContext(files)
         process(context)
+    }
+
+    suspend fun clearArchive() {
+        categoriesInfoService.deleteAll()
+        dataService.deleteAll()
     }
 
     suspend fun process(
@@ -116,14 +122,14 @@ class CreatePrintModelService(
         val myRate = getMyRateForModel(folderName)
         val nsfwFlag = isHaveTrigger(file.absolutePath, NSFW_TRIGGERS)
         val printModel = PrintModelData(
-            null,
-            null,
-            modelName,
-            folderName,
-            file.parent,
-            modelCategory,
-            myRate,
-            nsfwFlag,
+            id = null,
+            preview = null,
+            modelName = modelName,
+            folderName = folderName,
+            path = file.parent,
+            category = modelCategory,
+            rate = myRate,
+            nsfw = nsfwFlag,
             getAllPrintModelCategories(file.path),
             CopyOnWriteArrayList<PrintModelZipData>(),
             CopyOnWriteArrayList<PrintModelOthData>(),

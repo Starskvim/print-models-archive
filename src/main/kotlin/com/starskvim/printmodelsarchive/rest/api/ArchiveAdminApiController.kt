@@ -5,6 +5,7 @@ import com.starskvim.printmodelsarchive.domain.create.CreatePrintModelService
 import com.starskvim.printmodelsarchive.rest.model.response.ProgressResponse
 import com.starskvim.printmodelsarchive.utils.Constants.Task.INITIALIZE_ARCHIVE_TASK
 import com.starskvim.printmodelsarchive.utils.Constants.Url.CHECK_FOLDERS
+import com.starskvim.printmodelsarchive.utils.Constants.Url.CLEAR_ARCHIVE
 import com.starskvim.printmodelsarchive.utils.Constants.Url.CREATE_ARCHIVE
 import com.starskvim.printmodelsarchive.utils.Constants.Url.GET_PROGRESS_TASK
 import kotlinx.coroutines.coroutineScope
@@ -13,7 +14,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/api/service")
+@RequestMapping("/api/admin")
 class ArchiveAdminApiController(
     private val createService: CreatePrintModelService,
     private val taskProgressService: TaskProgressService
@@ -30,4 +31,8 @@ class ArchiveAdminApiController(
     @ResponseStatus(value = HttpStatus.OK)
     @GetMapping(GET_PROGRESS_TASK)
     suspend fun getProgressTask(): ProgressResponse = taskProgressService.getProgressTask(INITIALIZE_ARCHIVE_TASK)
+
+    @ResponseStatus(value = HttpStatus.OK)
+    @DeleteMapping(CLEAR_ARCHIVE)
+    suspend fun clearArchive() = createService.clearArchive()
 }
