@@ -1,8 +1,8 @@
 package com.starskvim.printmodelsarchive.domain
 
 import com.starskvim.printmodelsarchive.persistance.CategoriesInfoDataService
-import com.starskvim.printmodelsarchive.persistance.model.CategoriesInfoData
-import com.starskvim.printmodelsarchive.persistance.model.PrintModelData
+import com.starskvim.printmodelsarchive.persistance.model.catalog.CategoriesInfoData
+import com.starskvim.printmodelsarchive.persistance.model.print_model.PrintModelData
 import com.starskvim.printmodelsarchive.rest.model.Category
 import com.starskvim.printmodelsarchive.utils.Constants.Document.CATEGORIES_INFO
 import org.jgrapht.graph.DefaultDirectedGraph

@@ -1,7 +1,7 @@
 package com.starskvim.printmodelsarchive.mapping
 
 import com.starskvim.printmodelsarchive.domain.image.ImageService
-import com.starskvim.printmodelsarchive.persistance.model.PrintModelData
+import com.starskvim.printmodelsarchive.persistance.model.print_model.PrintModelData
 import com.starskvim.printmodelsarchive.rest.model.PrintModel
 import kotlinx.coroutines.runBlocking
 import org.mapstruct.AfterMapping

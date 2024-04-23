@@ -2,7 +2,7 @@ package com.starskvim.printmodelsarchive.persistance
 
 import com.mongodb.client.result.DeleteResult
 import com.starskvim.printmodelsarchive.aop.LoggTime
-import com.starskvim.printmodelsarchive.persistance.model.PrintModelData
+import com.starskvim.printmodelsarchive.persistance.model.print_model.PrintModelData
 import com.starskvim.printmodelsarchive.rest.model.request.PrintModelSearchParams
 import com.starskvim.printmodelsarchive.utils.Constants.Document.PRINT_MODELS
 import kotlinx.coroutines.reactive.awaitFirstOrNull

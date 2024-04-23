@@ -1,6 +1,7 @@
-package com.starskvim.printmodelsarchive.persistance.model
+package com.starskvim.printmodelsarchive.persistance.model.catalog
 
 import com.starskvim.printmodelsarchive.domain.model.Catalog
+import com.starskvim.printmodelsarchive.persistance.model.Auditable
 import com.starskvim.printmodelsarchive.utils.Constants.Document.CATEGORIES_INFO
 import com.starskvim.printmodelsarchive.utils.Constants.TypeAlias.CATEGORIES_INFO_DATA
 import org.springframework.data.annotation.Id

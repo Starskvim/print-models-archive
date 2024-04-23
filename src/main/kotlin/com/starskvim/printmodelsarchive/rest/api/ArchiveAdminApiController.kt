@@ -1,7 +1,7 @@
 package com.starskvim.printmodelsarchive.rest.api
 
-import com.starskvim.printmodelsarchive.domain.TaskProgressService
 import com.starskvim.printmodelsarchive.domain.create.CreatePrintModelService
+import com.starskvim.printmodelsarchive.domain.progress.TaskProgressService
 import com.starskvim.printmodelsarchive.rest.model.response.ProgressResponse
 import com.starskvim.printmodelsarchive.utils.Constants.Task.INITIALIZE_ARCHIVE_TASK
 import com.starskvim.printmodelsarchive.utils.Constants.Url.CHECK_FOLDERS

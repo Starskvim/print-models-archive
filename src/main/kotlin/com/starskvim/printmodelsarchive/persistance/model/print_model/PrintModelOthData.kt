@@ -1,4 +1,4 @@
-package com.starskvim.printmodelsarchive.persistance.model
+package com.starskvim.printmodelsarchive.persistance.model.print_model
 
 data class PrintModelOthData(
 
@@ -8,6 +8,7 @@ data class PrintModelOthData(
     var format: String?,
     var size: Double?,
     var storageName: String?
+
 ) {
 
     fun isImage(): Boolean = storageName != null

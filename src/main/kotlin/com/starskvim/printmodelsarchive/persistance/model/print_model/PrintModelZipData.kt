@@ -1,4 +1,4 @@
-package com.starskvim.printmodelsarchive.persistance.model
+package com.starskvim.printmodelsarchive.persistance.model.print_model
 
 data class PrintModelZipData (
 

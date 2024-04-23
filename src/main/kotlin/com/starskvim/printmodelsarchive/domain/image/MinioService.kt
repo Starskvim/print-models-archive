@@ -1,7 +1,6 @@
-package com.starskvim.printmodelsarchive.domain
+package com.starskvim.printmodelsarchive.domain.image
 
 import com.starskvim.printmodelsarchive.aop.LoggTime
-import com.starskvim.printmodelsarchive.domain.image.ImageService
 import com.starskvim.printmodelsarchive.persistance.MinioDataService
 import org.springframework.stereotype.Service
 import java.io.File

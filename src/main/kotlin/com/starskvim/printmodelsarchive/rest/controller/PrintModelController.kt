@@ -31,7 +31,10 @@ class PrintModelController(
     ): String {
         val pageable = getRequestPageable(requestPageable)
         val model = getRequestModel(requestModel)
-        val modelsPage = service.getPrintModelsPage(PrintModelSearchParams(wordName, category, rate), pageable)
+        val modelsPage = service.getPrintModelsPage(
+            PrintModelSearchParams(wordName, category, rate),
+            pageable
+        )
         val categories = categoriesInfoService.getAllCategories()
         model.addAttribute("categories", categories)
         model.addAttribute("models", modelsPage)

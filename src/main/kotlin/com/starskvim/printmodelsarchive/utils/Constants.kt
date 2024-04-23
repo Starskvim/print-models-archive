@@ -25,11 +25,18 @@ object Constants {
     object Document {
         const val CATEGORIES_INFO = "categories_info"
         const val PRINT_MODELS = "print_models"
+        const val USER_FAVORITES = "user_favorites"
+    }
+
+    object Data {
+        const val ADMIN_FAVORITES_ID = "admin_favorites_id"
     }
 
     object TypeAlias {
         const val PRINT_MODEL_DATA = "PrintModelData"
         const val CATEGORIES_INFO_DATA = "CategoriesInfoData"
+        const val USER_FAVORITES_DATA = "UserFavoritesData"
+        const val PRINT_MODEL_FAVORITES = "PrintModelFavorites"
     }
 
     object Bucket {

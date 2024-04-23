@@ -1,8 +1,8 @@
 package com.starskvim.printmodelsarchive.domain.model
 
-import com.starskvim.printmodelsarchive.persistance.model.PrintModelData
-import com.starskvim.printmodelsarchive.persistance.model.PrintModelOthData
-import com.starskvim.printmodelsarchive.persistance.model.PrintModelZipData
+import com.starskvim.printmodelsarchive.persistance.model.print_model.PrintModelData
+import com.starskvim.printmodelsarchive.persistance.model.print_model.PrintModelOthData
+import com.starskvim.printmodelsarchive.persistance.model.print_model.PrintModelZipData
 import java.io.File
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CopyOnWriteArrayList

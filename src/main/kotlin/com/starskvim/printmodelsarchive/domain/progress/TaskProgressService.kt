@@ -1,4 +1,4 @@
-package com.starskvim.printmodelsarchive.domain
+package com.starskvim.printmodelsarchive.domain.progress
 
 import com.starskvim.printmodelsarchive.domain.model.Progress
 import com.starskvim.printmodelsarchive.domain.model.Progress.Companion.toView

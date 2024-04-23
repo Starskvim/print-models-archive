@@ -1,7 +1,7 @@
 package com.starskvim.printmodelsarchive.persistance
 
 import com.mongodb.client.result.DeleteResult
-import com.starskvim.printmodelsarchive.persistance.model.CategoriesInfoData
+import com.starskvim.printmodelsarchive.persistance.model.catalog.CategoriesInfoData
 import com.starskvim.printmodelsarchive.rest.model.Category
 import com.starskvim.printmodelsarchive.utils.Constants.Document.CATEGORIES_INFO
 import kotlinx.coroutines.reactive.awaitFirstOrNull
