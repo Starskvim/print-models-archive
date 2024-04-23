@@ -130,11 +130,11 @@ class CreatePrintModelService(
             category = modelCategory,
             rate = myRate,
             nsfw = nsfwFlag,
-            getAllPrintModelCategories(file.path),
-            CopyOnWriteArrayList<PrintModelZipData>(),
-            CopyOnWriteArrayList<PrintModelOthData>(),
-            LocalDate.now(),
-            null
+            categories = getAllPrintModelCategories(file.path),
+            zips = CopyOnWriteArrayList<PrintModelZipData>(),
+            oths = CopyOnWriteArrayList<PrintModelOthData>(),
+            createdAt = LocalDate.now(),
+            modifiedAt = null
         )
         context.modelNames.add(folderName)
         if (context.models.contains(folderName)) return printModel // ?
