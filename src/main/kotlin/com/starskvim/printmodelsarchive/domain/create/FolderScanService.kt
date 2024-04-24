@@ -9,15 +9,13 @@ import java.io.File
 
 @Service
 class FolderScanService(
-
     @Value("\${scan.address1}")
     private val addressFigure: String,
     @Value("\${scan.address2}")
     private val addressOther: String,
     @Value("\${scan.address3}")
-    private val addressPack: String,
-
-    ) {
+    private val addressPack: String
+) {
 
     @LoggTime
     suspend fun getFilesFromDisk(): MutableCollection<File> {

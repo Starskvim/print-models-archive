@@ -32,7 +32,7 @@ class PrintModelApiController(
     @GetMapping("/model")
     suspend fun getModel(
         @RequestParam("modelId", required = false) modelId: String
-    ): PrintModel? {
+    ): PrintModel {
         return service.getPrintModelById(modelId)
     }
 }

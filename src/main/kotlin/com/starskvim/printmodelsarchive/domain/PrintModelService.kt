@@ -4,10 +4,12 @@ import com.starskvim.printmodelsarchive.mapping.PrintModelMapper
 import com.starskvim.printmodelsarchive.persistance.PrintModelDataService
 import com.starskvim.printmodelsarchive.rest.model.PrintModel
 import com.starskvim.printmodelsarchive.rest.model.request.PrintModelSearchParams
+import com.starskvim.printmodelsarchive.utils.Exceptions.MODEL_NOT_FOUND
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
+import ru.starskvim.inrastructure.webflux.advice.exception.NotFoundException
 
 @Service
 class PrintModelService(
@@ -25,8 +27,9 @@ class PrintModelService(
 
     suspend fun getPrintModelById(
         modelId: String
-    ): PrintModel? {
+    ): PrintModel {
         val model = dataService.getPrintModelById(modelId)
         return mapper.dataToApi(model)
+            ?: throw NotFoundException(MODEL_NOT_FOUND)
     }
 }
