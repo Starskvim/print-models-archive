@@ -26,7 +26,9 @@ data class PrintModelData(
     var zips: CopyOnWriteArrayList<PrintModelZipData>?, //TODO DOMAIN
     var oths: CopyOnWriteArrayList<PrintModelOthData>?, //TODO DOMAIN
     override var createdAt: LocalDate?, // todo time + index
-    override var modifiedAt: LocalDate?,
+    override var modifiedAt: LocalDate?
+//  TODO addedAt
+
 ) : Auditable(createdAt, modifiedAt) {
 
     fun hasPreview(): Boolean = preview != null

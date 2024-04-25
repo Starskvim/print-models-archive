@@ -20,6 +20,8 @@ object Constants {
         const val UNDERLINE = "_"
         const val HYPHEN = "-"
         const val EMPTY = ""
+        const val ZERO_INT = 0
+        const val ONE_INT = 1
     }
 
     object Document {
@@ -37,6 +39,7 @@ object Constants {
         const val CATEGORIES_INFO_DATA = "CategoriesInfoData"
         const val USER_FAVORITES_DATA = "UserFavoritesData"
         const val PRINT_MODEL_FAVORITES = "PrintModelFavorites"
+        const val CATALOG = "Catalog"
     }
 
     object Bucket {

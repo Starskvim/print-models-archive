@@ -24,6 +24,7 @@ class PrintModelFavoritesApiController(
         return modelService.getPrintModelFavoritesPage(pageable)
     }
 
+    // TODO id not appropriate
     @ResponseStatus(value = HttpStatus.ACCEPTED)
     @PostMapping("/{name}")
     suspend fun addModel(

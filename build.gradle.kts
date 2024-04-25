@@ -43,7 +43,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-thymeleaf:3.2.0")
 	implementation("org.springdoc:springdoc-openapi-starter-webflux-ui:2.3.0")
 	//
-	implementation("org.jgrapht:jgrapht-core:1.5.2")
+//	implementation("org.jgrapht:jgrapht-core:1.5.2")
 	implementation("commons-io:commons-io:2.11.0")
 	implementation("org.apache.commons:commons-collections4:4.4")
 	implementation("commons-codec:commons-codec:1.15")
