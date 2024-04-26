@@ -17,6 +17,7 @@ class UserFavoritesDataService(
         .awaitSingle()
 
     suspend fun getAdminFavorites() = findById(ADMIN_FAVORITES_ID)
+
     suspend fun findById(id: String): UserFavorites? {
         return template.findById(ObjectId(id), UserFavorites::class.java)
             .awaitFirstOrNull()

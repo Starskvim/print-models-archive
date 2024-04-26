@@ -28,7 +28,6 @@ class PrintModelApiController(
         return service.getPrintModelsPage(PrintModelSearchParams(wordName, category, rate), pageable)
     }
 
-    // todo add ControllerAdvice
     @GetMapping("/model")
     suspend fun getModel(
         @RequestParam("modelId", required = false) modelId: String

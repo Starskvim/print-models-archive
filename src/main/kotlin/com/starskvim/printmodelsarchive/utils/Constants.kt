@@ -57,7 +57,7 @@ object Constants {
             "zip", "7z", "7zip", "rar", "ZIP", "RAR", "7ZIP"
         )
         val IMAGE_FORMATS_TRIGGERS = setOf(
-            "jpg", "jpeg", "png", "gif", "JPG", "JPEG", "PNG", "GIF"
+            "jpg", "jpeg", "png", "gif", "webp", "JPG", "JPEG", "PNG", "GIF", "WEBP"
         )
         val NSFW_TRIGGERS = setOf(
             "nsfw", "NSFW", "Nsfw", "Nude", "NUDE", "nude", "18+", "Adult", "adult", "ADULT",

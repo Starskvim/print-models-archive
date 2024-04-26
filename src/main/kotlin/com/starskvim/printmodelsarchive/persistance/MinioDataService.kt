@@ -41,7 +41,7 @@ class MinioDataService(
 
     suspend fun savePrintModelImage(imageName: String, size: Long, image: InputStream) {
         try {
-            val res = client.putObject(
+            client.putObject(
                 PutObjectArgs.builder()
                     .bucket(PRINT_MODEL_IMAGE)
                     .`object`(imageName)

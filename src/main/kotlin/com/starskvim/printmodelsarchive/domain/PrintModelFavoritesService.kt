@@ -21,7 +21,11 @@ class PrintModelFavoritesService(
         pageable: Pageable
     ): Page<PrintModel> {
         val favorites = favoritesDataService.getAdminFavorites()
-        val modelNames = favorites?.getModelNames() ?: return Page.empty()
+        val modelNames = favorites
+            ?.models
+            ?.sortedByDescending { it.addedAt }
+            ?.map { it.modelName }
+            ?: return Page.empty()
         val dataPage = dataService.getPrintModels(
             PrintModelSearchParams(modelNames = modelNames),
             pageable

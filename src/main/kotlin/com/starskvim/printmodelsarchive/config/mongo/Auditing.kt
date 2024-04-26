@@ -4,7 +4,7 @@ import com.starskvim.printmodelsarchive.persistance.model.Auditable
 import org.springframework.data.mongodb.core.mapping.event.AbstractMongoEventListener
 import org.springframework.data.mongodb.core.mapping.event.BeforeConvertEvent
 import org.springframework.stereotype.Component
-import java.time.LocalDate.now
+import java.time.LocalDateTime.now
 
 @Component
 class Auditing : AbstractMongoEventListener<Any>() {

@@ -4,7 +4,8 @@ import com.starskvim.printmodelsarchive.aop.LoggTime
 import com.starskvim.printmodelsarchive.config.ArchiveConfiguration
 import com.starskvim.printmodelsarchive.domain.CategoriesInfoService
 import com.starskvim.printmodelsarchive.domain.image.MinioService
-import com.starskvim.printmodelsarchive.domain.model.InitializeArchiveTaskContext
+import com.starskvim.printmodelsarchive.domain.model.initialize.InitializeArchiveTaskContext
+import com.starskvim.printmodelsarchive.domain.model.initialize.InitializePrintModelData
 import com.starskvim.printmodelsarchive.domain.progress.TaskProgressService
 import com.starskvim.printmodelsarchive.persistance.PrintModelDataService
 import com.starskvim.printmodelsarchive.persistance.model.print_model.PrintModelData
@@ -21,6 +22,7 @@ import com.starskvim.printmodelsarchive.utils.CreateUtils.getPrintModelCategory
 import com.starskvim.printmodelsarchive.utils.CreateUtils.getSizeFileDouble
 import com.starskvim.printmodelsarchive.utils.CreateUtils.getStorageName
 import com.starskvim.printmodelsarchive.utils.CreateUtils.isHaveTrigger
+import com.starskvim.printmodelsarchive.utils.DateUtils.dateTimeFromLong
 import kotlinx.coroutines.ExecutorCoroutineDispatcher
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -29,8 +31,7 @@ import mu.KLogging
 import org.apache.commons.io.FilenameUtils.getExtension
 import org.springframework.stereotype.Service
 import java.io.File
-import java.time.LocalDate
-import java.util.concurrent.CopyOnWriteArrayList
+import java.time.LocalDateTime.now
 
 // todo separate logic
 @Service
@@ -73,12 +74,18 @@ class CreatePrintModelService(
                 }.awaitAll()
             }
         }
-        linkModelsAndFiles(context)
-        context.models.values.forEach { linkPreview(it) }
-        context.apply { files.clear() }
-        categoriesInfoService.initializeCategoriesInfo(context.models.values)
-        val modelsPages = context.models.values.chunked(config.saveBatch)
-        modelsPages.forEach { dataService.saveAll(it) }
+        associateModelContextAndFiles(context) // TODO parallel stage ?
+        context.prepareResultsModels()
+        context.models.forEach { linkPreview(it) }
+        context.apply {
+            files.clear()
+            contextByModelName.clear()
+        }
+        categoriesInfoService.initializeCategoriesInfo(context.models)
+        context.models.chunked(config.saveBatch)
+            .forEach {
+                dataService.saveAll(it)
+            }
     }
 
     private suspend fun createModelsAndFiles(
@@ -101,18 +108,18 @@ class CreatePrintModelService(
         )
     }
 
-    private suspend fun linkModelsAndFiles(
+    private suspend fun associateModelContextAndFiles(
         context: InitializeArchiveTaskContext
     ) {
-        context.otns.forEach {
-            context.models[it.parentFileName]?.oths?.add(it)
+        context.oths.forEach {
+            context.contextByModelName[it.parentFileName]?.oths?.add(it)
         }
         context.zips.forEach {
-            context.models[it.parentFileName]?.zips?.add(it)
+            context.contextByModelName[it.parentFileName]?.zips?.add(it)
         }
     }
 
-    private fun createModel(
+    private suspend fun createModel(
         file: File,
         folderName: String,
         context: InitializeArchiveTaskContext
@@ -121,6 +128,7 @@ class CreatePrintModelService(
         val modelCategory = getPrintModelCategory(file.path)
         val myRate = getMyRateForModel(folderName)
         val nsfwFlag = isHaveTrigger(file.absolutePath, NSFW_TRIGGERS)
+        val createdAt = now()
         val printModel = PrintModelData(
             id = null,
             preview = null,
@@ -131,14 +139,15 @@ class CreatePrintModelService(
             rate = myRate,
             nsfw = nsfwFlag,
             categories = getAllPrintModelCategories(file.path),
-            zips = CopyOnWriteArrayList<PrintModelZipData>(),
-            oths = CopyOnWriteArrayList<PrintModelOthData>(),
-            createdAt = LocalDate.now(),
-            modifiedAt = null
+            zips = mutableListOf(),
+            oths = mutableListOf(),
+            addedAt = dateTimeFromLong(file.lastModified()),
+            createdAt = createdAt,
+            modifiedAt = createdAt
         )
         context.modelNames.add(folderName)
-        if (context.models.contains(folderName)) return printModel // ?
-        context.models[folderName] = printModel
+        if (context.contextByModelName.contains(folderName)) return printModel // ?
+        context.contextByModelName[folderName] = InitializePrintModelData(printModel)
         return printModel
     }
 
@@ -188,7 +197,7 @@ class CreatePrintModelService(
             size = size,
             storageName = addImageInS3(file, format, parentFileName)
         )
-        context.apply { otns.add(oth) }
+        context.apply { oths.add(oth) }
         return oth
     }
 
@@ -206,7 +215,7 @@ class CreatePrintModelService(
     }
 
     private fun linkPreview(model: PrintModelData) {
-        for (oth in model.oths!!) {
+        for (oth in model.oths) {
             if (oth.isImage()) {
                 model.preview = oth.storageName
                 break

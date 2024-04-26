@@ -9,8 +9,7 @@ import com.starskvim.printmodelsarchive.utils.Constants.Document.CATEGORIES_INFO
 import com.starskvim.printmodelsarchive.utils.Constants.Service.ONE_INT
 import com.starskvim.printmodelsarchive.utils.Constants.Service.ZERO_INT
 import org.springframework.stereotype.Service
-import java.time.LocalDate.now
-import java.util.*
+import java.time.LocalDateTime.now
 import com.starskvim.printmodelsarchive.persistance.model.catalog.Category as CategoryData
 
 
@@ -19,20 +18,18 @@ class CategoriesInfoService(
     private val dataService: CategoriesInfoDataService
 ) {
 
-    // todo add main category in child
-    suspend fun initializeCategoriesInfo(models: MutableCollection<PrintModelData>): CategoriesInfoData {
+    suspend fun initializeCategoriesInfo(
+        models: Collection<PrintModelData>
+    ): CategoriesInfoData {
         val modelsCategories = mutableListOf<String>()
         for (model in models) modelsCategories.addAll(model.categories!!)
         val uniqCategories = mutableSetOf<String>()
         uniqCategories.addAll(modelsCategories)
-        val categoriesCount = mutableMapOf<String, Int>()
-        for (category in uniqCategories) categoriesCount[category] = Collections.frequency(uniqCategories, category) // todo not work
         val categories = mutableListOf<String>()
         categories.addAll(uniqCategories)
         val categoriesInfo = CategoriesInfoData(
             CATEGORIES_INFO,
             categories,
-            categoriesCount,
             createCatalog(models),
             now(),
             now()
@@ -45,7 +42,7 @@ class CategoriesInfoService(
     suspend fun getAllCategories(): List<Category> = dataService.getAllCategories()
 
     private suspend fun createCatalog(
-        models: MutableCollection<PrintModelData>
+        models: Collection<PrintModelData>
     ): Catalog {
         val categories = mutableMapOf<String, CategoryData>()
         models.forEach {

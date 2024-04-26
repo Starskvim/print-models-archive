@@ -32,4 +32,12 @@ class PrintModelFavoritesApiController(
     ) {
         userService.add(name)
     }
+
+    @ResponseStatus(value = HttpStatus.ACCEPTED)
+    @PostMapping("/{name}")
+    suspend fun removeModel(
+        @PathVariable name: String
+    ) {
+        userService.remove(name)
+    }
 }

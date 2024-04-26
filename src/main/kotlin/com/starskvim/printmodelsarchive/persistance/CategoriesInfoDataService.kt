@@ -22,8 +22,9 @@ class CategoriesInfoDataService(
     suspend fun getAllCategories(): List<Category> {
         return template.findById(CATEGORIES_INFO, CategoriesInfoData::class.java)
             .awaitFirstOrNull()
-            ?.countInfo
-            ?.map { Category(it.key, it.value) }
+            ?.categoriesCatalog
+            ?.catalog
+            ?.map { Category(it.name, it.size) }
             ?.sortedBy { it.name }
             ?: return emptyList()
 

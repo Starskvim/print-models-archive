@@ -7,7 +7,7 @@ import org.springframework.data.annotation.Id
 import org.springframework.data.annotation.TypeAlias
 import org.springframework.data.mongodb.core.mapping.Document
 import org.springframework.data.mongodb.core.mapping.Field
-import java.time.LocalDate
+import java.time.LocalDateTime
 
 @TypeAlias(CATEGORIES_INFO_DATA)
 @Document(CATEGORIES_INFO)
@@ -17,9 +17,8 @@ data class CategoriesInfoData(
     @Field
     var id: String?,
     var categories: MutableList<String>?,
-    var countInfo: Map<String, Int>?,
-    var catalog: Catalog,
-    override var createdAt: LocalDate?,
-    override var modifiedAt: LocalDate?
+    var categoriesCatalog: Catalog,
+    override var createdAt: LocalDateTime,
+    override var modifiedAt: LocalDateTime
 
 ) : Auditable(createdAt, modifiedAt)

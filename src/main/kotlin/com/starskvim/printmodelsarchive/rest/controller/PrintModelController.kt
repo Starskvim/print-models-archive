@@ -20,7 +20,8 @@ class PrintModelController(
     private val service: PrintModelService,
     private val categoriesInfoService: CategoriesInfoService
 
-    ) {
+) {
+
     @GetMapping
     suspend fun getModels(
         requestModel: Model?,

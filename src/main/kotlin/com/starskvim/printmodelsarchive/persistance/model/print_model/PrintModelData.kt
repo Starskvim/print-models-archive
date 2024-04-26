@@ -6,8 +6,7 @@ import com.starskvim.printmodelsarchive.utils.Constants.TypeAlias.PRINT_MODEL_DA
 import org.springframework.data.annotation.Id
 import org.springframework.data.annotation.TypeAlias
 import org.springframework.data.mongodb.core.mapping.Document
-import java.time.LocalDate
-import java.util.concurrent.CopyOnWriteArrayList
+import java.time.LocalDateTime
 
 @TypeAlias(PRINT_MODEL_DATA)
 @Document(PRINT_MODELS)
@@ -23,11 +22,11 @@ data class PrintModelData(
     var nsfw: Boolean?,
     var categories: MutableList<String>?,
     var preview: String?,
-    var zips: CopyOnWriteArrayList<PrintModelZipData>?, //TODO DOMAIN
-    var oths: CopyOnWriteArrayList<PrintModelOthData>?, //TODO DOMAIN
-    override var createdAt: LocalDate?, // todo time + index
-    override var modifiedAt: LocalDate?
-//  TODO addedAt
+    var zips: MutableList<PrintModelZipData>,
+    var oths: MutableList<PrintModelOthData>,
+    val addedAt: LocalDateTime,
+    override var createdAt: LocalDateTime, // todo time + index
+    override var modifiedAt: LocalDateTime
 
 ) : Auditable(createdAt, modifiedAt) {
 
