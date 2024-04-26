@@ -34,7 +34,7 @@ class PrintModelFavoritesApiController(
     }
 
     @ResponseStatus(value = HttpStatus.ACCEPTED)
-    @PostMapping("/{name}")
+    @DeleteMapping("/{name}")
     suspend fun removeModel(
         @PathVariable name: String
     ) {

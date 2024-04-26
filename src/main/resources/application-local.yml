@@ -26,7 +26,7 @@ minio:
   accessKey: minioadmin
 
 scan:
-  address1: F:\[Patreon]\[Unsorted]
+  address1: F:\[Patreon]\[test]
   address2: F:\[Patreon]\[test]
   address3: F:\[Patreon]\[test]
 

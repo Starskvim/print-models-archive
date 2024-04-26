@@ -5,7 +5,6 @@ import com.starskvim.print.models.archive.aop.LoggTime
 import com.starskvim.print.models.archive.persistance.model.print_model.PrintModelData
 import com.starskvim.print.models.archive.rest.model.request.PrintModelSearchParams
 import com.starskvim.print.models.archive.utils.Constants.Document.PRINT_MODELS
-import kotlinx.coroutines.reactive.awaitFirstOrNull
 import kotlinx.coroutines.reactive.awaitSingle
 import kotlinx.coroutines.reactor.awaitSingleOrNull
 import org.springframework.data.domain.Page
@@ -25,9 +24,11 @@ class PrintModelDataService(
         .awaitSingleOrNull()
 
     @LoggTime
-    suspend fun saveAll(models: Collection<PrintModelData>): Collection<PrintModelData>? = template.insertAll(models)
-        .collectList()
-        .awaitFirstOrNull()
+    suspend fun saveAll(models: Collection<PrintModelData>) {
+        val res = template.insertAll(models)
+            .collectList()
+        println()
+    }
 
     @LoggTime
     suspend fun deleteAll(): DeleteResult = template.remove(Query(), PRINT_MODELS).awaitSingle()
