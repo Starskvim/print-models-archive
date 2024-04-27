@@ -3,7 +3,7 @@ package com.starskvim.print.models.archive.domain
 import com.starskvim.print.models.archive.mapping.PrintModelMapper
 import com.starskvim.print.models.archive.persistance.PrintModelDataService
 import com.starskvim.print.models.archive.persistance.UserFavoritesDataService
-import com.starskvim.print.models.archive.rest.model.PrintModel
+import com.starskvim.print.models.archive.rest.model.ptint_model.PrintModel
 import com.starskvim.print.models.archive.rest.model.request.PrintModelSearchParams
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
@@ -25,7 +25,7 @@ class PrintModelFavoritesService(
             ?.models
             ?.sortedByDescending { it.addedAt }
             ?.map { it.modelName }
-            ?: return Page.empty()
+            ?: return PageImpl(emptyList(), pageable, 0)
         val dataPage = dataService.getPrintModels(
             PrintModelSearchParams(modelNames = modelNames),
             pageable

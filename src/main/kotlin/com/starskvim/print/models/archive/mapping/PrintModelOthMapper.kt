@@ -2,7 +2,7 @@ package com.starskvim.print.models.archive.mapping
 
 import com.starskvim.print.models.archive.domain.image.ImageService
 import com.starskvim.print.models.archive.persistance.model.print_model.PrintModelOthData
-import com.starskvim.print.models.archive.rest.model.PrintModelOth
+import com.starskvim.print.models.archive.rest.model.ptint_model.PrintModelOth
 import kotlinx.coroutines.runBlocking
 import org.mapstruct.AfterMapping
 import org.mapstruct.Mapper

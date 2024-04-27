@@ -6,6 +6,7 @@ import com.starskvim.print.models.archive.utils.Constants.TypeAlias.USER_FAVORIT
 import org.springframework.data.annotation.Id
 import org.springframework.data.annotation.TypeAlias
 import org.springframework.data.mongodb.core.mapping.Document
+import org.springframework.data.mongodb.core.mapping.Field
 import java.time.LocalDateTime
 
 @TypeAlias(USER_FAVORITES_DATA)
@@ -13,6 +14,7 @@ import java.time.LocalDateTime
 class UserFavorites(
 
     @Id
+    @Field
     val id: String,
     val models: MutableList<PrintModelFavorite>, // sort
     override var createdAt: LocalDateTime,

@@ -1,5 +1,6 @@
-package com.starskvim.print.models.archive.rest.model
+package com.starskvim.print.models.archive.rest.model.ptint_model
 
+import com.starskvim.print.models.archive.rest.model.Auditable
 import java.time.LocalDate
 
 data class PrintModel(

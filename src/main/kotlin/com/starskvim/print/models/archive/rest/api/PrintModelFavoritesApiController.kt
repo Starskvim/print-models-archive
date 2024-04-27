@@ -2,13 +2,14 @@ package com.starskvim.print.models.archive.rest.api
 
 import com.starskvim.print.models.archive.domain.PrintModelFavoritesService
 import com.starskvim.print.models.archive.domain.UserFavoritesService
-import com.starskvim.print.models.archive.rest.model.PrintModel
+import com.starskvim.print.models.archive.rest.model.ptint_model.PrintModel
 import com.starskvim.print.models.archive.utils.PageUtils
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 
+// TODO replace page
 @RestController
 @RequestMapping("/api/models/favorites")
 class PrintModelFavoritesApiController(

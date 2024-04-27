@@ -1,7 +1,7 @@
 package com.starskvim.print.models.archive.mapping
 
 import com.starskvim.print.models.archive.persistance.model.print_model.PrintModelZipData
-import com.starskvim.print.models.archive.rest.model.PrintModelZip
+import com.starskvim.print.models.archive.rest.model.ptint_model.PrintModelZip
 import org.mapstruct.Mapper
 
 @Mapper

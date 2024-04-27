@@ -11,12 +11,20 @@ import com.starskvim.print.models.archive.utils.Constants.Service.ZERO_INT
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime.now
 import com.starskvim.print.models.archive.persistance.model.catalog.Category as CategoryData
+import com.starskvim.print.models.archive.rest.model.Catalog as CatalogApi
 
 
 @Service
 class CategoriesInfoService(
     private val dataService: CategoriesInfoDataService
 ) {
+
+    suspend fun getCatalog(): CatalogApi {
+        val catalogData = dataService.getCategoriesInfoData().categoriesCatalog
+        return CatalogApi(
+            catalog = catalogData.catalog.filter { it.level == ZERO_INT }
+        )
+    }
 
     suspend fun initializeCategoriesInfo(
         models: Collection<PrintModelData>

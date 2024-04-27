@@ -14,7 +14,7 @@ data class PrintModelData(
 
     @Id
     var id: String?,
-    var modelName: String?,
+    var modelName: String,
     var folderName: String?,
     var path: String?,
     var category: String?,

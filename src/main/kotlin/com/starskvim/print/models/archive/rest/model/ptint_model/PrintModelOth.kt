@@ -1,4 +1,4 @@
-package com.starskvim.print.models.archive.rest.model
+package com.starskvim.print.models.archive.rest.model.ptint_model
 
 data class PrintModelOth(
 

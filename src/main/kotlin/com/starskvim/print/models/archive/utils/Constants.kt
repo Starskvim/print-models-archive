@@ -22,6 +22,8 @@ object Constants {
         const val EMPTY = ""
         const val ZERO_INT = 0
         const val ONE_INT = 1
+        const val SC = '['
+        const val EC = ']'
     }
 
     object Document {
@@ -70,6 +72,7 @@ object Constants {
         val SLASH_REG = "/".toRegex()
         val SQUARE_BRACKETS_REG = """.*\[.*\].*""".toRegex()
         val CLEAR_NAME_REG = "[+|_]".toRegex()
+        val EC_REG = "]".toRegex()
     }
 
     object Fields {

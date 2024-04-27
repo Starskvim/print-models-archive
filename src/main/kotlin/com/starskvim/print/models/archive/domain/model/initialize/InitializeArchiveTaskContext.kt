@@ -3,6 +3,7 @@ package com.starskvim.print.models.archive.domain.model.initialize
 import com.starskvim.print.models.archive.persistance.model.print_model.PrintModelData
 import com.starskvim.print.models.archive.persistance.model.print_model.PrintModelOthData
 import com.starskvim.print.models.archive.persistance.model.print_model.PrintModelZipData
+import com.starskvim.print.models.archive.utils.CreateUtils.isNotArtefact
 import java.io.File
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CopyOnWriteArrayList
@@ -33,6 +34,7 @@ data class InitializeArchiveTaskContext(
                     it.model.zips?.addAll(it.zips)
                 }
             }.map { it.model }
+            .filter { isNotArtefact(it.modelName) }
             .toList()
     }
 }

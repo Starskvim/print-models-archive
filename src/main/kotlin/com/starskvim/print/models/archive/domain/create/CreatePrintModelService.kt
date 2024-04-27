@@ -101,9 +101,9 @@ class CreatePrintModelService(
             logger.info { "Model - create - $parentFileName" }
         }
         context.fileDone.incrementAndGet()
-        logger.info { "${context.fileDone}/${context.filesCount} - now add - ${file.name}" }
+        logger.info { "${context.fileDone}/${context.filesCount} - processed - ${file.name}" }
         incrementProgress(
-            "${context.fileDone}/${context.filesCount} - now add - ${file.name}",
+            "${context.fileDone}/${context.filesCount} - processed - ${file.name}",
             context
         )
     }

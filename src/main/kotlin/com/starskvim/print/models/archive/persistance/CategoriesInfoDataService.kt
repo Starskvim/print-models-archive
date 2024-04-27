@@ -9,6 +9,7 @@ import kotlinx.coroutines.reactive.awaitSingle
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.stereotype.Service
+import ru.starskvim.inrastructure.webflux.advice.exception.NotFoundException
 
 @Service
 class CategoriesInfoDataService(
@@ -17,6 +18,11 @@ class CategoriesInfoDataService(
 
     suspend fun saveCategoriesInfo(categoriesInfo: CategoriesInfoData): CategoriesInfoData {
         return template.save(categoriesInfo).awaitSingle()
+    }
+
+    suspend fun getCategoriesInfoData(): CategoriesInfoData {
+        return template.findById(CATEGORIES_INFO, CategoriesInfoData::class.java)
+            .awaitFirstOrNull() ?: throw NotFoundException("")
     }
 
     suspend fun getAllCategories(): List<Category> {

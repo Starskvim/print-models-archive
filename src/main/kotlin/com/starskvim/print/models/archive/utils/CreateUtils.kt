@@ -5,11 +5,14 @@ import com.starskvim.print.models.archive.utils.Constants.ModelCategory.OTHER
 import com.starskvim.print.models.archive.utils.Constants.ModelCategory.PACK
 import com.starskvim.print.models.archive.utils.Constants.Regexp.BACKSLASH_REG
 import com.starskvim.print.models.archive.utils.Constants.Regexp.CLEAR_NAME_REG
+import com.starskvim.print.models.archive.utils.Constants.Regexp.EC_REG
 import com.starskvim.print.models.archive.utils.Constants.Regexp.SLASH_REG
 import com.starskvim.print.models.archive.utils.Constants.Regexp.SQUARE_BRACKETS_REG
+import com.starskvim.print.models.archive.utils.Constants.Service.EC
 import com.starskvim.print.models.archive.utils.Constants.Service.EMPTY
 import com.starskvim.print.models.archive.utils.Constants.Service.HYPHEN
 import com.starskvim.print.models.archive.utils.Constants.Service.PLUS
+import com.starskvim.print.models.archive.utils.Constants.Service.SC
 import org.springframework.util.StringUtils
 import java.io.File
 
@@ -34,8 +37,8 @@ object CreateUtils {
                 val stringBuilder = StringBuilder()
                 for (ch in word.toCharArray()) {
                     when (ch) {
-                        '[' -> continue
-                        ']' -> break
+                        SC -> continue
+                        EC -> break
                         else -> stringBuilder.append(ch)
                     }
                 }
@@ -70,5 +73,11 @@ object CreateUtils {
         return modelName + HYPHEN + fileName
     }
 
-    fun clearModelName(name: String): String = name.replace(CLEAR_NAME_REG, EMPTY)
+    fun clearModelName(name: String): String = name
+        .replace(CLEAR_NAME_REG, EMPTY)
+        .replaceFirstChar { it.uppercase() }
+
+    fun isNotArtefact(name: String): Boolean {
+        return name.contains(EC_REG).not()
+    }
 }
