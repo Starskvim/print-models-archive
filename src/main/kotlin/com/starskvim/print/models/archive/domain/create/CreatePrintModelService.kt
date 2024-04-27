@@ -215,7 +215,8 @@ class CreatePrintModelService(
     }
 
     private fun linkPreview(model: PrintModelData) {
-        for (oth in model.oths) {
+        if (model.oths == null) return
+        for (oth in model.oths!!) {
             if (oth.isImage()) {
                 model.preview = oth.storageName
                 break

@@ -22,8 +22,8 @@ data class PrintModelData(
     var nsfw: Boolean?,
     var categories: MutableList<String>?,
     var preview: String?,
-    var zips: MutableList<PrintModelZipData>,
-    var oths: MutableList<PrintModelOthData>,
+    var zips: MutableList<PrintModelZipData>?,
+    var oths: MutableList<PrintModelOthData>?,
     val addedAt: LocalDateTime,
     override var createdAt: LocalDateTime, // todo time + index
     override var modifiedAt: LocalDateTime

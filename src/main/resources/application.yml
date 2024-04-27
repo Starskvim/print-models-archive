@@ -22,6 +22,7 @@ scan:
   address3: /Other
 
 archive-properties:
+  version: "0.0.2-SNAPSHOT"
   saveBatch: 100
   coroutineBatch: 100
 

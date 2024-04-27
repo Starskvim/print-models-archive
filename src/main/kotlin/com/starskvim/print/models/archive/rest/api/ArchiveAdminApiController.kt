@@ -7,8 +7,6 @@ import com.starskvim.print.models.archive.utils.Constants.Url.CHECK_FOLDERS
 import com.starskvim.print.models.archive.utils.Constants.Url.CLEAR_ARCHIVE
 import com.starskvim.print.models.archive.utils.Constants.Url.CREATE_ARCHIVE
 import com.starskvim.print.models.archive.utils.Constants.Url.GET_PROGRESS_TASK
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 
@@ -21,7 +19,7 @@ class ArchiveAdminApiController(
 
     @ResponseStatus(value = HttpStatus.OK)
     @PostMapping(CREATE_ARCHIVE)
-    suspend fun createArchive() = coroutineScope { launch { createService.initializeArchive() } }
+    suspend fun createArchive() = createService.initializeArchive()
 
     @ResponseStatus(value = HttpStatus.OK)
     @GetMapping(CHECK_FOLDERS)

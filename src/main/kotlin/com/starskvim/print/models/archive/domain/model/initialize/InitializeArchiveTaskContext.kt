@@ -29,8 +29,8 @@ data class InitializeArchiveTaskContext(
             .asSequence()
             .apply {
                 forEach {
-                    it.model.oths.addAll(it.oths)
-                    it.model.zips.addAll(it.zips)
+                    it.model.oths?.addAll(it.oths)
+                    it.model.zips?.addAll(it.zips)
                 }
             }.map { it.model }
             .toList()
