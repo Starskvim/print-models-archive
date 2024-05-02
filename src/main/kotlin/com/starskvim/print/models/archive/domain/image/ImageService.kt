@@ -18,9 +18,7 @@ import javax.swing.ImageIcon
 
 @Service
 class ImageService(
-
     private val minioConfig: MinioConfiguration
-
 ) {
 
     suspend fun getUrlForImage(fileName: String): String {

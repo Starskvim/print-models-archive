@@ -21,6 +21,7 @@ abstract class PrintModelMapper {
     abstract fun dataToApi(source: PrintModelData?): PrintModel?
 
     @Mapping(target = "preview", ignore = true)
+    @Mapping(target = "images", ignore = true)
     abstract fun dataToCardApi(source: PrintModelData?): PrintModelCard
 
     abstract fun dataToApi(source: List<PrintModelData?>): List<PrintModel?>
@@ -41,6 +42,12 @@ abstract class PrintModelMapper {
         runBlocking {
             if (source.hasPreview()) {
                 target.preview = imageService.getUrlForImage(source.preview!!)
+            }
+            if (source.hasImages()) {
+                target.images = source.oths!!
+                    .filter { it.isImage() }
+                    .map { imageService.getUrlForImage(it.fileName!!) }
+                    .toList()
             }
         }
     }

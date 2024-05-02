@@ -6,6 +6,7 @@ data class PrintModelCard(
 
     val id: String,
     var preview: String?,
+    var images: List<String>?,
     val modelName: String?,
     val rate: Int?,
     val nsfw: Boolean?,

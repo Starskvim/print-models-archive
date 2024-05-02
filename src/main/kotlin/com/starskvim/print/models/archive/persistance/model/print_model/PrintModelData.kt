@@ -31,4 +31,6 @@ data class PrintModelData(
 ) : Auditable(createdAt, modifiedAt) {
 
     fun hasPreview(): Boolean = preview != null
+
+    fun hasImages(): Boolean = oths != null
 }
