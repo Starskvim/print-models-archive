@@ -6,10 +6,7 @@ import com.starskvim.print.models.archive.rest.model.response.PrintModelCardsRes
 import com.starskvim.print.models.archive.rest.model.response.PrintModelResponse
 import com.starskvim.print.models.archive.utils.PageUtils
 import org.springframework.data.domain.Pageable
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 // TODO short api model
 @RestController
@@ -21,18 +18,18 @@ class PrintModelApiController(
     @GetMapping
     suspend fun getModels(
         requestPageable: Pageable?, // replace
-        @RequestParam("wordName", required = false) wordName: String?,
-        @RequestParam("wordCategory", required = false) category: String?,
+        @RequestParam("name", required = false) name: String?,
+        @RequestParam("category", required = false) category: String?,
         @RequestParam("rate", required = false) rate: Int?
     ): PrintModelCardsResponse {
         val pageable = PageUtils.getRequestPageable(requestPageable)
-        return service.getPrintModelsPageApi(PrintModelSearchParams(wordName, category, rate), pageable)
+        return service.getPrintModelsPageApi(PrintModelSearchParams(name, category, rate), pageable)
     }
 
-    @GetMapping("/model")
+    @GetMapping("/{id}")
     suspend fun getModel(
-        @RequestParam("modelId", required = false) modelId: String
+        @PathVariable("id") id: String
     ): PrintModelResponse {
-        return PrintModelResponse(service.getPrintModelById(modelId))
+        return PrintModelResponse(service.getPrintModelById(id))
     }
 }

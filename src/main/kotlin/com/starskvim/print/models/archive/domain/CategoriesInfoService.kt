@@ -19,6 +19,7 @@ class CategoriesInfoService(
     private val dataService: CategoriesInfoDataService
 ) {
 
+    // TODO cache
     suspend fun getCatalog(): CatalogApi {
         val catalogData = dataService.getCategoriesInfoData().categoriesCatalog
         return CatalogApi(

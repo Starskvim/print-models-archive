@@ -1,11 +1,14 @@
 package com.starskvim.print.models.archive.rest.model.ptint_model
 
+import java.time.LocalDateTime
+
 data class PrintModelCard(
 
-    var id: String,
+    val id: String,
     var preview: String?,
-    var modelName: String?,
-    var rate: Int?,
-    var nsfw: Boolean?
+    val modelName: String?,
+    val rate: Int?,
+    val nsfw: Boolean?,
+    val addedAt: LocalDateTime
 
 )

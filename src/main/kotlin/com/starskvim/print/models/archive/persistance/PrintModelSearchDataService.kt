@@ -9,7 +9,6 @@ import com.starskvim.print.models.archive.utils.Constants.Fields.RATE
 import com.starskvim.print.models.archive.utils.Constants.Fields.ZIPS
 import kotlinx.coroutines.reactive.awaitFirstOrNull
 import kotlinx.coroutines.reactor.awaitSingleOrNull
-import org.bson.types.ObjectId
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
@@ -23,7 +22,7 @@ class PrintModelSearchDataService(
 ) : SearchMongoService {
 
     suspend fun findById(modelId: String): PrintModelData? {
-        return template.findById(ObjectId(modelId), PrintModelData::class.java).awaitFirstOrNull()
+        return template.findById(modelId, PrintModelData::class.java).awaitFirstOrNull()
     }
 
     suspend fun getPrintModelsPage(
