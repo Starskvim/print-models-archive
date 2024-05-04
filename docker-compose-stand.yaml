@@ -2,7 +2,7 @@ version: '3.8'
 services:
 
   archive:
-    image: archive-app:latest
+    image: starskvim-archive-app:latest
     container_name: 'archive-app'
     restart: always
     depends_on:
@@ -14,6 +14,15 @@ services:
       - "/run/media/maikl/hdd8-1/Archive/Figure:/Pigure"
       - "/run/media/maikl/hdd8-1/Archive/Pack:/Pack"
       - "/run/media/maikl/hdd8-1/Archive/Other:/Other"
+
+  front:
+    image: starskvim-archive-front:latest
+    container_name: 'archive-front'
+    restart: always
+    depends_on:
+      - archive
+    ports:
+      - 3000:3000
 
   mongo:
     image: mongo

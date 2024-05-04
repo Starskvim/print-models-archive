@@ -2,14 +2,21 @@ version: '3.8'
 services:
 
   archive:
-    image: archive-app:latest
-    container_name: 'archive-app'
+    image: starskvim-archive-app
+    container_name: 'starskvim-archive-app'
     restart: always
     depends_on:
       - mongo
       - minio
     ports:
       - 8081:8081
+
+  front:
+    image: starskvim-archive-front:latest
+    container_name: 'starskvim-archive-front'
+    restart: always
+    ports:
+      - 3000:3000
 
   mongo:
     image: mongo

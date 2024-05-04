@@ -2,12 +2,14 @@ package com.starskvim.print.models.archive.rest.model.ptint_model
 
 import com.starskvim.print.models.archive.rest.model.Auditable
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 data class PrintModel(
 
     override var id: String?,
     override var createdAt: LocalDate?,
     override var modifiedAt: LocalDate?,
+    val addedAt: LocalDateTime,
     var preview: String?,
     var modelName: String?,
     var folderName: String?,
