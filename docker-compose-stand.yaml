@@ -4,7 +4,6 @@ services:
   archive:
     image: starskvim-archive-app:latest
     container_name: 'archive-app'
-    restart: always
     depends_on:
       - mongo
       - minio
@@ -18,7 +17,6 @@ services:
   front:
     image: starskvim-archive-front:latest
     container_name: 'archive-front'
-    restart: always
     depends_on:
       - archive
     ports:
