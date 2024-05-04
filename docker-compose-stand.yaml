@@ -2,7 +2,7 @@ version: '3.8'
 services:
 
   archive:
-    image: starskvim-archive-app:latest
+    image: starskvim/starskvim-archive-app:latest
     container_name: 'archive-app'
     depends_on:
       - mongo
@@ -15,7 +15,7 @@ services:
       - "/run/media/maikl/hdd8-1/Archive/Other:/Other"
 
   front:
-    image: starskvim-archive-front:latest
+    image: starskvim/starskvim-archive-front:latest
     container_name: 'archive-front'
     depends_on:
       - archive

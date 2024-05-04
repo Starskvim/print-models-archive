@@ -2,7 +2,7 @@ version: '3.8'
 services:
 
   archive:
-    image: starskvim-archive-app
+    image: starskvim/starskvim-archive-app
     container_name: 'starskvim-archive-app'
     restart: always
     depends_on:
@@ -12,7 +12,7 @@ services:
       - 8081:8081
 
   front:
-    image: starskvim-archive-front:latest
+    image: starskvim/starskvim-archive-front:latest
     container_name: 'starskvim-archive-front'
     restart: always
     ports:
