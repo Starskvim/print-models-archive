@@ -5,14 +5,19 @@ import com.starskvim.print.models.archive.aop.LoggTime
 import com.starskvim.print.models.archive.persistance.model.print_model.PrintModelData
 import com.starskvim.print.models.archive.rest.model.request.PrintModelSearchParams
 import com.starskvim.print.models.archive.utils.Constants.Document.PRINT_MODELS
+import com.starskvim.print.models.archive.utils.Constants.Fields.FOLDER_NAME
 import kotlinx.coroutines.reactive.awaitFirstOrNull
 import kotlinx.coroutines.reactive.awaitSingle
 import kotlinx.coroutines.reactor.awaitSingleOrNull
+import org.bson.Document
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate
+import org.springframework.data.mongodb.core.aggregation.Aggregation
+import org.springframework.data.mongodb.core.aggregation.GroupOperation
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.stereotype.Service
+
 
 @Service
 class PrintModelDataService(
@@ -20,11 +25,9 @@ class PrintModelDataService(
     private val searchDataService: PrintModelSearchDataService
 ) {
 
-    @LoggTime
     suspend fun savePrintModel(model: PrintModelData): PrintModelData? = template.save(model)
         .awaitSingleOrNull()
 
-    @LoggTime
     suspend fun saveAll(models: Collection<PrintModelData>) {
         template.insertAll(models)
             .awaitFirstOrNull()
@@ -39,5 +42,19 @@ class PrintModelDataService(
 
     suspend fun getPrintModelById(modelId: String): PrintModelData? {
         return searchDataService.findById(modelId)
+    }
+
+    suspend fun resolveAllExistModelNames(): MutableSet<String> {
+        val groupOperation: GroupOperation = Aggregation.group()
+            .addToSet(FOLDER_NAME)
+            .`as`(FOLDER_NAME)
+        val aggregation: Aggregation = Aggregation.newAggregation(groupOperation)
+        val aggregationResults = template.aggregate(
+            aggregation,
+            PRINT_MODELS,
+            Document::class.java
+        ).awaitFirstOrNull() ?: return mutableSetOf()
+        return aggregationResults.getList(FOLDER_NAME, String::class.java)
+            .toMutableSet()
     }
 }

@@ -1,5 +1,6 @@
 package com.starskvim.print.models.archive.utils
 
+import com.starskvim.print.models.archive.persistance.model.print_model.PrintModelData
 import com.starskvim.print.models.archive.utils.Constants.ModelCategory.FIGURE
 import com.starskvim.print.models.archive.utils.Constants.ModelCategory.OTHER
 import com.starskvim.print.models.archive.utils.Constants.ModelCategory.PACK
@@ -23,6 +24,16 @@ object CreateUtils {
             path.contains(FIGURE) -> FIGURE
             path.contains(PACK) -> PACK
             else -> OTHER
+        }
+    }
+
+    fun linkPreview(model: PrintModelData) {
+        if (model.oths == null) return
+        for (oth in model.oths!!) {
+            if (oth.isImage()) {
+                model.preview = oth.storageName
+                break
+            }
         }
     }
 

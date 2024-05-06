@@ -10,7 +10,7 @@ import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.CopyOnWriteArraySet
 import java.util.concurrent.atomic.AtomicInteger
 
-data class InitializeArchiveTaskContext(
+data class ArchiveTaskContext(
 
     val files: MutableCollection<File>
 
@@ -25,16 +25,28 @@ data class InitializeArchiveTaskContext(
 
     lateinit var models: List<PrintModelData>
 
-    fun prepareResultsModels() {
-        models = contextByModelName.values
-            .asSequence()
-            .apply {
-                forEach {
-                    it.model.oths?.addAll(it.oths)
-                    it.model.zips?.addAll(it.zips)
-                }
-            }.map { it.model }
-            .filter { isNotArtefact(it.modelName) }
-            .toList()
+    fun prepareResultsModels(): ArchiveTaskContext {
+        return apply {
+            models = contextByModelName.values
+                .asSequence()
+                .apply {
+                    forEach {
+                        it.model.oths?.addAll(it.oths)
+                        it.model.zips?.addAll(it.zips)
+                    }
+                }.map { it.model }
+                .filter { isNotArtefact(it.modelName) }
+                .toList()
+        }
+    }
+
+    fun associateModelContextAndFiles(
+    ) {
+        oths.forEach {
+            contextByModelName[it.parentFileName]?.oths?.add(it)
+        }
+        zips.forEach {
+            contextByModelName[it.parentFileName]?.zips?.add(it)
+        }
     }
 }

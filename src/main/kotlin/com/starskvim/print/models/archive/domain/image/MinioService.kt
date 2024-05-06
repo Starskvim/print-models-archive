@@ -1,6 +1,5 @@
 package com.starskvim.print.models.archive.domain.image
 
-import com.starskvim.print.models.archive.aop.LoggTime
 import com.starskvim.print.models.archive.persistance.MinioDataService
 import org.springframework.stereotype.Service
 import java.io.File
@@ -10,7 +9,7 @@ class MinioService(
     private val minioDataService: MinioDataService,
     private val imageService: ImageService
 ) {
-    @LoggTime
+
     suspend fun saveImageWithCompressing(file: File, storageName: String) {
         try {
             val baos = imageService.getCompressedImgFromDisk(file.path, 0.8f) // TODO config

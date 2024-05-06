@@ -9,6 +9,7 @@ import com.starskvim.print.models.archive.utils.Constants.Document.CATEGORIES_IN
 import com.starskvim.print.models.archive.utils.Constants.Service.ONE_INT
 import com.starskvim.print.models.archive.utils.Constants.Service.ZERO_INT
 import org.springframework.stereotype.Service
+import ru.starskvim.inrastructure.webflux.advice.exception.NotFoundException
 import java.time.LocalDateTime.now
 import com.starskvim.print.models.archive.persistance.model.catalog.Category as CategoryData
 import com.starskvim.print.models.archive.rest.model.Catalog as CatalogApi
@@ -21,7 +22,9 @@ class CategoriesInfoService(
 
     // TODO cache
     suspend fun getCatalog(): CatalogApi {
-        val catalogData = dataService.getCategoriesInfoData().categoriesCatalog
+        val categoriesInfo = dataService.getCategoriesInfoData()
+            ?: throw NotFoundException("") // TODO
+        val catalogData = categoriesInfo.categoriesCatalog
         return CatalogApi(
             catalog = catalogData.catalog.filter { it.level == ZERO_INT }
         )
@@ -30,19 +33,24 @@ class CategoriesInfoService(
     suspend fun initializeCategoriesInfo(
         models: Collection<PrintModelData>
     ): CategoriesInfoData {
-        val modelsCategories = mutableListOf<String>()
-        for (model in models) modelsCategories.addAll(model.categories!!)
-        val uniqCategories = mutableSetOf<String>()
-        uniqCategories.addAll(modelsCategories)
-        val categories = mutableListOf<String>()
-        categories.addAll(uniqCategories)
         val categoriesInfo = CategoriesInfoData(
             CATEGORIES_INFO,
-            categories,
             createCatalog(models),
             now(),
             now()
         )
+        return dataService.saveCategoriesInfo(categoriesInfo)
+    }
+
+    suspend fun updateCategoriesInfo(
+        models: Collection<PrintModelData>,
+    ): CategoriesInfoData {
+        val categoriesInfo = dataService.getCategoriesInfoData() ?: run {
+            return initializeCategoriesInfo(models)
+        }
+        categoriesInfo.apply {
+            categoriesCatalog.updateCatalog(models)
+        }
         return dataService.saveCategoriesInfo(categoriesInfo)
     }
 
@@ -54,10 +62,16 @@ class CategoriesInfoService(
         models: Collection<PrintModelData>
     ): Catalog {
         val categories = mutableMapOf<String, CategoryData>()
-        models.forEach {
-            it.categories?.addBranch(categories)
-        }
+        models.forEach { it.categories?.addBranch(categories) }
         return Catalog(categories.values)
+    }
+
+    private suspend fun Catalog.updateCatalog(
+        models: Collection<PrintModelData>
+    ) {
+        val categories = mutableMapOf<String, CategoryData>()
+        catalog.forEach { categories[it.name] = it }
+        models.forEach { it.categories?.addBranch(categories) }
     }
 
     private suspend fun MutableList<String>.addBranch(

@@ -6,13 +6,15 @@ object Constants {
         const val API_MODELS = "/api/models"
         const val MODELS = "/models"
         const val CREATE_ARCHIVE = "/create-archive"
+        const val UPDATE_ARCHIVE = "/update-archive"
         const val CLEAR_ARCHIVE = "/clear-archive"
         const val CHECK_FOLDERS = "/check-folders"
         const val GET_PROGRESS_TASK = "/progress-task"
     }
 
     object Task {
-        const val INITIALIZE_ARCHIVE_TASK = "Initialize archive task"
+        const val INITIALIZE_ARCHIVE_TASK = "Initialize archive task."
+        const val UPDATE_ARCHIVE_TASK = "Update archive task."
     }
 
     object Service {
@@ -78,6 +80,7 @@ object Constants {
     object Fields {
         const val ID = "_id"
         const val MODEL_NAME = "modelName"
+        const val FOLDER_NAME = "folderName"
         const val CATEGORIES = "categories"
         const val ZIPS = "zips"
         const val OTHS = "oths"

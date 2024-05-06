@@ -16,7 +16,6 @@ data class CategoriesInfoData(
     @Id
     @Field
     var id: String?,
-    var categories: MutableList<String>?,
     var categoriesCatalog: Catalog,
     override var createdAt: LocalDateTime,
     override var modifiedAt: LocalDateTime

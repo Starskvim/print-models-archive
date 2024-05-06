@@ -1,17 +1,14 @@
 package com.starskvim.print.models.archive.domain.create
 
-import com.starskvim.print.models.archive.aop.LoggTime
 import com.starskvim.print.models.archive.config.ArchiveConfiguration
-import com.starskvim.print.models.archive.domain.CategoriesInfoService
 import com.starskvim.print.models.archive.domain.image.MinioService
-import com.starskvim.print.models.archive.domain.model.initialize.InitializeArchiveTaskContext
+import com.starskvim.print.models.archive.domain.model.initialize.ArchiveTaskContext
 import com.starskvim.print.models.archive.domain.model.initialize.InitializePrintModelData
 import com.starskvim.print.models.archive.domain.progress.TaskProgressService
 import com.starskvim.print.models.archive.persistance.PrintModelDataService
 import com.starskvim.print.models.archive.persistance.model.print_model.PrintModelData
 import com.starskvim.print.models.archive.persistance.model.print_model.PrintModelOthData
 import com.starskvim.print.models.archive.persistance.model.print_model.PrintModelZipData
-import com.starskvim.print.models.archive.utils.Constants.Task.INITIALIZE_ARCHIVE_TASK
 import com.starskvim.print.models.archive.utils.Constants.Triggers.IMAGE_FORMATS_TRIGGERS
 import com.starskvim.print.models.archive.utils.Constants.Triggers.NSFW_TRIGGERS
 import com.starskvim.print.models.archive.utils.Constants.Triggers.ZIP_FORMATS
@@ -22,107 +19,66 @@ import com.starskvim.print.models.archive.utils.CreateUtils.getPrintModelCategor
 import com.starskvim.print.models.archive.utils.CreateUtils.getSizeFileDouble
 import com.starskvim.print.models.archive.utils.CreateUtils.getStorageName
 import com.starskvim.print.models.archive.utils.CreateUtils.isHaveTrigger
+import com.starskvim.print.models.archive.utils.CreateUtils.linkPreview
 import com.starskvim.print.models.archive.utils.DateUtils.dateTimeFromLong
-import kotlinx.coroutines.ExecutorCoroutineDispatcher
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
-import mu.KLogging
+import mu.KLogger
 import org.apache.commons.io.FilenameUtils.getExtension
-import org.springframework.stereotype.Service
 import java.io.File
 import java.time.LocalDateTime.now
 
-// todo separate logic
-@Service
-class CreatePrintModelService(
-    private val scanService: FolderScanService,
-    private val dataService: PrintModelDataService,
-    private val minioService: MinioService,
-    private val categoriesInfoService: CategoriesInfoService,
-    private val taskProgressService: TaskProgressService,
-    private val dispatcher: ExecutorCoroutineDispatcher,
-    private val config: ArchiveConfiguration
+abstract class AbstractArchiveProcessor(
+    open val dataService: PrintModelDataService,
+    open val minioService: MinioService,
+    open val taskProgressService: TaskProgressService,
+    open val config: ArchiveConfiguration
 ) {
 
-    suspend fun checkFolders() {
-        val files = scanService.getFilesFromDisk()
-        logger.info { "Files found: ${files.size}" }
-    }
+    abstract suspend fun typeTask(): String
 
-    @LoggTime
-    suspend fun initializeArchive() {
-        val files = scanService.getFilesFromDisk()
-        val context = InitializeArchiveTaskContext(files)
-        process(context)
-    }
+    abstract suspend fun process(
+        context: ArchiveTaskContext
+    ): ArchiveTaskContext
 
-    suspend fun clearArchive() {
-        categoriesInfoService.deleteAll()
-        dataService.deleteAll()
-    }
-
-    suspend fun process(
-        context: InitializeArchiveTaskContext
-    ) {
-        context.apply { filesCount = files.size }
-        val fileParts = context.files.chunked(config.coroutineBatch)
-        coroutineScope {
-            fileParts.forEach { part ->
-                part.map {
-                    async(dispatcher) { createModelsAndFiles(it, context) }
-                }.awaitAll()
-            }
-        }
-        associateModelContextAndFiles(context) // TODO parallel stage ?
-        context.prepareResultsModels()
-        context.models.forEach { linkPreview(it) }
-        context.apply {
+    protected suspend fun postProcess(
+        context: ArchiveTaskContext
+    ): ArchiveTaskContext {
+        return context.apply {
+            associateModelContextAndFiles()
+            prepareResultsModels()
+            models.forEach { linkPreview(it) }
             files.clear()
             contextByModelName.clear()
+            models.chunked(config.saveBatch)
+                .forEach { dataService.saveAll(it) }
         }
-        categoriesInfoService.initializeCategoriesInfo(context.models)
-        context.models.chunked(config.saveBatch)
-            .forEach {
-                dataService.saveAll(it)
-            }
     }
 
-    private suspend fun createModelsAndFiles(
+    protected suspend fun createModelsAndFiles(
         file: File,
-        context: InitializeArchiveTaskContext
+        context: ArchiveTaskContext,
+        logger: KLogger
     ) {
-        val parentFileName = file.parentFile.name
-        if (context.modelNames.contains(parentFileName)) {
-            createNonModelObject(file, parentFileName, context)
+        val folderName = file.parentFile.name
+        if (context.modelNames.contains(folderName)) {
+            createNonModelObject(file, folderName, context)
         } else {
-            createModel(file, parentFileName, context)
-            createNonModelObject(file, parentFileName, context)
-            logger.info { "Model - create - $parentFileName" }
+            createModel(file, folderName, context)
+            createNonModelObject(file, folderName, context)
+            logger.info { "Model - create - $folderName" }
         }
         context.fileDone.incrementAndGet()
-        logger.info { "${context.fileDone}/${context.filesCount} - processed - ${file.name}" }
+        logger.info { "File ${context.fileDone}/${context.filesCount} - processed - ${file.name}" }
         incrementProgress(
-            "${context.fileDone}/${context.filesCount} - processed - ${file.name}",
+            "File ${context.fileDone}/${context.filesCount} - processed - ${file.name}",
             context
         )
     }
 
-    private suspend fun associateModelContextAndFiles(
-        context: InitializeArchiveTaskContext
-    ) {
-        context.oths.forEach {
-            context.contextByModelName[it.parentFileName]?.oths?.add(it)
-        }
-        context.zips.forEach {
-            context.contextByModelName[it.parentFileName]?.zips?.add(it)
-        }
-    }
-
-    private suspend fun createModel(
+    // TODO lock for add in concurrent ?
+    private fun createModel(
         file: File,
         folderName: String,
-        context: InitializeArchiveTaskContext
+        context: ArchiveTaskContext
     ): PrintModelData {
         val modelName = clearModelName(folderName)
         val modelCategory = getPrintModelCategory(file.path)
@@ -154,7 +110,7 @@ class CreatePrintModelService(
     private suspend fun createNonModelObject(
         file: File,
         parentFileName: String,
-        context: InitializeArchiveTaskContext
+        context: ArchiveTaskContext
     ) {
         if (ZIP_FORMATS.contains(getExtension(file.name))) {
             createZip(file, parentFileName, context)
@@ -166,7 +122,7 @@ class CreatePrintModelService(
     private fun createZip(
         file: File,
         parentFileName: String,
-        context: InitializeArchiveTaskContext
+        context: ArchiveTaskContext
     ) {
         val size = getSizeFileDouble(file)
         val format = getExtension(file.name)
@@ -185,7 +141,7 @@ class CreatePrintModelService(
     private suspend fun createOth(
         file: File,
         parentFileName: String,
-        context: InitializeArchiveTaskContext
+        context: ArchiveTaskContext
     ): PrintModelOthData {
         val size = getSizeFileDouble(file)
         val format = getExtension(file.name)
@@ -214,26 +170,14 @@ class CreatePrintModelService(
         return null
     }
 
-    private fun linkPreview(model: PrintModelData) {
-        if (model.oths == null) return
-        for (oth in model.oths!!) {
-            if (oth.isImage()) {
-                model.preview = oth.storageName
-                break
-            }
-        }
-    }
-
     private suspend fun incrementProgress(
         currentTask: String,
-        context: InitializeArchiveTaskContext
+        context: ArchiveTaskContext
     ) {
         taskProgressService.incrementTask(
-            INITIALIZE_ARCHIVE_TASK,
+            typeTask(),
             currentTask,
             context.filesCount
         )
     }
-
-    companion object : KLogging()
 }

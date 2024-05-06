@@ -20,9 +20,6 @@ class LoggTimeAspect {
             return point.proceed()
         } finally {
             val end = System.currentTimeMillis()
-            // todo Method execute saveImageWithCompressing OFF
-            // Method execute saveAll OFF
-
             logger.info { "Method execute ${point.signature.name} TIME: ${end - start}" }
         }
     }
