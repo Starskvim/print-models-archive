@@ -23,7 +23,7 @@ abstract class PrintModelOthMapper {
     fun setPreview(source: PrintModelOthData, @MappingTarget target: PrintModelOth) {
         runBlocking {
             if (source.isImage()) {
-                target.preview = imageService.getUrlForImage(source.storageName!!)
+                target.preview = imageService.getBucketForImage(source.storageName!!)
             }
         }
     }

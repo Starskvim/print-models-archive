@@ -1,13 +1,13 @@
 package com.starskvim.print.models.archive.domain.create
 
 import com.starskvim.print.models.archive.config.ArchiveConfiguration
-import com.starskvim.print.models.archive.domain.create.CreateArchiveProcessor.Companion.logger
 import com.starskvim.print.models.archive.domain.image.MinioService
 import com.starskvim.print.models.archive.domain.model.initialize.ArchiveTaskContext
 import com.starskvim.print.models.archive.domain.progress.TaskProgressService
 import com.starskvim.print.models.archive.persistance.PrintModelDataService
 import com.starskvim.print.models.archive.utils.Constants.Task.UPDATE_ARCHIVE_TASK
 import com.starskvim.print.models.archive.utils.CreateUtils.isNotArtefact
+import mu.KLogging
 import org.springframework.stereotype.Service
 import java.io.File
 
@@ -49,4 +49,6 @@ class UpdateArchiveProcessor(
             savedModelFolders.contains(it.parentFile.name).not() && isNotArtefact(it.parentFile.name)
         }
     }
+
+    companion object : KLogging()
 }

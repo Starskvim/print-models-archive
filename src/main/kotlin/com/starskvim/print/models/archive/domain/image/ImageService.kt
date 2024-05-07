@@ -25,6 +25,10 @@ class ImageService(
         return minioConfig.external + "/print-model-image/" + fileName
     }
 
+    suspend fun getBucketForImage(fileName: String): String {
+        return "/print-model-image/$fileName"
+    }
+
     suspend fun getBase64Img(path: String?, isNeedCompression: Boolean, quality: Float): String {
         if (path == null) {
             return ""

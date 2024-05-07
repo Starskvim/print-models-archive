@@ -32,7 +32,7 @@ abstract class PrintModelMapper {
     fun setPreview(source: PrintModelData, @MappingTarget target: PrintModel) {
         runBlocking {
             if (source.hasPreview()) {
-                target.preview = imageService.getUrlForImage(source.preview!!)
+                target.preview = imageService.getBucketForImage(source.preview!!)
             }
         }
     }
@@ -41,12 +41,12 @@ abstract class PrintModelMapper {
     fun setPreview(source: PrintModelData, @MappingTarget target: PrintModelCard) {
         runBlocking {
             if (source.hasPreview()) {
-                target.preview = imageService.getUrlForImage(source.preview!!)
+                target.preview = imageService.getBucketForImage(source.preview!!)
             }
             if (source.hasImages()) {
                 target.images = source.oths!!
                     .filter { it.isImage() }
-                    .map { imageService.getUrlForImage(it.fileName!!) }
+                    .map { imageService.getBucketForImage(it.fileName!!) }
                     .toList()
             }
         }
