@@ -20,10 +20,19 @@ class PrintModelApiController(
         requestPageable: Pageable?, // replace
         @RequestParam("name", required = false) name: String?,
         @RequestParam("category", required = false) category: String?,
-        @RequestParam("rate", required = false) rate: Int?
+        @RequestParam("rate", required = false) rate: Int?,
+        @RequestParam("nsfwOnly", required = false) nsfwOnly: Boolean?
     ): PrintModelCardsResponse {
         val pageable = PageUtils.getRequestPageable(requestPageable)
-        return service.getPrintModelsPageApi(PrintModelSearchParams(name, category, rate), pageable)
+        return service.getPrintModelsPageApi(
+            PrintModelSearchParams(
+                modelName = name,
+                category = category,
+                rate = rate,
+                nsfwOnly = nsfwOnly
+            ),
+            pageable
+        )
     }
 
     @GetMapping("/{id}")

@@ -82,6 +82,7 @@ object Constants {
         const val MODEL_NAME = "modelName"
         const val FOLDER_NAME = "folderName"
         const val CATEGORIES = "categories"
+        const val NSFW = "nsfw"
         const val ZIPS = "zips"
         const val OTHS = "oths"
         const val RATE = "rate"

@@ -4,6 +4,7 @@ import com.starskvim.print.models.archive.persistance.model.print_model.PrintMod
 import com.starskvim.print.models.archive.rest.model.request.PrintModelSearchParams
 import com.starskvim.print.models.archive.utils.Constants.Fields.CATEGORIES
 import com.starskvim.print.models.archive.utils.Constants.Fields.MODEL_NAME
+import com.starskvim.print.models.archive.utils.Constants.Fields.NSFW
 import com.starskvim.print.models.archive.utils.Constants.Fields.OTHS
 import com.starskvim.print.models.archive.utils.Constants.Fields.RATE
 import com.starskvim.print.models.archive.utils.Constants.Fields.ZIPS
@@ -33,6 +34,7 @@ class PrintModelSearchDataService(
         addIsLikeCriteria(query, MODEL_NAME, searchParams.modelName)
         addInCriteria(query, MODEL_NAME, searchParams.modelNames)
         addInCriteria(query, CATEGORIES, searchParams.category)
+        addIsCriteria(query, NSFW, searchParams.nsfwOnly)
         addGteCriteria(query, RATE, searchParams.rate)
         addExcludeFieldsCriteria(query, ZIPS, OTHS)
         val totalCount = template.count(query, PrintModelData::class.java).awaitSingleOrNull()
