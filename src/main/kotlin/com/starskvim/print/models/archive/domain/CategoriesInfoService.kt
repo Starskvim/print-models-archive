@@ -21,12 +21,17 @@ class CategoriesInfoService(
 ) {
 
     // TODO cache
+    // TODO mapping
     suspend fun getCatalog(): CatalogApi {
         val categoriesInfo = dataService.getCategoriesInfoData()
             ?: throw NotFoundException("") // TODO
         val catalogData = categoriesInfo.categoriesCatalog
         return CatalogApi(
-            catalog = catalogData.catalog.filter { it.level == ZERO_INT }
+            catalog = catalogData.catalog
+                .filter { it.level == ZERO_INT },
+            categories = catalogData.catalog
+                .filter { it.level != ZERO_INT }
+                .sortedByDescending { it.size }
         )
     }
 

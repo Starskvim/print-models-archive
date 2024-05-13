@@ -4,6 +4,7 @@ import com.starskvim.print.models.archive.persistance.model.catalog.Category
 
 data class Catalog(
 
-    val catalog: List<Category>
+    val catalog: List<Category>,
+    val categories: List<Category>
 
 )
