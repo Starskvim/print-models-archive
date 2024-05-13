@@ -7,6 +7,7 @@ import com.starskvim.print.models.archive.utils.Constants.Url.CHECK_FOLDERS
 import com.starskvim.print.models.archive.utils.Constants.Url.CLEAR_ARCHIVE
 import com.starskvim.print.models.archive.utils.Constants.Url.CREATE_ARCHIVE
 import com.starskvim.print.models.archive.utils.Constants.Url.GET_PROGRESS_TASK
+import com.starskvim.print.models.archive.utils.Constants.Url.RECREATE_BUCKET
 import com.starskvim.print.models.archive.utils.Constants.Url.UPDATE_ARCHIVE
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
@@ -37,4 +38,8 @@ class ArchiveAdminApiController(
     @ResponseStatus(value = HttpStatus.OK)
     @DeleteMapping(CLEAR_ARCHIVE)
     suspend fun clearArchive() = adminService.clearArchive()
+
+    @ResponseStatus(value = HttpStatus.OK)
+    @PutMapping(RECREATE_BUCKET)
+    suspend fun recreateBucket() = adminService.recreateBucket()
 }

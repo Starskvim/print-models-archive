@@ -151,7 +151,7 @@ abstract class AbstractArchiveProcessor(
             path = file.absolutePath,
             format = format,
             size = size,
-            storageName = addImageInS3(file, format, parentFileName)
+            storageName = addImageInS3(file, format, parentFileName) // TODO after all save
         )
         context.apply { oths.add(oth) }
         return oth

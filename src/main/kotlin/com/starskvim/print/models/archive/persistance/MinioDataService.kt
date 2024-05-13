@@ -1,17 +1,15 @@
 package com.starskvim.print.models.archive.persistance
 
-import com.starskvim.print.models.archive.aop.LoggTime
 import com.starskvim.print.models.archive.utils.Constants.Bucket.PRINT_MODEL_IMAGE
-import io.minio.GetObjectArgs
-import io.minio.GetPresignedObjectUrlArgs
-import io.minio.MinioClient
-import io.minio.PutObjectArgs
-import io.minio.errors.MinioException
+import com.starskvim.print.models.archive.utils.Constants.S3.BUCKET_POLICY
+import io.minio.*
+import io.minio.errors.ErrorResponseException
 import io.minio.http.Method
+import io.minio.messages.DeleteObject
+import mu.KLogging
 import org.apache.commons.codec.binary.Base64
 import org.springframework.stereotype.Service
-import java.io.File
-import java.io.IOException
+import ru.starskvim.inrastructure.webflux.utils.constant.Logging.EXPECTED_ERROR
 import java.io.InputStream
 import java.nio.charset.StandardCharsets
 
@@ -21,69 +19,103 @@ class MinioDataService(
     private val client: MinioClient
 ) {
 
-    @LoggTime
-    suspend fun saveObject(file: File, name: String) {
-        try {
-            val res = client.putObject(
-                PutObjectArgs.builder()
-                    .bucket(PRINT_MODEL_IMAGE)
-                    .`object`(name)
-                    .stream(file.inputStream(), file.length(), -1)
-                    .build()
-            )
-            println(res)
-        } catch (ex: IOException) {
-            throw IllegalStateException(ex.message)
-        } catch (ex: MinioException) {
-            throw IllegalStateException(ex.message)
-        }
-    }
-
     suspend fun savePrintModelImage(imageName: String, size: Long, image: InputStream) {
+        client.putObject(
+            PutObjectArgs.builder()
+                .bucket(PRINT_MODEL_IMAGE)
+                .`object`(imageName)
+                .stream(image, size, -1)
+                .build()
+        )
+    }
+
+    suspend fun isImageNotExist(imageName: String): Boolean {
         try {
-            client.putObject(
-                PutObjectArgs.builder()
+            client.statObject(
+                StatObjectArgs.builder()
                     .bucket(PRINT_MODEL_IMAGE)
                     .`object`(imageName)
-                    .stream(image, size, -1)
                     .build()
             )
-        } catch (ex: IOException) {
-            throw IllegalStateException(ex.message)
-        } catch (ex: MinioException) {
-            throw IllegalStateException(ex.message)
+            logger.info { "$EXPECTED_ERROR File with name $imageName exist." }
+            return false;
+        } catch (e: ErrorResponseException) {
+            return true;
         }
     }
 
-    suspend fun getPrintModelImage(imageName: String): String {
-        try {
-            val res = client.getObject(
-                GetObjectArgs.builder()
-                    .bucket(PRINT_MODEL_IMAGE)
-                    .`object`(imageName)
-                    .build()
+    suspend fun createBucket(bucketName: String) {
+        client.makeBucket(
+            MakeBucketArgs
+                .builder()
+                .bucket(bucketName)
+                .build()
+        )
+        client.setBucketPolicy(
+            SetBucketPolicyArgs.builder()
+                .bucket(bucketName)
+                .config(BUCKET_POLICY)
+                .build()
+        )
+    }
+
+    suspend fun deleteBucket(bucketName: String) {
+        val existObjects = client.listObjects(
+            ListObjectsArgs.builder()
+                .bucket(bucketName)
+                .build()
+        )
+        val objectsToDelete = mutableListOf<DeleteObject>()
+        for (result in existObjects) {
+            val item = result.get()
+            objectsToDelete.add(
+                DeleteObject(item.objectName())
             )
-            return String(Base64.encodeBase64(res.readAllBytes()), StandardCharsets.UTF_8)
-        } catch (ex: IOException) {
-            throw IllegalStateException(ex.message)
-        } catch (ex: MinioException) {
-            throw IllegalStateException(ex.message)
         }
+        val results = client.removeObjects(
+            RemoveObjectsArgs.builder()
+                .bucket(bucketName)
+                .objects(objectsToDelete)
+                .build()
+        )
+        for (errorResult in results) {
+            val error = errorResult.get()
+        }
+        client.removeBucket(
+            RemoveBucketArgs
+                .builder()
+                .bucket(bucketName)
+                .build()
+        )
+    }
+
+    suspend fun isBucketExist(bucketName: String): Boolean {
+        return client.bucketExists(
+            BucketExistsArgs.builder()
+                .bucket(bucketName)
+                .build()
+        )
+    }
+
+    fun getPrintModelImage(imageName: String): String {
+        val res = client.getObject(
+            GetObjectArgs.builder()
+                .bucket(PRINT_MODEL_IMAGE)
+                .`object`(imageName)
+                .build()
+        )
+        return String(Base64.encodeBase64(res.readAllBytes()), StandardCharsets.UTF_8)
     }
 
     suspend fun getPrintModelImageUrl(imageName: String): String {
-        try {
-            return client.getPresignedObjectUrl(
-                GetPresignedObjectUrlArgs.builder()
-                    .bucket(PRINT_MODEL_IMAGE)
-                    .`object`(imageName)
-                    .method(Method.GET)
-                    .build()
-            )
-        } catch (ex: IOException) {
-            throw IllegalStateException(ex.message)
-        } catch (ex: MinioException) {
-            throw IllegalStateException(ex.message)
-        }
+        return client.getPresignedObjectUrl(
+            GetPresignedObjectUrlArgs.builder()
+                .bucket(PRINT_MODEL_IMAGE)
+                .`object`(imageName)
+                .method(Method.GET)
+                .build()
+        )
     }
+
+    companion object : KLogging()
 }

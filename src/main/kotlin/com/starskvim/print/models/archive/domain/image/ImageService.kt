@@ -41,9 +41,10 @@ class ImageService(
         }
     }
 
+    // TODO file -> string -> file ?
     suspend fun getCompressedImgFromDisk(path: String, quality: Float): ByteArrayOutputStream {
         val input = File(path)
-        val image = ImageIO.read(input)
+        val image = ImageIO.read(input) // TODO thread starvation?
         val iter = ImageIO.getImageWritersByFormatName("JPG")
         val baos = ByteArrayOutputStream()
         if (iter.hasNext()) {

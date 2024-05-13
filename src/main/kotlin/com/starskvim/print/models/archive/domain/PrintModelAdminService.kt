@@ -3,6 +3,7 @@ package com.starskvim.print.models.archive.domain
 import com.starskvim.print.models.archive.domain.create.CreateArchiveProcessor
 import com.starskvim.print.models.archive.domain.create.FolderScanService
 import com.starskvim.print.models.archive.domain.create.UpdateArchiveProcessor
+import com.starskvim.print.models.archive.domain.image.MinioService
 import com.starskvim.print.models.archive.domain.model.initialize.ArchiveTaskContext
 import com.starskvim.print.models.archive.persistance.PrintModelDataService
 import mu.KLogging
@@ -14,7 +15,8 @@ class PrintModelAdminService(
     private val dataService: PrintModelDataService,
     private val categoriesInfoService: CategoriesInfoService,
     private val createService: CreateArchiveProcessor,
-    private val updateService: UpdateArchiveProcessor
+    private val updateService: UpdateArchiveProcessor,
+    private val minioService: MinioService
 ) {
 
     suspend fun initializeArchive() {
@@ -42,6 +44,10 @@ class PrintModelAdminService(
     suspend fun checkFolders() {
         val files = scanService.getFilesFromDisk()
         logger.info { "Files found: ${files.size}" }
+    }
+
+    suspend fun recreateBucket() {
+        minioService.recreateBucket()
     }
 
     companion object : KLogging()

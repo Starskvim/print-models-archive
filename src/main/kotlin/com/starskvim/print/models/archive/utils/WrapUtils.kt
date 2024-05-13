@@ -30,9 +30,10 @@ object WrapUtils {
     fun <S, R> OpExceptionResult<S, R>.logErrorIfFail(
         errorMessage: String,
         logger: KLogger
-    ) {
+    ): OpExceptionResult<S, R> {
         if (isNoSuccess()) {
             logger.error(exception) { errorMessage }
         }
+        return this
     }
 }

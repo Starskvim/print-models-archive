@@ -10,6 +10,7 @@ object Constants {
         const val CLEAR_ARCHIVE = "/clear-archive"
         const val CHECK_FOLDERS = "/check-folders"
         const val GET_PROGRESS_TASK = "/progress-task"
+        const val RECREATE_BUCKET = "/recreate-bucket"
     }
 
     object Task {
@@ -86,5 +87,24 @@ object Constants {
         const val ZIPS = "zips"
         const val OTHS = "oths"
         const val RATE = "rate"
+    }
+
+    object S3 {
+        // todo config ?
+        const val BUCKET_POLICY = """
+                {
+                  "Version": "2012-10-17",
+                  "Statement": [
+                    {
+                      "Effect": "Allow",
+                      "Principal": "*",
+                      "Action": [
+                        "s3:GetObject"
+                      ],
+                      "Resource": "arn:aws:s3:::print-model-image/*"
+                    }
+                  ]
+                }
+                """
     }
 }
