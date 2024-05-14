@@ -28,7 +28,8 @@ class PrintModelSearchDataService(
 
     suspend fun getPrintModelsPage(
         searchParams: PrintModelSearchParams,
-        pageable: Pageable
+        pageable: Pageable,
+        needCount: Boolean = true
     ): Page<PrintModelData> {
         val query = Query()
         addIsLikeCriteria(query, MODEL_NAME, searchParams.modelName)
@@ -37,7 +38,10 @@ class PrintModelSearchDataService(
         addIsCriteria(query, NSFW, searchParams.nsfwOnly)
         addGteCriteria(query, RATE, searchParams.rate)
         addExcludeFieldsCriteria(query, ZIPS, OTHS)
-        val totalCount = template.count(query, PrintModelData::class.java).awaitSingleOrNull()
+        val totalCount = when (needCount) {
+            true -> template.count(query, PrintModelData::class.java).awaitSingleOrNull()
+            false -> null
+        }
         query.with(pageable)
         val result = template.find(query, PrintModelData::class.java).collectList().awaitSingleOrNull()
         return PageImpl(result?.toList() ?: emptyList(), pageable, totalCount ?: 0)

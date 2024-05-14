@@ -36,8 +36,14 @@ class PrintModelDataService(
     @LoggTime
     suspend fun deleteAll(): DeleteResult = template.remove(Query(), PRINT_MODELS).awaitSingle()
 
-    suspend fun getPrintModels(searchParams: PrintModelSearchParams, pageable: Pageable): Page<PrintModelData> {
-        return searchDataService.getPrintModelsPage(searchParams, pageable)
+    suspend fun getPrintModels(
+        searchParams: PrintModelSearchParams,
+        pageable: Pageable
+    ): Page<PrintModelData> {
+        return searchDataService.getPrintModelsPage(
+            searchParams,
+            pageable
+        )
     }
 
     suspend fun getPrintModelById(modelId: String): PrintModelData? {

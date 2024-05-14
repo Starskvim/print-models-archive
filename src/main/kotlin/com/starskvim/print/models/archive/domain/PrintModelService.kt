@@ -2,7 +2,9 @@ package com.starskvim.print.models.archive.domain
 
 import com.starskvim.print.models.archive.mapping.PrintModelMapper
 import com.starskvim.print.models.archive.persistance.PrintModelDataService
+import com.starskvim.print.models.archive.persistance.PrintModelSearchDataService
 import com.starskvim.print.models.archive.rest.model.ptint_model.PrintModel
+import com.starskvim.print.models.archive.rest.model.ptint_model.PrintModelSuggest
 import com.starskvim.print.models.archive.rest.model.request.PrintModelSearchParams
 import com.starskvim.print.models.archive.rest.model.response.PrintModelCardsResponse
 import com.starskvim.print.models.archive.utils.Exceptions.MODEL_NOT_FOUND
@@ -16,6 +18,7 @@ import ru.starskvim.inrastructure.webflux.advice.exception.NotFoundException
 @Service
 class PrintModelService(
     private val dataService: PrintModelDataService,
+    private val searchDataService: PrintModelSearchDataService,
     private val mapper: PrintModelMapper
 ) {
 
@@ -24,7 +27,10 @@ class PrintModelService(
         searchParams: PrintModelSearchParams,
         pageable: Pageable
     ): PrintModelCardsResponse {
-        val dataPage = dataService.getPrintModels(searchParams, pageable)
+        val dataPage = searchDataService.getPrintModelsPage(
+            searchParams,
+            pageable
+        )
         return PrintModelCardsResponse(
             models = dataPage.content.map { mapper.dataToCardApi(it) },
             totalPages = dataPage.totalPages,
@@ -32,11 +38,22 @@ class PrintModelService(
         )
     }
 
+    suspend fun getSuggestionModels(
+        query: String
+    ): List<PrintModelSuggest> {
+        val dataPage = searchDataService.getPrintModelsPage(
+            PrintModelSearchParams(modelName = query),
+            Pageable.ofSize(3),
+            needCount = false
+        )
+        return mapper.dataToSuggestApi(dataPage.content)
+    }
+
     suspend fun getPrintModelsPage(
         searchParams: PrintModelSearchParams,
         pageable: Pageable
     ): Page<PrintModel> {
-        val dataPage = dataService.getPrintModels(searchParams, pageable)
+        val dataPage = searchDataService.getPrintModelsPage(searchParams, pageable)
         return PageImpl(mapper.dataToApi(dataPage.content), pageable, dataPage.totalElements)
     }
 
