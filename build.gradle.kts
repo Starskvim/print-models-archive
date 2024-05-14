@@ -50,7 +50,7 @@ dependencies {
 	implementation("org.mapstruct:mapstruct:1.5.5.Final")
 	kapt("org.mapstruct:mapstruct-processor:1.5.5.Final")
 	// experimental infrastructure
-	implementation("ru.starskvim:infrastructure-webflux-3-kotlin-autoconfiguration:0.1.1-EXPERIMENTAL")
+	implementation("ru.starskvim:infrastructure-webflux-3-kotlin-autoconfiguration:0.1.2-EXPERIMENTAL")
 }
 
 kapt {
