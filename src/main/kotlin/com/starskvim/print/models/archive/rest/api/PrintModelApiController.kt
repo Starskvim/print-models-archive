@@ -36,6 +36,7 @@ class PrintModelApiController(
         )
     }
 
+    // TODO by name in url?
     @GetMapping("/{id}")
     suspend fun getModel(
         @PathVariable("id") id: String

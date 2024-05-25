@@ -20,6 +20,7 @@ class CategoriesInfoService(
     private val dataService: CategoriesInfoDataService
 ) {
 
+    // TODO upper case search ?
     // TODO cache
     // TODO mapping
     suspend fun getCatalog(): CatalogApi {
