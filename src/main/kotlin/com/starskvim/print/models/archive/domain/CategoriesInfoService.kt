@@ -30,7 +30,7 @@ class CategoriesInfoService(
             catalog = catalogData.catalog
                 .filter { it.level == ZERO_INT },
             categories = catalogData.catalog
-                .filter { it.level != ZERO_INT }
+//                .filter { it.level != ZERO_INT }
                 .sortedByDescending { it.size }
         )
     }
