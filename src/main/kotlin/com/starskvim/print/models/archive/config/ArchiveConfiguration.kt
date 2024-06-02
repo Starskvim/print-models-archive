@@ -7,6 +7,7 @@ class ArchiveConfiguration(
 
     val version: String,
     val saveBatch: Int,
-    val coroutineBatch: Int
+    val coroutineBatch: Int,
+    val tempFolderPath: String
 
 )

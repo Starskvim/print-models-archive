@@ -18,9 +18,9 @@ import org.springframework.data.mongodb.core.query.Query
 import org.springframework.stereotype.Service
 
 @Service
-class PrintModelSearchDataService(
+class PrintModelDataSearchService(
     private val template: ReactiveMongoTemplate
-) : SearchMongoService {
+) : MongoSearchService {
 
     suspend fun findById(modelId: String): PrintModelData? {
         return template.findById(modelId, PrintModelData::class.java).awaitFirstOrNull()

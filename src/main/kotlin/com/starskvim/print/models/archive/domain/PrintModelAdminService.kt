@@ -1,8 +1,8 @@
 package com.starskvim.print.models.archive.domain
 
 import com.starskvim.print.models.archive.domain.create.CreateArchiveProcessor
-import com.starskvim.print.models.archive.domain.create.FolderScanService
 import com.starskvim.print.models.archive.domain.create.UpdateArchiveProcessor
+import com.starskvim.print.models.archive.domain.files.FolderScanService
 import com.starskvim.print.models.archive.domain.image.MinioService
 import com.starskvim.print.models.archive.domain.model.initialize.ArchiveTaskContext
 import com.starskvim.print.models.archive.persistance.PrintModelDataService

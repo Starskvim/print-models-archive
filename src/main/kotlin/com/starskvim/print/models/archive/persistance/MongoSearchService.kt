@@ -5,7 +5,7 @@ import org.springframework.data.domain.Sort.by
 import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
 
-interface SearchMongoService {
+interface MongoSearchService {
 
     fun addIsCriteria(query: Query, field: String, value: Any?): Query {
         if (value != null) {

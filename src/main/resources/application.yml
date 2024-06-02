@@ -25,6 +25,7 @@ archive-properties:
   version: "0.0.2-SNAPSHOT"
   saveBatch: 100
   coroutineBatch: 100
+  tempFolderPath: "?"
 
 springdoc:
   show-actuator: false

@@ -1,6 +1,7 @@
 package com.starskvim.print.models.archive.rest.api
 
 import com.starskvim.print.models.archive.domain.PrintModelAdminService
+import com.starskvim.print.models.archive.domain.PrintModelDownloadsService
 import com.starskvim.print.models.archive.domain.progress.TaskProgressService
 import com.starskvim.print.models.archive.utils.Constants.Task.INITIALIZE_ARCHIVE_TASK
 import com.starskvim.print.models.archive.utils.Constants.Url.CHECK_FOLDERS
@@ -16,7 +17,8 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/api/admin")
 class ArchiveAdminApiController(
     private val adminService: PrintModelAdminService,
-    private val taskProgressService: TaskProgressService
+    private val taskProgressService: TaskProgressService,
+    private val downloadsService: PrintModelDownloadsService,
 ) {
 
     @ResponseStatus(value = HttpStatus.OK)
@@ -42,4 +44,16 @@ class ArchiveAdminApiController(
     @ResponseStatus(value = HttpStatus.OK)
     @PutMapping(RECREATE_BUCKET)
     suspend fun recreateBucket() = adminService.recreateBucket()
+
+    @ResponseStatus(value = HttpStatus.OK)
+    @PutMapping("/download/{id}")
+    suspend fun addDownloadModel(@PathVariable id: String) = downloadsService.addToDownloads(id)
+
+    @ResponseStatus(value = HttpStatus.OK)
+    @PostMapping("/download/{id}")
+    suspend fun downloadModel(@PathVariable id: String) = downloadsService.downloadById(id)
+
+    @ResponseStatus(value = HttpStatus.OK)
+    @PostMapping("/download")
+    suspend fun downloadModels() = downloadsService.downloadAll()
 }

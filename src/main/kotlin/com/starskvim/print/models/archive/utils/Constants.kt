@@ -37,6 +37,7 @@ object Constants {
 
     object Data {
         const val ADMIN_FAVORITES_ID = "admin_favorites_id"
+        const val ADMIN_DOWNLOADS_ID = "admin_downloads_id"
     }
 
     object TypeAlias {
@@ -44,6 +45,7 @@ object Constants {
         const val CATEGORIES_INFO_DATA = "CategoriesInfoData"
         const val USER_FAVORITES_DATA = "UserFavoritesData"
         const val PRINT_MODEL_FAVORITES = "PrintModelFavorites"
+        const val PRINT_MODEL_DOWNLOADS = "PrintModelDownloads"
         const val CATALOG = "Catalog"
     }
 
@@ -106,5 +108,9 @@ object Constants {
                   ]
                 }
                 """
+    }
+
+    object Logs {
+        const val UN_ER = "Unexpected error."
     }
 }

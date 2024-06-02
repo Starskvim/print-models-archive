@@ -1,8 +1,8 @@
 package com.starskvim.print.models.archive.domain
 
 import com.starskvim.print.models.archive.mapping.PrintModelMapper
+import com.starskvim.print.models.archive.persistance.PrintModelDataSearchService
 import com.starskvim.print.models.archive.persistance.PrintModelDataService
-import com.starskvim.print.models.archive.persistance.PrintModelSearchDataService
 import com.starskvim.print.models.archive.rest.model.ptint_model.PrintModel
 import com.starskvim.print.models.archive.rest.model.ptint_model.PrintModelSuggest
 import com.starskvim.print.models.archive.rest.model.request.PrintModelSearchParams
@@ -12,13 +12,12 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
-
 import ru.starskvim.inrastructure.webflux.advice.exception.NotFoundException
 
 @Service
 class PrintModelService(
     private val dataService: PrintModelDataService,
-    private val searchDataService: PrintModelSearchDataService,
+    private val searchDataService: PrintModelDataSearchService,
     private val mapper: PrintModelMapper
 ) {
 

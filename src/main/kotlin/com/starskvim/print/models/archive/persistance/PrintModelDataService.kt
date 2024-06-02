@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service
 @Service
 class PrintModelDataService(
     private val template: ReactiveMongoTemplate,
-    private val searchDataService: PrintModelSearchDataService
+    private val searchDataService: PrintModelDataSearchService
 ) {
 
     suspend fun savePrintModel(model: PrintModelData): PrintModelData? = template.save(model)

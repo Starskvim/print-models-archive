@@ -30,6 +30,12 @@ scan:
   address2: F:\[Patreon]\[test]
   address3: F:\[Patreon]\[test]
 
+archive-properties:
+  version: "0.0.2-SNAPSHOT"
+  saveBatch: 100
+  coroutineBatch: 100
+  tempFolderPath: F:\[Patreon]\[archive temp]
+
 springdoc:
   show-actuator: true
   api-docs.enabled: true
