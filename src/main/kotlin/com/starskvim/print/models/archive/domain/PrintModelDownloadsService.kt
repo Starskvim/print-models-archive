@@ -34,8 +34,8 @@ class PrintModelDownloadsService(
 
     suspend fun downloadById(id: String) {
         val model = dataService.getPrintModelById(id)
-            ?: throw NotFoundException("Noy found for download")
-        val sourcePath = model.path ?: throw DomainException("Invalid model path")
+            ?: throw NotFoundException("$UN_ER Noy found for download id $id")
+        val sourcePath = model.path ?: throw DomainException("$UN_ER Invalid model path id $id")
         val targetPath = config.tempFolderPath + model.folderName
         folderService.copyDirectoryAsync(
             source = File(sourcePath),
