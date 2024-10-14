@@ -6,6 +6,7 @@ import com.starskvim.print.models.archive.persistance.model.print_model.PrintMod
 import com.starskvim.print.models.archive.rest.model.request.PrintModelSearchParams
 import com.starskvim.print.models.archive.utils.Constants.Document.PRINT_MODELS
 import com.starskvim.print.models.archive.utils.Constants.Fields.FOLDER_NAME
+import com.starskvim.print.models.archive.utils.Constants.Logs.UN_ER
 import kotlinx.coroutines.reactive.awaitFirstOrNull
 import kotlinx.coroutines.reactive.awaitSingle
 import kotlinx.coroutines.reactor.awaitSingleOrNull
@@ -17,6 +18,7 @@ import org.springframework.data.mongodb.core.aggregation.Aggregation
 import org.springframework.data.mongodb.core.aggregation.GroupOperation
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.stereotype.Service
+import ru.starskvim.inrastructure.webflux.advice.exception.NotFoundException
 
 
 @Service
@@ -48,6 +50,11 @@ class PrintModelDataService(
 
     suspend fun getPrintModelById(modelId: String): PrintModelData? {
         return searchDataService.findById(modelId)
+    }
+
+    suspend fun getPrintModelByIdRequired(modelId: String): PrintModelData {
+        return searchDataService.findById(modelId)
+            ?: throw NotFoundException("$UN_ER Not found for download id $modelId")
     }
 
     suspend fun resolveAllExistModelNames(): MutableSet<String> {
