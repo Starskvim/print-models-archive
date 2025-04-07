@@ -78,9 +78,6 @@ class MinioDataService(
                 .objects(objectsToDelete)
                 .build()
         )
-        for (errorResult in results) {
-            val error = errorResult.get()
-        }
         client.removeBucket(
             RemoveBucketArgs
                 .builder()

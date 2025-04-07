@@ -40,3 +40,12 @@ springdoc:
   show-actuator: true
   api-docs.enabled: true
   swagger-ui.enabled: true
+
+google:
+  gemini:
+    job: false
+    cron: "*/60 * * * * *"
+    batch-size: 10
+    base-url: https://generativelanguage.googleapis.com/v1beta/models
+    model: gemini-1.5-flash-latest
+    api-key: "?"

@@ -98,6 +98,7 @@ abstract class AbstractArchiveProcessor(
             zips = mutableListOf(),
             oths = mutableListOf(),
             addedAt = dateTimeFromLong(file.lastModified()),
+            meta = null, // TODO meta from file
             createdAt = createdAt,
             modifiedAt = createdAt
         )

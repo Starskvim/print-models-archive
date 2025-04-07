@@ -89,6 +89,7 @@ object Constants {
         const val ZIPS = "zips"
         const val OTHS = "oths"
         const val RATE = "rate"
+        const val META = "meta"
     }
 
     object S3 {

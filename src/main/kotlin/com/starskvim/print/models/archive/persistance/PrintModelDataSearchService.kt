@@ -3,6 +3,7 @@ package com.starskvim.print.models.archive.persistance
 import com.starskvim.print.models.archive.persistance.model.print_model.PrintModelData
 import com.starskvim.print.models.archive.rest.model.request.PrintModelSearchParams
 import com.starskvim.print.models.archive.utils.Constants.Fields.CATEGORIES
+import com.starskvim.print.models.archive.utils.Constants.Fields.META
 import com.starskvim.print.models.archive.utils.Constants.Fields.MODEL_NAME
 import com.starskvim.print.models.archive.utils.Constants.Fields.NSFW
 import com.starskvim.print.models.archive.utils.Constants.Fields.OTHS
@@ -45,6 +46,18 @@ class PrintModelDataSearchService(
         query.with(pageable)
         val result = template.find(query, PrintModelData::class.java).collectList().awaitSingleOrNull()
         return PageImpl(result?.toList() ?: emptyList(), pageable, totalCount ?: 0)
+    }
+
+    suspend fun getPrintModelsForJob(
+        limit: Int
+    ): List<PrintModelData> {
+        val query = Query()
+        query.addIsNotNullCriteria(META) // todo
+        query.limit(limit)
+        return template.find(query, PrintModelData::class.java)
+            .collectList()
+            .awaitSingleOrNull()
+            ?: emptyList()
     }
 
     private suspend fun createPage(

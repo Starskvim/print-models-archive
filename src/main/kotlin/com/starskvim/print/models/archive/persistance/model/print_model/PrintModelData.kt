@@ -1,6 +1,7 @@
 package com.starskvim.print.models.archive.persistance.model.print_model
 
 import com.starskvim.print.models.archive.persistance.model.Auditable
+import com.starskvim.print.models.archive.persistance.model.print_model.meta.Meta
 import com.starskvim.print.models.archive.utils.Constants.Document.PRINT_MODELS
 import com.starskvim.print.models.archive.utils.Constants.TypeAlias.PRINT_MODEL_DATA
 import org.springframework.data.annotation.Id
@@ -25,6 +26,7 @@ data class PrintModelData(
     var zips: MutableList<PrintModelZipData>?,
     var oths: MutableList<PrintModelOthData>?,
     val addedAt: LocalDateTime,
+    var meta: Meta?,
     override var createdAt: LocalDateTime, // todo time + index
     override var modifiedAt: LocalDateTime
 
