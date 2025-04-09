@@ -35,7 +35,7 @@ class ImageTaggingService(
             Focus on objects, scene, concepts, and actions. The name of the source, if known, such as a movie or game.
             If obscene add 18+. Do not add any other text. 
             Example: garfield, cat, sofa, indoor, pet, sleeping, window, daytime
-            """
+            """ // TODO filename?
         private val SUPPORTED_MIME_TYPES =
             listOf("image/png", "image/jpeg", "image/webp", "image/heic", "image/heif")
     }
