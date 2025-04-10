@@ -90,6 +90,7 @@ object Constants {
         const val OTHS = "oths"
         const val RATE = "rate"
         const val META = "meta"
+        const val META_PROCESSORS = "meta.processors"
     }
 
     object S3 {

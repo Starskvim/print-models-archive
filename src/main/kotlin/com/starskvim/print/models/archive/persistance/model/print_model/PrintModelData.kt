@@ -35,4 +35,12 @@ data class PrintModelData(
     fun hasPreview(): Boolean = preview != null
 
     fun hasImages(): Boolean = oths != null
+
+    fun getLazyMeta(): Meta {
+        if (meta != null) {
+            return meta!!
+        }
+        meta = Meta(mutableListOf(), mutableListOf())
+        return meta!!
+    }
 }

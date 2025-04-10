@@ -38,6 +38,9 @@ google:
     cron: "*/60 * * * * *"
     batch-size: 10
     base-url: https://generativelanguage.googleapis.com/v1beta/models
-    model: gemini-1.5-flash-latest
+    model: gemini-2.0-flash-latest
     processor-name: gemini-1.5-flash-latest-v1
     api-key: "?"
+
+local-context:
+  job: false

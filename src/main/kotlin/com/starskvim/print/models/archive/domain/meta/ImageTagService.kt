@@ -21,7 +21,7 @@ import java.nio.file.Paths
 import java.util.*
 
 @Service
-class ImageTaggingService(
+class ImageTagService(
     @Qualifier("geminiWebClient")
     private val geminiWebClient: WebClient,
     private val objectMapper: ObjectMapper,
@@ -35,15 +35,25 @@ class ImageTaggingService(
             Focus on objects, scene, concepts, and actions. The name of the source, if known, such as a movie or game.
             If obscene add 18+. Do not add any other text. 
             Example: garfield, cat, sofa, indoor, pet, sleeping, window, daytime
-            """ // TODO filename?
+            """
+        private const val TAGGING_PROMPT_W_F_N = """
+            Describe this image using only a comma-separated list of short, relevant, lowercase tags. 
+            Focus on objects, scene, concepts, and actions. The name of the source, if known, such as a movie or game.
+            If obscene add 18+. Do not add any other text.
+            Example: garfield, cat, sofa, indoor, pet, sleeping, window, daytime
+            Perhaps the file name will help you - 
+            """
         private val SUPPORTED_MIME_TYPES =
             listOf("image/png", "image/jpeg", "image/webp", "image/heic", "image/heif")
     }
 
-    suspend fun generateTags(imagePathString: String): List<String> { // todo
+    suspend fun generateTags(
+        imagePathString: String,
+        modelName: String? = null
+    ): List<String> { // todo
         val (imageBytes, mimeType) = readAndValidateLocalImage(imagePathString)
         val base64ImageData = Base64.getEncoder().encodeToString(imageBytes)
-        val requestBody = buildRequestBodyMap(mimeType, base64ImageData)
+        val requestBody = buildRequestBodyMap(mimeType, base64ImageData, modelName)
 
         try {
             val responseBody = geminiWebClient.post()
@@ -68,40 +78,50 @@ class ImageTaggingService(
         }
     }
 
-    private suspend fun readAndValidateLocalImage(imagePathString: String): Pair<ByteArray, String> = withContext(Dispatchers.IO) {
-        val imagePath = try {
-            Paths.get(imagePathString).normalize()
-        } catch (e: InvalidPathException) {
-            throw e
-        }
-
-        if (!Files.exists(imagePath) || !Files.isRegularFile(imagePath)) {
-            throw NoSuchFileException(imagePath.toString())
-        }
-
-        log.debug("Reading bytes from file: {}", imagePath)
-        val imageBytes = Files.readAllBytes(imagePath)
-        log.debug("Read {} bytes from file.", imageBytes.size)
-
-        val mimeType = Files.probeContentType(imagePath)?.lowercase()
-            ?: run {
-                log.warn{"Could not determine MIME type for path: $imagePath. Attempting default."}
-                "application/octet-stream"
+    private suspend fun readAndValidateLocalImage(imagePathString: String): Pair<ByteArray, String> =
+        withContext(Dispatchers.IO) {
+            val imagePath = try {
+                Paths.get(imagePathString).normalize()
+            } catch (e: InvalidPathException) {
+                throw e
             }
 
-        if (mimeType !in SUPPORTED_MIME_TYPES) {
-            val errorMsg = "Unsupported image MIME type detected for file ${imagePath}: $mimeType. Supported: $SUPPORTED_MIME_TYPES"
-            log.error(errorMsg)
-            throw IllegalArgumentException(errorMsg)
+            if (!Files.exists(imagePath) || !Files.isRegularFile(imagePath)) {
+                throw NoSuchFileException(imagePath.toString())
+            }
+
+            log.debug("Reading bytes from file: {}", imagePath)
+            val imageBytes = Files.readAllBytes(imagePath)
+            log.debug("Read {} bytes from file.", imageBytes.size)
+
+            val mimeType = Files.probeContentType(imagePath)?.lowercase()
+                ?: run {
+                    log.warn { "Could not determine MIME type for path: $imagePath. Attempting default." }
+                    "application/octet-stream"
+                }
+
+            if (mimeType !in SUPPORTED_MIME_TYPES) {
+                val errorMsg =
+                    "Unsupported image MIME type detected for file ${imagePath}: $mimeType. Supported: $SUPPORTED_MIME_TYPES"
+                log.error(errorMsg)
+                throw IllegalArgumentException(errorMsg)
+            }
+            log.debug("Detected MIME type: {}", mimeType)
+
+            imageBytes to mimeType
         }
-        log.debug("Detected MIME type: {}", mimeType)
 
-        imageBytes to mimeType
-    }
-
-    private fun buildRequestBodyMap(mimeType: String, base64ImageData: String): Map<String, Any> {
+    private fun buildRequestBodyMap(
+        mimeType: String,
+        base64ImageData: String,
+        modelName: String?
+    ): Map<String, Any> {
+        val prompt = when (modelName) {
+            null -> TAGGING_PROMPT
+            else -> TAGGING_PROMPT_W_F_N + modelName
+        }
         val inlineData = mapOf("mimeType" to mimeType, "data" to base64ImageData)
-        val textPart = mapOf("text" to TAGGING_PROMPT)
+        val textPart = mapOf("text" to prompt)
         val imagePart = mapOf("inlineData" to inlineData)
         val parts = listOf(textPart, imagePart)
         val content = mapOf("parts" to parts)
@@ -124,7 +144,7 @@ class ImageTaggingService(
                 ?.asText("NONE")
                 ?: "NONE"
             if (blockReason != "NONE" && blockReason != "BLOCK_REASON_UNSPECIFIED") {
-                log.warn{"Prompt was blocked. Reason:  $blockReason"}
+                log.warn { "Prompt was blocked. Reason:  $blockReason" }
             } else {
                 log.warn("No 'candidates' found in the successful response.")
             }
@@ -136,10 +156,10 @@ class ImageTaggingService(
 
         if (finishReason != "STOP") {
             val blockReasonStr = firstCandidate?.path("finishReasonDetails")
-                    ?.path("blockReason")
-                    ?.asText("UNKNOWN")
-                    ?: "UNKNOWN"
-            log.warn{"Gemini generation finished with reason: $finishReason. Block Reason: $blockReasonStr"}
+                ?.path("blockReason")
+                ?.asText("UNKNOWN")
+                ?: "UNKNOWN"
+            log.warn { "Gemini generation finished with reason: $finishReason. Block Reason: $blockReasonStr" }
             if (finishReason == "SAFETY") {
                 log.warn("Generation blocked due to safety settings.")
             }
@@ -157,7 +177,7 @@ class ImageTaggingService(
             return emptyList()
         }
 
-        log.debug{"Raw text extracted from Gemini response: $rawText"}
+        log.debug { "Raw text extracted from Gemini response: $rawText" }
 
         val tags = rawText.split(',')
             .map { it.trim() }
@@ -176,7 +196,7 @@ class ImageTaggingService(
                 ?.asText(defaultMessage)
                 ?: defaultMessage
         } catch (e: JsonProcessingException) {
-            log.warn{"Could not parse error response body: $errorBody"}
+            log.warn { "Could not parse error response body: $errorBody" }
             defaultMessage
         }
     }

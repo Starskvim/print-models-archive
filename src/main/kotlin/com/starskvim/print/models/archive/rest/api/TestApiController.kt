@@ -1,7 +1,8 @@
 package com.starskvim.print.models.archive.rest.api
 
+import com.starskvim.print.models.archive.domain.job.LocalContextJobService
 import com.starskvim.print.models.archive.domain.meta.ImageMetaService
-import com.starskvim.print.models.archive.domain.meta.ImageTaggingService
+import com.starskvim.print.models.archive.domain.meta.ImageTagService
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -11,15 +12,16 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api/test")
 class TestApiController(
-    private val taggingService: ImageTaggingService,
-    private val imageMetaService: ImageMetaService
+    private val taggingService: ImageTagService,
+    private val imageMetaService: ImageMetaService,
+    private val localContextJobService: LocalContextJobService
 ) {
 
     @PostMapping("/tags")
     suspend fun testTag(
         @RequestBody request: Request,
     ) : List<String> {
-        return taggingService.generateTags(request.path);
+        return taggingService.generateTags(request.path, request.name);
     }
 
     @PostMapping("/tags/{id}")
@@ -29,7 +31,15 @@ class TestApiController(
         imageMetaService.createMetaById(id)
     }
 
+    @PostMapping("/context/{id}")
+    suspend fun testModelContext(
+        @PathVariable id: String,
+    ) {
+        localContextJobService.process(id)
+    }
+
     class Request(
-        val path: String
+        val path: String,
+        val name: String
     )
 }

@@ -4,13 +4,12 @@ import com.starskvim.print.models.archive.config.ai.GeminiClientConfiguration
 import com.starskvim.print.models.archive.persistance.PrintModelDataService
 import com.starskvim.print.models.archive.persistance.model.print_model.PrintModelData
 import com.starskvim.print.models.archive.persistance.model.print_model.meta.ImageMeta
-import com.starskvim.print.models.archive.persistance.model.print_model.meta.Meta
 import mu.KLogging
 import org.springframework.stereotype.Service
 
 @Service
 class ImageMetaService(
-    private val taggingService: ImageTaggingService,
+    private val taggingService: ImageTagService,
     private val dataService: PrintModelDataService,
     private val config: GeminiClientConfiguration
 ) {
@@ -22,23 +21,26 @@ class ImageMetaService(
     }
 
     suspend fun createMeta(model: PrintModelData) {
-        val targetImage = model.oths
-            ?.find { it.path == model.preview }
-            ?: return
-
-        val tags = targetImage
-            .path
-            ?.let { taggingService.generateTags(it) }
-            ?: return
-
-        model.apply {// todo add logic
-            meta = Meta(
-                listOf(ImageMeta(targetImage.fileName!!, config.processorName, tags)),
-                listOf(config.processorName)
-            )
+        val imageMeta = generateImageMeta(model)
+        model.getLazyMeta().apply {
+            images.add(imageMeta)
+            processors.add(config.processorName)
         }
         dataService.savePrintModel(model)
-        logger.info { "ImageAiMetaJob: for ${model.modelName} meta added" }
+        logger.info { "ImageAiMetaJob: for [${model.modelName}] meta added, tags size [${imageMeta.tags.size}]" }
+    }
+
+    suspend fun generateImageMeta(model: PrintModelData): ImageMeta {
+        val targetImage = model.oths
+            ?.find { it.path == model.preview }
+        val tags = targetImage
+            ?.path
+            ?.let { taggingService.generateTags(it, model.modelName) }
+        return ImageMeta(
+            fileName = targetImage?.fileName ?: "",
+            processor = config.processorName,
+            tags = tags ?: listOf()
+        )
     }
 
     companion object : KLogging()

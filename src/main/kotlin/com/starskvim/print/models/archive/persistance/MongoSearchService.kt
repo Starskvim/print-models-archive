@@ -40,6 +40,27 @@ interface MongoSearchService { // java style :(
         return query
     }
 
+    fun Query.addInCriteria(field: String, value: String?): Query {
+        if (!value.isNullOrEmpty()) {
+            this.addCriteria(Criteria.where(field).`in`(value))
+        }
+        return this
+    }
+
+    fun Query.addNinCriteria(field: String, value: List<String>?): Query {
+        if (!value.isNullOrEmpty()) {
+            this.addCriteria(Criteria.where(field).nin(value))
+        }
+        return this
+    }
+
+    fun Query.addNinCriteria(field: String, value: String?): Query {
+        if (!value.isNullOrEmpty()) {
+            this.addCriteria(Criteria.where(field).nin(value))
+        }
+        return this
+    }
+
     fun addExcludeFieldsCriteria(query: Query, vararg fields: String): Query {
         for (field in fields) query.fields().exclude(field)
         return query

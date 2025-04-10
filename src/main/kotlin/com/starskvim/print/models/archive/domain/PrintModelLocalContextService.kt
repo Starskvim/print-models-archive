@@ -12,18 +12,26 @@ import org.springframework.stereotype.Service
 import java.io.File
 
 @Service
-class PrintModelContextService(
-    private val dataService: PrintModelDataService,
-    private val folderService: FolderService,
+class PrintModelLocalContextService(
     private val mapper: PrintModelContextMapper,
     private val objectMapper: ObjectMapper
 ) {
 
-    suspend fun saveContext(modelId: String, context: PrintModelContext) {
-        var printModel = dataService.getPrintModelByIdRequired(modelId)
-        val contextFile = File(printModel.path + "context.json")
+    suspend fun saveContext (model: PrintModelData) {
+        saveContext(model.path!!, PrintModelContext(
+            0,
+            null,
+            model.getLazyMeta()
+        ))
+    }
+
+    suspend fun saveContext(modelPath: String, context: PrintModelContext) {
+        val contextFile = File(modelPath + "context.json")
         if (contextFile.exists()) {
             val existContext: PrintModelContext = objectMapper.readValue(contextFile)
+            context.apply {
+                version = existContext.version!! + 1
+            }
             mapper.update(context, existContext)
             objectMapper.writeValue(contextFile, existContext)
         } else {
@@ -31,8 +39,11 @@ class PrintModelContextService(
         }
     }
 
-    suspend fun loadContext(model: PrintModelData): PrintModelContext? {
-        //  TODO
+    suspend fun loadContext(modelPath: String): PrintModelContext? {
+        val contextFile = File(modelPath + "context.json")
+        if (contextFile.exists()) {
+            return objectMapper.readValue(contextFile)
+        }
         return null
     }
 
