@@ -3,11 +3,7 @@ package com.starskvim.print.models.archive.rest.api
 import com.starskvim.print.models.archive.domain.job.LocalContextJobService
 import com.starskvim.print.models.archive.domain.meta.ImageMetaService
 import com.starskvim.print.models.archive.domain.meta.ImageTagService
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/test")
@@ -40,6 +36,6 @@ class TestApiController(
 
     class Request(
         val path: String,
-        val name: String
+        val name: String?
     )
 }
