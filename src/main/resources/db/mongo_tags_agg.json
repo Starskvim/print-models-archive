@@ -1,0 +1,28 @@
+[
+  {
+    "$unwind": "$meta.images"
+  },
+  {
+    "$unwind": "$meta.images.tags"
+  },
+  {
+    "$group": {
+      "_id": "$meta.images.tags",
+      "count": {
+        "$sum": 1
+      }
+    }
+  },
+  {
+    "$project": {
+      "_id": 0,
+      "tag": "$_id",
+      "count": 1
+    }
+  },
+  {
+    "$sort": {
+      "count": -1
+    }
+  }
+]

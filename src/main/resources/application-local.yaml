@@ -43,9 +43,10 @@ springdoc:
 
 google:
   gemini:
-    job: false
+    job: true
     cron: "*/60 * * * * *"
     batch-size: 10
     base-url: https://generativelanguage.googleapis.com/v1beta/models
     model: gemini-1.5-flash-latest
-    api-key: "?"
+    processor-name: gemini-2.0-flash-v1
+    api-key: ""

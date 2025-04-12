@@ -9,6 +9,7 @@ class GeminiClientConfiguration (
     val model: String,
     val processorName: String,
     val apikey: String,
-    val batchSize: Int
+    val batchSize: Int,
+    val excludeTags: Set<String>
 
 )

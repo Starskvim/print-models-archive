@@ -22,7 +22,7 @@ data class PrintModelData(
     var rate: Int?,
     var nsfw: Boolean?,
     var categories: MutableList<String>?,
-    var preview: String?,
+    var preview: String?, // storageName in Oth
     var zips: MutableList<PrintModelZipData>?,
     var oths: MutableList<PrintModelOthData>?,
     val addedAt: LocalDateTime,

@@ -21,7 +21,7 @@ class ImageMetaService(
     }
 
     suspend fun createMeta(model: PrintModelData) {
-        val imageMeta = generateImageMeta(model)
+        val imageMeta = generateSingleImageMeta(model)
         model.getLazyMeta().apply {
             images.add(imageMeta)
             processors.add(config.processorName)
@@ -30,17 +30,21 @@ class ImageMetaService(
         logger.info { "ImageAiMetaJob: for [${model.modelName}] meta added, tags size [${imageMeta.tags.size}]" }
     }
 
-    suspend fun generateImageMeta(model: PrintModelData): ImageMeta {
+    suspend fun generateSingleImageMeta(model: PrintModelData): ImageMeta {
         val targetImage = model.oths
-            ?.find { it.path == model.preview }
+            ?.find { it.storageName == model.preview }
         val tags = targetImage
             ?.path
-            ?.let { taggingService.generateTags(it, model.modelName) }
+            ?.let { clearTags(taggingService.generateTags(it, model.modelName)) }
         return ImageMeta(
             fileName = targetImage?.fileName ?: "",
             processor = config.processorName,
             tags = tags ?: listOf()
         )
+    }
+
+    suspend fun clearTags(responseTags: List<String>): List<String> {
+        return responseTags.filter { !config.excludeTags.contains(it) }
     }
 
     companion object : KLogging()

@@ -14,8 +14,8 @@ class ImageAiMetaJob(
     @Scheduled(cron = "\${google.gemini.cron}")
     suspend fun process() {
         logger.info { "ImageAiMetaJob started" }
-        service.process()
-        logger.info { "ImageAiMetaJob finished" }
+        val processed = service.process()
+        logger.info { "ImageAiMetaJob finished. Processed [$processed]" }
     }
 
     companion object : KLogging()

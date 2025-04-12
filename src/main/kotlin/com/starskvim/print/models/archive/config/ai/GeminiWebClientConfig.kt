@@ -43,7 +43,7 @@ class GeminiWebClientConfig {
 
     private fun logRequest(): ExchangeFilterFunction {
         return ExchangeFilterFunction.ofRequestProcessor { clientRequest ->
-            logger.info(">>> {} {}", clientRequest.method(), clientRequest.url())
+            logger.info(">>> {}", clientRequest.method())
             // clientRequest.headers().forEach { name, values -> log.info("  {}: {}", name, values) }
             Mono.just(clientRequest)
         }

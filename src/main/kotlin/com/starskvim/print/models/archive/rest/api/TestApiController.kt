@@ -34,6 +34,12 @@ class TestApiController(
         localContextJobService.process(id)
     }
 
+    @PostMapping("/context")
+    suspend fun testModelContexts(
+    ) {
+        localContextJobService.process()
+    }
+
     class Request(
         val path: String,
         val name: String?

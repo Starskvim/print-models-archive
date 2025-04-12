@@ -38,9 +38,10 @@ google:
     cron: "*/60 * * * * *"
     batch-size: 10
     base-url: https://generativelanguage.googleapis.com/v1beta/models
-    model: gemini-2.0-flash-latest
-    processor-name: gemini-1.5-flash-latest-v1
-    api-key: "?"
+    model: gemini-2.0-flash
+    processor-name: gemini-2.0-flash-v1
+    api-key: ""
+    exclude-tags: [ "3d render", "model", "figurine" ]
 
 local-context:
   job: false

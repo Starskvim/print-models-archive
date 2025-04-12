@@ -14,9 +14,10 @@ class ImageAiMetaJobService(
     private val config: GeminiClientConfiguration
 ) {
 
-    suspend fun process() {
-        searchService.getPrintModelsForMetaJob(config.batchSize, config.processorName)
-            .forEach { WrapUtils.wrapException { imageMetaService.createMeta(it) } } // todo logs
+    suspend fun process(): Int {
+        return searchService.getPrintModelsForMetaJob(config.batchSize, config.processorName)
+            .onEach { WrapUtils.wrapException { imageMetaService.createMeta(it) } }
+            .size
     }
 
     companion object : KLogging()

@@ -2,10 +2,8 @@ package com.starskvim.print.models.archive.domain
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import com.starskvim.print.models.archive.domain.files.FolderService
 import com.starskvim.print.models.archive.domain.model.PrintModelContext
 import com.starskvim.print.models.archive.mapping.PrintModelContextMapper
-import com.starskvim.print.models.archive.persistance.PrintModelDataService
 import com.starskvim.print.models.archive.persistance.model.print_model.PrintModelData
 import mu.KLogging
 import org.springframework.stereotype.Service
@@ -23,10 +21,11 @@ class PrintModelLocalContextService(
             null,
             model.getLazyMeta()
         ))
+        logger.info { "Local context saved for ${model.modelName}" }
     }
 
     suspend fun saveContext(modelPath: String, context: PrintModelContext) {
-        val contextFile = File(modelPath + "context.json")
+        val contextFile = File(modelPath + "\\" + "context.json")
         if (contextFile.exists()) {
             val existContext: PrintModelContext = objectMapper.readValue(contextFile)
             context.apply {

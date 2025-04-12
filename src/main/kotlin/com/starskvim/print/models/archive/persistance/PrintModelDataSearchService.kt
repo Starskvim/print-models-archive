@@ -55,7 +55,7 @@ class PrintModelDataSearchService(
     ): List<PrintModelData> {
         val query = Query()
         query.addNinCriteria(META_PROCESSORS, ninProcessor)
-        query.addInCriteriaa(META_PROCESSORS, inProcessor)
+        // query.addInCriteriaa(META_PROCESSORS, inProcessor)
         query.limit(limit)
         return template.find(query, PrintModelData::class.java)
             .collectList()
