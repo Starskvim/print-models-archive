@@ -1,7 +1,7 @@
 package com.starskvim.print.models.archive.domain
 
 import com.starskvim.print.models.archive.domain.create.CreateArchiveProcessor
-import com.starskvim.print.models.archive.domain.create.UpdateArchiveProcessor
+import com.starskvim.print.models.archive.domain.create.UpdateSyncArchiveProcessor
 import com.starskvim.print.models.archive.domain.files.FolderScanService
 import com.starskvim.print.models.archive.domain.image.MinioService
 import com.starskvim.print.models.archive.domain.model.initialize.ArchiveTaskContext
@@ -15,7 +15,7 @@ class PrintModelAdminService(
     private val dataService: PrintModelDataService,
     private val categoriesInfoService: CategoriesInfoService,
     private val createService: CreateArchiveProcessor,
-    private val updateService: UpdateArchiveProcessor,
+    private val updateService: UpdateSyncArchiveProcessor,
     private val minioService: MinioService
 ) {
 

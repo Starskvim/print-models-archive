@@ -6,12 +6,15 @@ import com.starskvim.print.models.archive.domain.model.initialize.ArchiveTaskCon
 import com.starskvim.print.models.archive.domain.progress.TaskProgressService
 import com.starskvim.print.models.archive.persistance.PrintModelDataService
 import com.starskvim.print.models.archive.utils.Constants.Task.INITIALIZE_ARCHIVE_TASK
+import com.starskvim.print.models.archive.utils.CreateUtils.isNotArtefact
+import com.starskvim.print.models.archive.utils.CreateUtils.isNotJson
 import kotlinx.coroutines.ExecutorCoroutineDispatcher
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import mu.KLogging
 import org.springframework.stereotype.Service
+import java.io.File
 
 @Service
 class CreateArchiveProcessor(
@@ -32,8 +35,9 @@ class CreateArchiveProcessor(
     override suspend fun process(
         context: ArchiveTaskContext
     ): ArchiveTaskContext {
-        context.apply { filesCount = files.size }
-        val fileParts = context.files.chunked(config.coroutineBatch)
+        val filteredFiles = filterInputFiles(context.files)
+        context.apply { filesCount = filteredFiles.size }
+        val fileParts = filteredFiles.chunked(config.coroutineBatch)
         coroutineScope {
             fileParts.forEach { part ->
                 part.map {
@@ -42,6 +46,12 @@ class CreateArchiveProcessor(
             }
         }
         return postProcess(context)
+    }
+
+    private suspend fun filterInputFiles(
+        files: MutableCollection<File>
+    ): List<File> {
+        return files.filter { isNotArtefact(it.parentFile.name) && isNotJson(it) }
     }
 
     companion object : KLogging()

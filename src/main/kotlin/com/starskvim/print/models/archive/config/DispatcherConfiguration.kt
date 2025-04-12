@@ -10,6 +10,7 @@ import java.util.concurrent.Executors
 class DispatcherConfiguration {
 
     @Bean
+    // Virtual? But memory limitations
     fun dispatcher(): ExecutorCoroutineDispatcher {
         return Executors
             .newFixedThreadPool(6)

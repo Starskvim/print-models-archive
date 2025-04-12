@@ -1,5 +1,6 @@
 package com.starskvim.print.models.archive.rest.api
 
+import com.starskvim.print.models.archive.domain.context.PrintModelLocalContextService
 import com.starskvim.print.models.archive.domain.job.LocalContextJobService
 import com.starskvim.print.models.archive.domain.meta.ImageMetaService
 import com.starskvim.print.models.archive.domain.meta.ImageTagService
@@ -10,7 +11,8 @@ import org.springframework.web.bind.annotation.*
 class TestApiController(
     private val taggingService: ImageTagService,
     private val imageMetaService: ImageMetaService,
-    private val localContextJobService: LocalContextJobService
+    private val localContextJobService: LocalContextJobService,
+    private val localContextService: PrintModelLocalContextService
 ) {
 
     @PostMapping("/tags")
@@ -32,6 +34,14 @@ class TestApiController(
         @PathVariable id: String,
     ) {
         localContextJobService.process(id)
+    }
+
+    @PostMapping("/context/load")
+    suspend fun testModelContextGet(
+        @RequestBody request: Request,
+    ) {
+        var r = localContextService.loadContext(request.path)
+        println()
     }
 
     @PostMapping("/context")

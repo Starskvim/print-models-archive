@@ -7,12 +7,13 @@ import com.starskvim.print.models.archive.domain.progress.TaskProgressService
 import com.starskvim.print.models.archive.persistance.PrintModelDataService
 import com.starskvim.print.models.archive.utils.Constants.Task.UPDATE_ARCHIVE_TASK
 import com.starskvim.print.models.archive.utils.CreateUtils.isNotArtefact
+import com.starskvim.print.models.archive.utils.CreateUtils.isNotJson
 import mu.KLogging
 import org.springframework.stereotype.Service
 import java.io.File
 
 @Service
-class UpdateArchiveProcessor(
+class UpdateSyncArchiveProcessor(
     override val dataService: PrintModelDataService,
     override val minioService: MinioService,
     override val taskProgressService: TaskProgressService,
@@ -37,7 +38,7 @@ class UpdateArchiveProcessor(
             logger.info { "Update archive task. New models found. ${newFiles.size}" }
             context.apply { filesCount = newFiles.size }
         }
-        newFiles.map { createModelsAndFiles(it, context, logger) }
+        newFiles.forEach { createModelsAndFiles(it, context, logger) }
         return postProcess(context)
     }
 
@@ -46,7 +47,9 @@ class UpdateArchiveProcessor(
     ): List<File> {
         val savedModelFolders = dataService.resolveAllExistModelNames()
         return files.filter {
-            savedModelFolders.contains(it.parentFile.name).not() && isNotArtefact(it.parentFile.name)
+            savedModelFolders.contains(it.parentFile.name).not()
+                    && isNotArtefact(it.parentFile.name)
+                    && isNotJson(it)
         }
     }
 

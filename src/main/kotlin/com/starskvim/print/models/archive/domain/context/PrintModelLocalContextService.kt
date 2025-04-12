@@ -1,4 +1,4 @@
-package com.starskvim.print.models.archive.domain
+package com.starskvim.print.models.archive.domain.context
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
@@ -39,9 +39,9 @@ class PrintModelLocalContextService(
     }
 
     suspend fun loadContext(modelPath: String): PrintModelContext? {
-        val contextFile = File(modelPath + "context.json")
+        val contextFile = File(modelPath + "\\" + "context.json")
         if (contextFile.exists()) {
-            return objectMapper.readValue(contextFile)
+            return objectMapper.readValue(contextFile, PrintModelContext::class.java)
         }
         return null
     }

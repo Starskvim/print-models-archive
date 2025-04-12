@@ -60,10 +60,10 @@ abstract class AbstractArchiveProcessor(
     ) {
         val folderName = file.parentFile.name
         if (context.modelNames.contains(folderName)) {
-            createNonModelObject(file, folderName, context)
+            createNonEntityObject(file, folderName, context)
         } else {
-            createModel(file, folderName, context)
-            createNonModelObject(file, folderName, context)
+            createModelEntity(file, folderName, context)
+            createNonEntityObject(file, folderName, context)
             logger.info { "Model - create - $folderName" }
         }
         context.fileDone.incrementAndGet()
@@ -75,7 +75,7 @@ abstract class AbstractArchiveProcessor(
     }
 
     // TODO lock for add in concurrent ?
-    private fun createModel(
+    private fun createModelEntity(
         file: File,
         folderName: String,
         context: ArchiveTaskContext
@@ -108,7 +108,7 @@ abstract class AbstractArchiveProcessor(
         return printModel
     }
 
-    private suspend fun createNonModelObject(
+    private suspend fun createNonEntityObject(
         file: File,
         parentFileName: String,
         context: ArchiveTaskContext

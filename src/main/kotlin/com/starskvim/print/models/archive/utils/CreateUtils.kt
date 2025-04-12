@@ -91,4 +91,8 @@ object CreateUtils {
     fun isNotArtefact(name: String): Boolean {
         return name.contains(EC_REG).not()
     }
+
+    fun isNotJson(file: File): Boolean {
+        return file.extension != "json"
+    }
 }

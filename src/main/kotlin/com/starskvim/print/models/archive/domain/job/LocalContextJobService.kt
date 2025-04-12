@@ -1,7 +1,7 @@
 package com.starskvim.print.models.archive.domain.job
 
 import com.starskvim.print.models.archive.config.ai.GeminiClientConfiguration
-import com.starskvim.print.models.archive.domain.PrintModelLocalContextService
+import com.starskvim.print.models.archive.domain.context.PrintModelLocalContextService
 import com.starskvim.print.models.archive.persistance.PrintModelDataSearchService
 import com.starskvim.print.models.archive.persistance.PrintModelDataService
 import com.starskvim.print.models.archive.utils.WrapUtils.wrapException
