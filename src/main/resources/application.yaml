@@ -43,5 +43,8 @@ google:
     api-key: ""
     exclude-tags: [ "3d render", "model", "figurine" ]
 
+openrouter:
+
+
 local-context:
   job: false

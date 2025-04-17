@@ -115,4 +115,20 @@ object Constants {
     object Logs {
         const val UN_ER = "Unexpected error."
     }
+
+    object Prompt {
+        val TAGGING_PROMPT = """
+            Describe this image using only a comma-separated list of short, relevant, lowercase tags. 
+            Focus on objects, scene, concepts, and actions. The name of the source, if known, such as a movie or game.
+            If obscene add 18+. Do not add any other text. 
+            Example: garfield, cat, sofa, indoor, pet, sleeping, window, daytime
+            """.trimIndent()
+        const val TAGGING_PROMPT_W_F_N = """
+            Describe this image using only a comma-separated list of short, relevant, lowercase tags. 
+            Focus on objects, scene, concepts, and actions. The name of the source, if known, such as a movie or game.
+            If obscene add 18+. Do not add any other text.
+            Example: garfield, cat, sofa, indoor, pet, sleeping, window, daytime
+            Perhaps the file name will help you - 
+            """
+    }
 }

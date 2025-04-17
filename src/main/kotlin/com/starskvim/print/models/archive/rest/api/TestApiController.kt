@@ -3,16 +3,18 @@ package com.starskvim.print.models.archive.rest.api
 import com.starskvim.print.models.archive.domain.context.PrintModelLocalContextService
 import com.starskvim.print.models.archive.domain.job.LocalContextJobService
 import com.starskvim.print.models.archive.domain.meta.ImageMetaService
-import com.starskvim.print.models.archive.domain.meta.ImageTagService
+import com.starskvim.print.models.archive.domain.meta.gemini.GeminiImageTagService
+import com.starskvim.print.models.archive.domain.meta.openrouter.OpenRouterService
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/test")
 class TestApiController(
-    private val taggingService: ImageTagService,
+    private val taggingService: GeminiImageTagService,
     private val imageMetaService: ImageMetaService,
     private val localContextJobService: LocalContextJobService,
-    private val localContextService: PrintModelLocalContextService
+    private val localContextService: PrintModelLocalContextService,
+    private val openRouterService: OpenRouterService
 ) {
 
     @PostMapping("/tags")
@@ -20,6 +22,13 @@ class TestApiController(
         @RequestBody request: Request,
     ) : List<String> {
         return taggingService.generateTags(request.path, request.name);
+    }
+
+    @PostMapping("/tags/open")
+    suspend fun testTagOpen(
+        @RequestBody request: Request,
+    ): List<String>? {
+        return openRouterService.generateTags(request.path);
     }
 
     @PostMapping("/tags/{id}")

@@ -1,9 +1,12 @@
-package com.starskvim.print.models.archive.domain.meta
+package com.starskvim.print.models.archive.domain.meta.gemini
 
 import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.starskvim.print.models.archive.config.ai.GeminiClientConfiguration
+import com.starskvim.print.models.archive.utils.Constants.Prompt.TAGGING_PROMPT
+import com.starskvim.print.models.archive.utils.Constants.Prompt.TAGGING_PROMPT_W_F_N
+import com.starskvim.print.models.archive.utils.MetaUtils.splitTags
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import mu.KLogging
@@ -21,31 +24,12 @@ import java.nio.file.Paths
 import java.util.*
 
 @Service
-class ImageTagService(
+class GeminiImageTagService(
     @Qualifier("geminiWebClient")
     private val geminiWebClient: WebClient,
     private val objectMapper: ObjectMapper,
     private val config: GeminiClientConfiguration
 ) {
-
-    companion object {
-        val log = KLogging().logger()
-        private const val TAGGING_PROMPT = """
-            Describe this image using only a comma-separated list of short, relevant, lowercase tags. 
-            Focus on objects, scene, concepts, and actions. The name of the source, if known, such as a movie or game.
-            If obscene add 18+. Do not add any other text. 
-            Example: garfield, cat, sofa, indoor, pet, sleeping, window, daytime
-            """
-        private const val TAGGING_PROMPT_W_F_N = """
-            Describe this image using only a comma-separated list of short, relevant, lowercase tags. 
-            Focus on objects, scene, concepts, and actions. The name of the source, if known, such as a movie or game.
-            If obscene add 18+. Do not add any other text.
-            Example: garfield, cat, sofa, indoor, pet, sleeping, window, daytime
-            Perhaps the file name will help you - 
-            """
-        private val SUPPORTED_MIME_TYPES =
-            listOf("image/png", "image/jpeg", "image/webp", "image/heic", "image/heif")
-    }
 
     suspend fun generateTags(
         imagePathString: String,
@@ -78,7 +62,7 @@ class ImageTagService(
         }
     }
 
-    private suspend fun readAndValidateLocalImage(imagePathString: String): Pair<ByteArray, String> =
+    suspend fun readAndValidateLocalImage(imagePathString: String): Pair<ByteArray, String> =
         withContext(Dispatchers.IO) {
             val imagePath = try {
                 Paths.get(imagePathString).normalize()
@@ -178,11 +162,7 @@ class ImageTagService(
         }
 
         log.debug { "Raw text extracted from Gemini response: $rawText" }
-
-        val tags = rawText.split(',')
-            .map { it.trim() }
-            .filter { it.isNotEmpty() }
-
+        val tags = rawText.splitTags()
         log.info("Successfully parsed {} tags.", tags.size)
         return tags
     }
@@ -199,6 +179,12 @@ class ImageTagService(
             log.warn { "Could not parse error response body: $errorBody" }
             defaultMessage
         }
+    }
+
+    companion object {
+        val log = KLogging().logger()
+        private val SUPPORTED_MIME_TYPES =
+            listOf("image/png", "image/jpeg", "image/webp", "image/heic", "image/heif")
     }
 }
 

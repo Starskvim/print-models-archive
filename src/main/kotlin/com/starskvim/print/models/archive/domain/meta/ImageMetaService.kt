@@ -1,6 +1,7 @@
 package com.starskvim.print.models.archive.domain.meta
 
 import com.starskvim.print.models.archive.config.ai.GeminiClientConfiguration
+import com.starskvim.print.models.archive.domain.meta.gemini.GeminiImageTagService
 import com.starskvim.print.models.archive.persistance.PrintModelDataService
 import com.starskvim.print.models.archive.persistance.model.print_model.PrintModelData
 import com.starskvim.print.models.archive.persistance.model.print_model.meta.ImageMeta
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class ImageMetaService(
-    private val taggingService: ImageTagService,
+    private val taggingService: GeminiImageTagService,
     private val dataService: PrintModelDataService,
     private val config: GeminiClientConfiguration
 ) {

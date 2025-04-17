@@ -5,8 +5,6 @@ import com.starskvim.print.models.archive.config.ai.LogUtils.logResponse
 import io.netty.channel.ChannelOption
 import io.netty.handler.timeout.ReadTimeoutHandler
 import io.netty.handler.timeout.WriteTimeoutHandler
-import mu.KLogging
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpHeaders
@@ -17,13 +15,12 @@ import reactor.netty.http.client.HttpClient
 import java.util.concurrent.TimeUnit
 
 @Configuration
-class GeminiWebClientConfig {
-
-    @Value("\${google.gemini.base-url}")
-    private lateinit var apiBaseUrl: String
+class OpenRouterConfig(
+    private val props: OpenRouterConfiguration
+) {
 
     @Bean
-    fun geminiWebClient(webClientBuilder: WebClient.Builder): WebClient {
+    fun openRouterWebClient(webClientBuilder: WebClient.Builder): WebClient {
         val httpClient = HttpClient.create()
             .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 5000)
             .responseTimeout(java.time.Duration.ofSeconds(60))
@@ -33,13 +30,12 @@ class GeminiWebClientConfig {
             }
 
         return webClientBuilder
-            .baseUrl(apiBaseUrl)
-            .clientConnector(ReactorClientHttpConnector(httpClient))
+            .baseUrl(props.baseUrl)
             .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+            .defaultHeader(HttpHeaders.AUTHORIZATION, "Bearer ${props.apiKey}")
+            .clientConnector(ReactorClientHttpConnector(httpClient))
             .filter(logRequest())
             .filter(logResponse())
             .build()
     }
-
-    companion object : KLogging()
 }
