@@ -41,7 +41,7 @@ services:
       - "9000:9000"
       - "9099:9099"
     volumes:
-      - "/media/maikl/ssd500/DbStorage/Minio:/data"
+      - "/media/maikl/ssd5001/DbStorage/Minio:/data"
     environment:
       - MINIO_ROOT_USER=minioadmin
       - MINIO_ROOT_PASSWORD=minioadmin
