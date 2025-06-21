@@ -11,9 +11,9 @@ services:
     ports:
       - 8081:8081
     volumes:
-      - "/media/maikl/hdd8-1/Archive/Figure:/Pigure"
-      - "/media/maikl/hdd8-1/Archive/Pack:/Pack"
-      - "/media/maikl/hdd8-1/Archive/Other:/Other"
+      - "/mnt/hdd8-1/Archive/Figure:/Pigure"
+      - "/mnt/hdd8-1/Archive/Pack:/Pack"
+      - "/mnt/hdd8-1/Archive/Other:/Other"
 
   front:
     image: starskvim/starskvim-archive-front:latest
@@ -31,7 +31,7 @@ services:
     ports:
       - "27017:27017"
     volumes:
-      - "/media/maikl/ssd500/DbStorage/Mongo:/data"
+      - "/mnt/ssd500/DbStorage/Mongo:/data"
 
   minio:
     image: minio/minio:latest
@@ -41,7 +41,7 @@ services:
       - "9000:9000"
       - "9099:9099"
     volumes:
-      - "/media/maikl/ssd5001/DbStorage/Minio:/data"
+      - "/mnt/ssd500/DbStorage/Minio:/data"
     environment:
       - MINIO_ROOT_USER=minioadmin
       - MINIO_ROOT_PASSWORD=minioadmin
