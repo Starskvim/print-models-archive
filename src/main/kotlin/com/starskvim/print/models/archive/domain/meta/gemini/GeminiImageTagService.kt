@@ -51,7 +51,7 @@ class GeminiImageTagService(
             return parseSuccessResponse(responseBody)
 
         } catch (e: WebClientResponseException) {
-            val statusCode = e.statusCode
+            val statusCode = e.statusCode // 429 TOO_MANY_REQUESTS
             val errorBody = e.responseBodyAsString
             log.error("Gemini API request failed: Status {}, Body: {}", statusCode, errorBody, e)
             val message = extractErrorMessage(errorBody, "API request failed with status $statusCode")

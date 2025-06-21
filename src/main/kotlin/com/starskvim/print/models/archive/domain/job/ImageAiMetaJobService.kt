@@ -2,6 +2,7 @@ package com.starskvim.print.models.archive.domain.job
 
 import com.starskvim.print.models.archive.config.ai.GeminiClientConfiguration
 import com.starskvim.print.models.archive.domain.meta.ImageMetaService
+import com.starskvim.print.models.archive.domain.meta.ImageMetaService.Companion.TOTAL_PROCESSOR_NAME
 import com.starskvim.print.models.archive.persistance.PrintModelDataSearchService
 import com.starskvim.print.models.archive.utils.WrapUtils
 import mu.KLogging
@@ -15,8 +16,9 @@ class ImageAiMetaJobService(
 ) {
 
     suspend fun process(): Int {
-        return searchService.getPrintModelsForMetaJob(config.batchSize, config.processorName)
-            .onEach { WrapUtils.wrapException { imageMetaService.createMeta(it) } }
+        return searchService.getPrintModelsForMetaJob(config.batchSize, TOTAL_PROCESSOR_NAME)
+            .map { WrapUtils.wrapException(it) { imageMetaService.createMeta(it) } }
+            .onEach { it.onException { imageMetaService.createFailMeta(it.source!!, it.exception!!) } }
             .size
     }
 

@@ -40,7 +40,7 @@ data class PrintModelData(
         if (meta != null) {
             return meta!!
         }
-        meta = Meta(mutableListOf(), mutableListOf())
+        meta = Meta(mutableListOf(), mutableSetOf())
         return meta!!
     }
 }
