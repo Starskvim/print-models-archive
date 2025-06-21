@@ -31,7 +31,7 @@ services:
     ports:
       - "27017:27017"
     volumes:
-      - "/mnt/ssd500/DbStorage/Mongo:/data"
+      - "/mnt/ssd500/DbStorage/Mongo:/data/db"
 
   minio:
     image: minio/minio:latest

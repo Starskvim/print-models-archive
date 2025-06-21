@@ -1,5 +1,6 @@
 package com.starskvim.print.models.archive.domain.job
 
+import jakarta.annotation.PostConstruct
 import mu.KLogging
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.stereotype.Component
@@ -9,6 +10,11 @@ import org.springframework.stereotype.Component
 class LocalContextJob(
     private val service: LocalContextJobService
 ) {
+
+    @PostConstruct
+    fun init() {
+        logger.info { "LocalContextJob init." }
+    }
 
     suspend fun process() {
         logger.info { "LocalContextJob started" }
