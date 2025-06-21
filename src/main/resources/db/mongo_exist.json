@@ -1,0 +1,10 @@
+[
+  {
+    $match: {
+      "meta.processors": "gemini-1.5-flash-latest"
+    }
+  },
+  {
+    $count: "documentsWithGeminiFlash"
+  }
+]
