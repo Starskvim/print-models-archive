@@ -22,12 +22,17 @@ class LocalContextJobService(
         do {
             val models = searchService.getPrintModelsForMetaJob(
                 limit = 10,
-                ninProcessor = PROCESSOR_NAME,
-                inProcessor = config.processorName // todo?
+                ninProcessor = PROCESSOR_NAME
             )
+            log.info { "LocalContextJob current batch [${models.size}]" }
             models.onEach {
-                wrapException { service.saveContext(it) }
-                it.getLazyMeta().processors.add(PROCESSOR_NAME)
+                val processors = it.getLazyMeta().processors
+                val op = wrapException { service.saveContext(it) }
+                op.onException {
+                    processors.add(PROCESSOR_NAME + "_FAIL")
+                    log.info { "LocalContextJob exception with [${it.modelName}], ex: ${op.exception}" }
+                }
+                processors.add(PROCESSOR_NAME)
                 dataService.savePrintModel(it)
             }
             result += models.size
@@ -44,7 +49,7 @@ class LocalContextJobService(
 
     companion object {
         val log = KLogging().logger()
-        const val PROCESSOR_NAME = "LocalContextJob2"
+        const val PROCESSOR_NAME = "LocalContextJob_1"
     }
 
 }

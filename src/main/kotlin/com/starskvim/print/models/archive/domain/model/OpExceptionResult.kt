@@ -17,9 +17,17 @@ data class OpExceptionResult<S, R>(
 
     fun isNullPointerException(): Boolean = exception is NullPointerException
 
-    suspend fun onException(block: suspend () -> Unit) {
+    suspend fun onException(block: suspend () -> Unit): OpExceptionResult<S, R> {
         if (exception != null) {
             block()
         }
+        return this
+    }
+
+    suspend fun onSuccess(block: suspend () -> Unit): OpExceptionResult<S, R> {
+        if (exception == null) {
+            block()
+        }
+        return this
     }
 }

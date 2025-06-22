@@ -16,7 +16,10 @@ class ImageAiMetaJobService(
 ) {
 
     suspend fun process(): Int {
-        return searchService.getPrintModelsForMetaJob(config.batchSize, TOTAL_PROCESSOR_NAME)
+        return searchService.getPrintModelsForMetaJob(
+            limit = config.batchSize,
+            ninProcessor = TOTAL_PROCESSOR_NAME
+        )
             .map { WrapUtils.wrapException(it) { imageMetaService.createMeta(it) } }
             .onEach { it.onException { imageMetaService.createFailMeta(it.source!!, it.exception!!) } }
             .size
