@@ -40,7 +40,8 @@ class ImageMetaService(
     // gemini-2.0-flash_FAIL
     suspend fun createFailMeta(model: PrintModelData, ex: Exception) {
         if (ex is GeminiApiException && ex.statusCode.is4xxClientError) {
-            logger.info { "ImageAiMetaJob: for [${model.modelName}] FAIL 400]" }
+            logger.info { "ImageAiMetaJob: for [${model.modelName}] FAIL 400 RETURN]" }
+            return
         }
         model.getLazyMeta().apply {
             processors.add(TOTAL_PROCESSOR_NAME)
@@ -55,9 +56,9 @@ class ImageMetaService(
         val imageMeta = generateSingleImageMeta(model)
         model.getLazyMeta().apply {
             images.add(imageMeta)
-            processors = processors.filter { it != inProcessor }.toMutableSet()
-            processors.add(TOTAL_PROCESSOR_NAME)
-            processors.add(config.processorName)
+            processors = processors
+                .filter { it != inProcessor && it != TOTAL_PROCESSOR_NAME } // TODO важно
+                .toMutableSet()
         }
         dataService.savePrintModel(model)
         logger.info { "ImageAiMetaJobRetry: for [${model.modelName}] meta added, tags size [${imageMeta.tags.size}]" }
