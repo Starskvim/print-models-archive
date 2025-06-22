@@ -16,23 +16,22 @@ class LocalContextJobService(
     private val config: GeminiClientConfiguration
 ) {
 
-    // todo pages
     suspend fun process(): Int {
         var result = 0
         do {
             val models = searchService.getPrintModelsForMetaJob(
                 limit = 10,
-                ninProcessor = PROCESSOR_NAME
+                ninProcessor = LOCAL_CONTEXT_PROCESSOR_NAME
             )
             log.info { "LocalContextJob current batch [${models.size}]" }
             models.onEach {
                 val processors = it.getLazyMeta().processors
                 val op = wrapException { service.saveContext(it) }
                 op.onException {
-                    processors.add(PROCESSOR_NAME + "_FAIL")
+                    processors.add(LOCAL_CONTEXT_PROCESSOR_NAME + "_FAIL")
                     log.info { "LocalContextJob exception with [${it.modelName}], ex: ${op.exception}" }
                 }
-                processors.add(PROCESSOR_NAME)
+                processors.add(LOCAL_CONTEXT_PROCESSOR_NAME)
                 dataService.savePrintModel(it)
             }
             result += models.size
@@ -49,7 +48,7 @@ class LocalContextJobService(
 
     companion object {
         val log = KLogging().logger()
-        const val PROCESSOR_NAME = "LocalContextJob_1"
+        const val LOCAL_CONTEXT_PROCESSOR_NAME = "LocalContextJob_1"
     }
 
 }

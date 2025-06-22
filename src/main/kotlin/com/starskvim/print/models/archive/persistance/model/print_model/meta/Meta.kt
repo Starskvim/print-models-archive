@@ -5,6 +5,4 @@ data class Meta(
     var processors: MutableSet<String>
 ) {
 
-
-
 }

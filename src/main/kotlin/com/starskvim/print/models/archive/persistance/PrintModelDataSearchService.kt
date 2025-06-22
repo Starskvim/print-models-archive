@@ -50,12 +50,12 @@ class PrintModelDataSearchService(
 
     suspend fun getPrintModelsForMetaJob(
         limit: Int,
-        ninProcessor: String?,
+        ninProcessor: String? = null,
         inProcessor: String? = null
     ): List<PrintModelData> {
         val query = Query()
         query.addNinCriteria(META_PROCESSORS, ninProcessor)
-        // query.addInCriteriaa(META_PROCESSORS, inProcessor)
+        query.addInCriteria(META_PROCESSORS, inProcessor)
         query.limit(limit)
         return template.find(query, PrintModelData::class.java)
             .collectList()

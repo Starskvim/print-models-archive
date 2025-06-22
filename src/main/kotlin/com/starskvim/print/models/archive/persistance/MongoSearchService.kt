@@ -40,7 +40,7 @@ interface MongoSearchService { // java style :(
         return query
     }
 
-    fun Query.addInCriteriaa(field: String, value: String?): Query {
+    fun Query.addInCriteria(field: String, value: String?): Query {
         if (!value.isNullOrEmpty()) {
             this.addCriteria(Criteria.where(field).`in`(value))
         }

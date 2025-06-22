@@ -1,6 +1,7 @@
 package com.starskvim.print.models.archive.domain.create
 
 import com.starskvim.print.models.archive.config.ArchiveConfiguration
+import com.starskvim.print.models.archive.domain.context.PrintModelLocalContextService
 import com.starskvim.print.models.archive.domain.image.MinioService
 import com.starskvim.print.models.archive.domain.model.initialize.ArchiveTaskContext
 import com.starskvim.print.models.archive.domain.model.initialize.InitializePrintModelData
@@ -30,7 +31,8 @@ abstract class AbstractArchiveProcessor(
     open val dataService: PrintModelDataService,
     open val minioService: MinioService,
     open val taskProgressService: TaskProgressService,
-    open val config: ArchiveConfiguration
+    open val config: ArchiveConfiguration,
+    open val localContextService: PrintModelLocalContextService
 ) {
 
     abstract suspend fun typeTask(): String
@@ -75,7 +77,7 @@ abstract class AbstractArchiveProcessor(
     }
 
     // TODO lock for add in concurrent ?
-    private fun createModelEntity(
+    private suspend fun createModelEntity(
         file: File,
         folderName: String,
         context: ArchiveTaskContext
@@ -85,12 +87,13 @@ abstract class AbstractArchiveProcessor(
         val myRate = getMyRateForModel(folderName)
         val nsfwFlag = isHaveTrigger(file.absolutePath, NSFW_TRIGGERS)
         val createdAt = now()
+        val path = file.parent
         val printModel = PrintModelData(
             id = null,
             preview = null,
             modelName = modelName,
             folderName = folderName,
-            path = file.parent,
+            path = path,
             category = modelCategory,
             rate = myRate,
             nsfw = nsfwFlag,
@@ -98,7 +101,7 @@ abstract class AbstractArchiveProcessor(
             zips = mutableListOf(),
             oths = mutableListOf(),
             addedAt = dateTimeFromLong(file.lastModified()),
-            meta = null, // TODO meta from file
+            meta = localContextService.loadContext(path)?.meta,
             createdAt = createdAt,
             modifiedAt = createdAt
         )

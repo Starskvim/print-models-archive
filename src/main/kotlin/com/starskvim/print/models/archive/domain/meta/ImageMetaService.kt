@@ -51,7 +51,19 @@ class ImageMetaService(
         logger.info { "ImageAiMetaJob: for [${model.modelName}] FAIL meta added]" }
     }
 
-    suspend fun generateSingleImageMeta(model: PrintModelData): ImageMeta {
+    suspend fun createRetryMeta(model: PrintModelData, inProcessor: String) {
+        val imageMeta = generateSingleImageMeta(model)
+        model.getLazyMeta().apply {
+            images.add(imageMeta)
+            processors = processors.filter { it != inProcessor }.toMutableSet()
+            processors.add(TOTAL_PROCESSOR_NAME)
+            processors.add(config.processorName)
+        }
+        dataService.savePrintModel(model)
+        logger.info { "ImageAiMetaJobRetry: for [${model.modelName}] meta added, tags size [${imageMeta.tags.size}]" }
+    }
+
+    private suspend fun generateSingleImageMeta(model: PrintModelData): ImageMeta {
         val targetImage = model.oths
             ?.find { it.storageName == model.preview }
         val tags = targetImage
@@ -64,7 +76,7 @@ class ImageMetaService(
         )
     }
 
-    suspend fun clearTags(responseTags: List<String>): List<String> {
+    private suspend fun clearTags(responseTags: List<String>): List<String> {
         return responseTags.filter { !config.excludeTags.contains(it) }
     }
 

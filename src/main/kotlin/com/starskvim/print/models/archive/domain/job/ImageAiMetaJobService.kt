@@ -25,5 +25,28 @@ class ImageAiMetaJobService(
             .size
     }
 
+    // gemini-1.5-flash-latest_FAIL
+    // gemini-2.0-flash_FAIL
+    suspend fun processRetry(): Int {
+        val firstModel = "gemini-1.5-flash-latest_FAIL"
+        val secondModel = "gemini-2.0-flash_FAIL"
+        var size = retry(firstModel)
+        if (size == 0) {
+            logger.info {"SecondModel start"}
+            size = retry(secondModel)
+        }
+        return size;
+    }
+
+    private suspend fun retry(inProcessor: String): Int {
+        return searchService.getPrintModelsForMetaJob(
+            limit = config.batchSize,
+            inProcessor = inProcessor
+        )
+            .map { WrapUtils.wrapException(it) { imageMetaService.createRetryMeta(it, inProcessor) } }
+            .onEach { it.onException { imageMetaService.createFailMeta(it.source!!, it.exception!!) } }
+            .size
+    }
+
     companion object : KLogging()
 }
