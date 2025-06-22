@@ -25,7 +25,7 @@ class GeminiWebClientConfig {
     @Bean
     fun geminiWebClient(webClientBuilder: WebClient.Builder): WebClient {
         val httpClient = HttpClient.create()
-            .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 5000)
+            .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 30000)
             .responseTimeout(java.time.Duration.ofSeconds(60))
             .doOnConnected { conn ->
                 conn.addHandlerLast(ReadTimeoutHandler(60, TimeUnit.SECONDS))
