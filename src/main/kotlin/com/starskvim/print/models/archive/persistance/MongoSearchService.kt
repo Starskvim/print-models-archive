@@ -26,13 +26,6 @@ interface MongoSearchService { // java style :(
         return query
     }
 
-    fun addInCriteria(query: Query, field: String, value: String?): Query {
-        if (!value.isNullOrBlank()) {
-            query.addCriteria(Criteria.where(field).`in`(value))
-        }
-        return query
-    }
-
     fun addInCriteria(query: Query, field: String, value: List<String>?): Query {
         if (!value.isNullOrEmpty()) {
             query.addCriteria(Criteria.where(field).`in`(value))

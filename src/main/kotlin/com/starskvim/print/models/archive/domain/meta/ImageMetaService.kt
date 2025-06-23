@@ -39,8 +39,8 @@ class ImageMetaService(
     // exist gemini-1.5-flash-latest_FAIL
     // gemini-2.0-flash_FAIL
     suspend fun createFailMeta(model: PrintModelData, ex: Exception) {
-        if (ex is GeminiApiException && ex.statusCode.is4xxClientError) {
-            logger.info { "ImageAiMetaJob: for [${model.modelName}] FAIL 400 RETURN]" }
+        if (ex is GeminiApiException && (ex.statusCode.is4xxClientError || ex.statusCode.is5xxServerError)) {
+            logger.info { "ImageAiMetaJob: for [${model.modelName}] FAIL 400/500 RETURN]" }
             return
         }
         model.getLazyMeta().apply {

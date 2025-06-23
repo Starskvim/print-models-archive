@@ -1,6 +1,7 @@
 package com.starskvim.print.models.archive.domain.create
 
 import com.starskvim.print.models.archive.config.ArchiveConfiguration
+import com.starskvim.print.models.archive.domain.context.PrintModelLocalContextService
 import com.starskvim.print.models.archive.domain.image.MinioService
 import com.starskvim.print.models.archive.domain.model.initialize.ArchiveTaskContext
 import com.starskvim.print.models.archive.domain.progress.TaskProgressService
@@ -22,12 +23,14 @@ class CreateArchiveProcessor(
     override val minioService: MinioService,
     override val taskProgressService: TaskProgressService,
     override val config: ArchiveConfiguration,
+    override val localContextService: PrintModelLocalContextService,
     private val dispatcher: ExecutorCoroutineDispatcher,
 ) : AbstractArchiveProcessor(
     dataService,
     minioService,
     taskProgressService,
-    config
+    config,
+    localContextService
 ) {
 
     override suspend fun typeTask() = INITIALIZE_ARCHIVE_TASK
