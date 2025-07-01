@@ -20,8 +20,8 @@ class ImageAiMetaJobService(
             limit = config.batchSize,
             ninProcessor = TOTAL_PROCESSOR_NAME
         )
-            .map { WrapUtils.wrapException(it) { imageMetaService.createMeta(it) } }
-            .onEach { it.onException { imageMetaService.createFailMeta(it.source!!, it.exception!!) } }
+            .map { WrapUtils.wrapException(it) { imageMetaService.createImageMeta(it) } }
+            .onEach { it.onException { imageMetaService.createFailImageMeta(it.source!!, it.exception!!) } }
             .size
     }
 
@@ -44,7 +44,7 @@ class ImageAiMetaJobService(
             inProcessor = inProcessor
         )
             .map { WrapUtils.wrapException(it) { imageMetaService.createRetryMeta(it, inProcessor) } }
-            .onEach { it.onException { imageMetaService.createFailMeta(it.source!!, it.exception!!) } }
+            .onEach { it.onException { imageMetaService.createFailImageMeta(it.source!!, it.exception!!) } }
             .size
     }
 

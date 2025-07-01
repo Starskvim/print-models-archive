@@ -40,6 +40,14 @@ google:
     base-url: https://generativelanguage.googleapis.com/v1beta/models
     model: gemini-2.0-flash
     processor-name: gemini-2.0-flash-v1
+    models:
+      -
+        model: gemini-2.0-flash
+        limit: 200
+      -
+        model: gemini-2.0-flash-lite
+        limit: 200
+
     api-key: ""
     exclude-tags: [ "3d render", "model", "figurine" ]
 

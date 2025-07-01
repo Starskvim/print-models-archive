@@ -3,6 +3,7 @@ package com.starskvim.print.models.archive.domain.meta
 import com.starskvim.print.models.archive.config.ai.GeminiClientConfiguration
 import com.starskvim.print.models.archive.domain.meta.gemini.GeminiApiException
 import com.starskvim.print.models.archive.domain.meta.gemini.GeminiImageTagService
+import com.starskvim.print.models.archive.domain.meta.gemini.GeminiLimitRequestException
 import com.starskvim.print.models.archive.persistance.PrintModelDataService
 import com.starskvim.print.models.archive.persistance.model.print_model.PrintModelData
 import com.starskvim.print.models.archive.persistance.model.print_model.meta.ImageMeta
@@ -18,13 +19,13 @@ class ImageMetaService(
 
     suspend fun createMetaById(modelId: String) {
         dataService.getPrintModelById(modelId)?.let {
-            createMeta(it)
+            createImageMeta(it)
         }
     }
 
     // exist gemini-1.5-flash-latest
     // gemini-2.0-flash
-    suspend fun createMeta(model: PrintModelData) {
+    suspend fun createImageMeta(model: PrintModelData) {
         val imageMeta = generateSingleImageMeta(model)
         model.getLazyMeta().apply {
             images.add(imageMeta)
@@ -38,9 +39,13 @@ class ImageMetaService(
     // TODO
     // exist gemini-1.5-flash-latest_FAIL
     // gemini-2.0-flash_FAIL
-    suspend fun createFailMeta(model: PrintModelData, ex: Exception) {
+    suspend fun createFailImageMeta(model: PrintModelData, ex: Exception) {
         if (ex is GeminiApiException && (ex.statusCode.is4xxClientError || ex.statusCode.is5xxServerError)) {
-            logger.info { "ImageAiMetaJob: for [${model.modelName}] FAIL 400/500 RETURN]" }
+            logger.info { "ImageAiMetaJob: FAIL 400/500 RETURN]" }
+            return
+        }
+        if (ex is GeminiLimitRequestException) {
+            logger.info { "ImageAiMetaJob: GeminiLimitRequestException FAIL 400/500 RETURN models: ${config.getModelStats()}" }
             return
         }
         model.getLazyMeta().apply {

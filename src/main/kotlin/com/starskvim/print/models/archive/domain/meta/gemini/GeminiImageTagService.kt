@@ -38,24 +38,39 @@ class GeminiImageTagService(
         val (imageBytes, mimeType) = readAndValidateLocalImage(imagePathString)
         val base64ImageData = Base64.getEncoder().encodeToString(imageBytes)
         val requestBody = buildRequestBodyMap(mimeType, base64ImageData, modelName)
+        return request(requestBody, imagePathString)
+    }
 
+    suspend fun request(requestBody: Map<String, Any>,
+                        imagePathString: String) : List<String> {
+        val aiModel = config.getFirstAvailableModel() ?: throw GeminiLimitRequestException("All models")
         try {
             val responseBody = geminiWebClient.post()
-                .uri("/{modelName}:generateContent?key={apiKey}", config.model, config.apikey)
+                .uri("/{modelName}:generateContent?key={apiKey}", aiModel.model, config.apikey)
                 .accept(MediaType.APPLICATION_JSON)
                 .body(BodyInserters.fromValue(requestBody))
                 .retrieve()
                 .awaitBody<String>() // todo
             log.debug("Received successful response body from Gemini API.")
 
-            return parseSuccessResponse(responseBody)
+            val parsed = parseSuccessResponse(responseBody)
+            aiModel.incrementRequest()
+            return parsed
 
         } catch (e: WebClientResponseException) {
-            val statusCode = e.statusCode // 429 TOO_MANY_REQUESTS
-            val errorBody = e.responseBodyAsString
-            log.error("Gemini API request failed: Status {}, Body: {}", statusCode, errorBody, e)
-            val message = extractErrorMessage(errorBody, "API request failed with status $statusCode")
-            throw GeminiApiException("Gemini API error: ($statusCode) $message", e, statusCode)
+            if (e.statusCode.value() == 429) { // 429 TOO_MANY_REQUESTS = RETRY
+                val statusCode = e.statusCode
+                val errorBody = e.responseBodyAsString
+                log.error("Gemini API request failed: Status {}, Body: {}", statusCode, errorBody, e)
+                val message = extractErrorMessage(errorBody, "API request failed with status $statusCode")
+                throw GeminiApiException("Gemini API error: ($statusCode) $message", e, statusCode)
+            } else if (e.statusCode.value() == 500) { // TODO LIMIT CODE? = next ai model
+                log.error{ "Gemini API request failed LIMIT, retry with new model" }
+                return request(requestBody, imagePathString)
+            }
+            throw e
+        } catch (e: GeminiLimitRequestException) {
+            throw e // return
         } catch (e: Exception) {
             log.error("Unexpected error during tag generation for $imagePathString", e)
             throw RuntimeException("Unexpected error generating tags: ${e.message}", e)
