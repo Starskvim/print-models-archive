@@ -24,7 +24,7 @@ class GeminiClientConfiguration (
         models.forEach {
             s.append(" - Model: [${it.model}] [${it.limit}] [${it.currentReqCount.get()}]")
         }
-        return s
+        return s.toString()
     }
 
 }

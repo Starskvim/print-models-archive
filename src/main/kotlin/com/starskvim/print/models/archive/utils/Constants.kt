@@ -33,11 +33,13 @@ object Constants {
         const val CATEGORIES_INFO = "categories_info"
         const val PRINT_MODELS = "print_models"
         const val USER_FAVORITES = "user_favorites"
+        const val APP_SETTINGS = "app_settings"
     }
 
     object Data {
         const val ADMIN_FAVORITES_ID = "admin_favorites_id"
         const val ADMIN_DOWNLOADS_ID = "admin_downloads_id"
+        const val APP_SETTINGS_ID = "app_settings_id"
     }
 
     object TypeAlias {
@@ -47,6 +49,7 @@ object Constants {
         const val PRINT_MODEL_FAVORITES = "PrintModelFavorites"
         const val PRINT_MODEL_DOWNLOADS = "PrintModelDownloads"
         const val CATALOG = "Catalog"
+        const val APP_SETTINGS = "AppSetting"
     }
 
     object Bucket {

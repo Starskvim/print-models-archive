@@ -43,7 +43,7 @@ class GeminiImageTagService(
 
     suspend fun request(requestBody: Map<String, Any>,
                         imagePathString: String) : List<String> {
-        val aiModel = config.getFirstAvailableModel() ?: throw GeminiLimitRequestException("All models")
+        val aiModel = config.getFirstAvailableModel() ?: throw GeminiLimitRequestException("All models limited")
         try {
             val responseBody = geminiWebClient.post()
                 .uri("/{modelName}:generateContent?key={apiKey}", aiModel.model, config.apikey)
