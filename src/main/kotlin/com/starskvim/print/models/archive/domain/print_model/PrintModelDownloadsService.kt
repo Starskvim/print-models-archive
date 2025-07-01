@@ -1,4 +1,4 @@
-package com.starskvim.print.models.archive.domain
+package com.starskvim.print.models.archive.domain.print_model
 
 import com.starskvim.print.models.archive.config.ArchiveConfiguration
 import com.starskvim.print.models.archive.domain.files.FolderService

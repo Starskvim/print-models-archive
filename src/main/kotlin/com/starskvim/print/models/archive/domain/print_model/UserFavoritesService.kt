@@ -1,4 +1,4 @@
-package com.starskvim.print.models.archive.domain
+package com.starskvim.print.models.archive.domain.print_model
 
 import com.starskvim.print.models.archive.persistance.UserFavoritesDataService
 import com.starskvim.print.models.archive.persistance.model.favorites.UserFavorites

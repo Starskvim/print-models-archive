@@ -1,7 +1,7 @@
 package com.starskvim.print.models.archive.rest.controller
 
 import com.starskvim.print.models.archive.domain.CategoriesInfoService
-import com.starskvim.print.models.archive.domain.PrintModelService
+import com.starskvim.print.models.archive.domain.print_model.PrintModelService
 import com.starskvim.print.models.archive.rest.model.request.PrintModelSearchParams
 import com.starskvim.print.models.archive.utils.PageUtils.getPagesCount
 import com.starskvim.print.models.archive.utils.PageUtils.getRequestModel

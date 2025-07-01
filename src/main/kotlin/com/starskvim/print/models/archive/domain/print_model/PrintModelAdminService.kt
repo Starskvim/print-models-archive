@@ -1,5 +1,6 @@
-package com.starskvim.print.models.archive.domain
+package com.starskvim.print.models.archive.domain.print_model
 
+import com.starskvim.print.models.archive.domain.CategoriesInfoService
 import com.starskvim.print.models.archive.domain.create.CreateArchiveProcessor
 import com.starskvim.print.models.archive.domain.create.UpdateSyncArchiveProcessor
 import com.starskvim.print.models.archive.domain.files.FolderScanService

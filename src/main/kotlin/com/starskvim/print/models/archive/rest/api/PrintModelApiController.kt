@@ -1,6 +1,6 @@
 package com.starskvim.print.models.archive.rest.api
 
-import com.starskvim.print.models.archive.domain.PrintModelService
+import com.starskvim.print.models.archive.domain.print_model.PrintModelService
 import com.starskvim.print.models.archive.rest.model.request.PrintModelSearchParams
 import com.starskvim.print.models.archive.rest.model.response.PrintModelCardsResponse
 import com.starskvim.print.models.archive.rest.model.response.PrintModelResponse
