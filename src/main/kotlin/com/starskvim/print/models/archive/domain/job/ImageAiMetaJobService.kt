@@ -16,13 +16,14 @@ class ImageAiMetaJobService(
 ) {
 
     suspend fun process(): Int {
-        return searchService.getPrintModelsForMetaJob(
+        val models = searchService.getPrintModelsForMetaJob(
             limit = config.batchSize,
             ninProcessor = TOTAL_PROCESSOR_NAME
         )
-            .map { WrapUtils.wrapException(it) { imageMetaService.createImageMeta(it) } }
-            .onEach { it.onException { imageMetaService.createFailImageMeta(it.source!!, it.exception!!) } }
-            .size
+        val ops = models.map { WrapUtils.wrapException(it) { imageMetaService.createImageMeta(it) } }
+        ops.onEach { it.onException { imageMetaService.createFailImageMeta(it.source!!, it.exception!!) } }
+        ops.filter { it.isNoSuccess() }.forEach { logger.info { "Model - ${it.source?.modelName} - ${it.exception}" } }
+        return ops.size
     }
 
     // gemini-1.5-flash-latest_FAIL
@@ -32,7 +33,7 @@ class ImageAiMetaJobService(
         val secondModel = "gemini-2.0-flash_FAIL"
         var size = retry(firstModel)
         if (size == 0) {
-            logger.info {"SecondModel start"}
+            logger.info { "SecondModel start" }
             size = retry(secondModel)
         }
         return size;

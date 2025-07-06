@@ -11,7 +11,7 @@ class AiModel (
 ) {
 
     fun canRequest() : Boolean {
-        return (limit <= currentReqCount.get())
+        return (limit >= currentReqCount.get())
     }
     fun incrementRequest() {
         currentReqCount.incrementAndGet()
