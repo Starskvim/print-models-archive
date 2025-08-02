@@ -23,10 +23,11 @@ class OpenRouterService(
 ) {
 
     suspend fun generateTags(
-        imagePathString: String
+        imagePathString: String,
+        modelName: String? = null,
     ): List<String> {
         val p = geminiImageTagService.readAndValidateLocalImage(imagePathString) // todo
-        return generateTags(images = listOf(p.first), model = config.model)
+        return generateTags(images = listOf(p.first), modelName = modelName, model = config.model)
             .choices
             ?.first()
             ?.message

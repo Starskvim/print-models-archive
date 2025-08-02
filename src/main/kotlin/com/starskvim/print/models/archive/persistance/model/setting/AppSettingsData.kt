@@ -11,7 +11,11 @@ class AppSettingsData(
 
     @Id
     var id: String,
-    var imageAiMetaJob: Boolean // def false
+    var commonBatchSize: Int,
+    var imageAiMetaJob: Boolean, // def false
+    var imageAiMetaClearJob: Boolean, // def false
+    var openRouterApiKey: String = "",
+    var geminiApiKey: String = ""
 
 ) {
 }

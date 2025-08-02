@@ -25,7 +25,7 @@ class PrintModelLocalContextService(
     }
 
     suspend fun saveContext(modelPath: String, context: PrintModelContext) {
-        val contextFile = File(modelPath + "\\" + "context.json")
+        val contextFile = File(modelPath + "/" + "context.json")
         if (contextFile.exists()) {
             val existContext: PrintModelContext = objectMapper.readValue(contextFile)
             context.apply {

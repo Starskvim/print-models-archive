@@ -4,6 +4,7 @@ import com.starskvim.print.models.archive.config.ai.GeminiClientConfiguration
 import com.starskvim.print.models.archive.domain.meta.gemini.GeminiApiException
 import com.starskvim.print.models.archive.domain.meta.gemini.GeminiImageTagService
 import com.starskvim.print.models.archive.domain.meta.gemini.GeminiLimitRequestException
+import com.starskvim.print.models.archive.domain.meta.openrouter.OpenRouterService
 import com.starskvim.print.models.archive.persistance.PrintModelDataService
 import com.starskvim.print.models.archive.persistance.model.print_model.PrintModelData
 import com.starskvim.print.models.archive.persistance.model.print_model.meta.ImageMeta
@@ -12,7 +13,8 @@ import org.springframework.stereotype.Service
 
 @Service
 class ImageMetaService(
-    private val taggingService: GeminiImageTagService,
+    private val geminiImageTagService: GeminiImageTagService,
+    private val oImageTagService: OpenRouterService,
     private val dataService: PrintModelDataService,
     private val config: GeminiClientConfiguration
 ) {
@@ -69,12 +71,26 @@ class ImageMetaService(
         logger.info { "ImageAiMetaJobRetry: for [${model.modelName}] meta added, tags size [${imageMeta.tags.size}]" }
     }
 
+    suspend fun clearMeta(model: PrintModelData) {
+        model.getLazyMeta().apply {
+            images.clear()
+            processors.clear()
+        }
+        dataService.savePrintModel(model)
+        logger.info { "ImageAiMetaJobRetryClear: for [${model.modelName}] meta cleared" }
+    }
+
     private suspend fun generateSingleImageMeta(model: PrintModelData): ImageMeta {
         val targetImage = model.oths
             ?.find { it.storageName == model.preview }
         val tags = targetImage
             ?.path
-            ?.let { clearTags(taggingService.generateTags(it, model.modelName)) }
+            ?.let {
+                clearTags(
+                    //geminiImageTagService.generateTags(it, model.modelName))
+                    oImageTagService.generateTags(it, model.modelName)
+                )
+            }
         return ImageMeta(
             fileName = targetImage?.fileName ?: "",
             processor = config.processorName,

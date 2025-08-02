@@ -1,12 +1,14 @@
 package com.starskvim.print.models.archive.domain.job
 
+import com.starskvim.print.models.archive.domain.setting.AppSettingsService
 import jakarta.annotation.PostConstruct
 import mu.KLogging
 import org.springframework.stereotype.Component
 
 @Component
 class ImageAiMetaRetryJob (
-    private val service: ImageAiMetaJobService
+    private val service: ImageAiMetaJobService,
+    private val settings: AppSettingsService
 ) {
 
     @PostConstruct
@@ -15,9 +17,13 @@ class ImageAiMetaRetryJob (
     }
 
     suspend fun process() {
-        logger.info { "ImageAiMetaRetryJob started" }
-        val processed = service.processRetry()
-        logger.info { "ImageAiMetaRetryJob finished. Processed [$processed]" }
+        if (settings.getAppSettings().imageAiMetaClearJob) {
+            logger.info { "ImageAiMetaRetryJobClear started" }
+            val processed = service.processRetryByClear(settings.getAppSettings().commonBatchSize)
+            logger.info { "ImageAiMetaRetryJobClear finished. Processed [$processed]" }
+        } else {
+            logger.info { "ImageAiMetaRetryJobClear disabled" }
+        }
     }
 
     companion object : KLogging()

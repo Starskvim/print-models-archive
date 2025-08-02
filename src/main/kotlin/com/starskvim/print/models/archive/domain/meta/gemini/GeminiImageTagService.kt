@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.starskvim.print.models.archive.config.ai.GeminiClientConfiguration
+import com.starskvim.print.models.archive.domain.setting.AppSettingsService
 import com.starskvim.print.models.archive.utils.Constants.Prompt.TAGGING_PROMPT
 import com.starskvim.print.models.archive.utils.Constants.Prompt.TAGGING_PROMPT_W_F_N
 import com.starskvim.print.models.archive.utils.MetaUtils.splitTags
@@ -28,7 +29,8 @@ class GeminiImageTagService(
     @Qualifier("geminiWebClient")
     private val geminiWebClient: WebClient,
     private val objectMapper: ObjectMapper,
-    private val config: GeminiClientConfiguration
+    private val config: GeminiClientConfiguration,
+    private val appSettingsService: AppSettingsService
 ) {
 
     suspend fun generateTags(
@@ -41,12 +43,16 @@ class GeminiImageTagService(
         return request(requestBody, imagePathString)
     }
 
-    suspend fun request(requestBody: Map<String, Any>,
-                        imagePathString: String) : List<String> {
+    suspend fun request(
+        requestBody: Map<String, Any>,
+        imagePathString: String
+    ): List<String> {
         val aiModel = config.getFirstAvailableModel() ?: throw GeminiLimitRequestException("All models limited")
+        log.info { "Ai model selected [${aiModel.model}] [${aiModel.currentReqCount.get()}]" }
+        val apiKey = appSettingsService.getAppSettings().geminiApiKey
         try {
             val responseBody = geminiWebClient.post()
-                .uri("/{modelName}:generateContent?key={apiKey}", aiModel.model, config.apikey)
+                .uri("/{modelName}:generateContent?key={apiKey}", aiModel.model, apiKey)
                 .accept(MediaType.APPLICATION_JSON)
                 .body(BodyInserters.fromValue(requestBody))
                 .retrieve()
@@ -56,19 +62,17 @@ class GeminiImageTagService(
             val parsed = parseSuccessResponse(responseBody)
             aiModel.incrementRequest()
             return parsed
-
         } catch (e: WebClientResponseException) {
-            if (e.statusCode.value() == 429) { // 429 TOO_MANY_REQUESTS = RETRY
+            if (e.statusCode.value() == 429) { // TODO LIMIT CODE = next ai model
+                log.error { "Gemini API request failed LIMIT, retry with new model" }
+                return request(requestBody, imagePathString)
+            } else {
                 val statusCode = e.statusCode
                 val errorBody = e.responseBodyAsString
                 log.error("Gemini API request failed: Status {}, Body: {}", statusCode, errorBody, e)
                 val message = extractErrorMessage(errorBody, "API request failed with status $statusCode")
                 throw GeminiApiException("Gemini API error: ($statusCode) $message", e, statusCode)
-            } else if (e.statusCode.value() == 500) { // TODO LIMIT CODE? = next ai model
-                log.error{ "Gemini API request failed LIMIT, retry with new model" }
-                return request(requestBody, imagePathString)
             }
-            throw e
         } catch (e: GeminiLimitRequestException) {
             throw e // return
         } catch (e: Exception) {

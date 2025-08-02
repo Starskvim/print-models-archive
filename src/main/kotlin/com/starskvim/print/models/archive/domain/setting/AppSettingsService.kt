@@ -22,7 +22,10 @@ class AppSettingsService(
             val s = getAppSettings()
             logger.info {
                 """AppSettings loaded successfully: 
-                |[imageAiMetaJob - ${s.imageAiMetaJob}]"""
+                |[imageAiMetaJob - ${s.imageAiMetaJob}]
+                |[commonBatchSize - ${s.commonBatchSize}]
+                |[openRouterApiKey - ${s.openRouterApiKey.substring(0, 5)}]
+                |[geminiApiKey - ${s.geminiApiKey.substring(0, 5)}]"""
                     .trimMargin()
             }
         }
@@ -37,7 +40,9 @@ class AppSettingsService(
         return repository.save(
             AppSettingsData(
                 Constants.Data.APP_SETTINGS_ID,
-                imageAiMetaJob = false
+                commonBatchSize = 10,
+                imageAiMetaJob = false,
+                imageAiMetaClearJob = false
             )
         ).awaitSingle()
     }

@@ -15,9 +15,10 @@ class ImageAiMetaJobService(
     private val config: GeminiClientConfiguration
 ) {
 
-    suspend fun process(): Int {
+    suspend fun process(batchSize: Int): Int {
+        var limit = if (config.batchSize >= batchSize) config.batchSize else batchSize
         val models = searchService.getPrintModelsForMetaJob(
-            limit = config.batchSize,
+            limit = limit,
             ninProcessor = TOTAL_PROCESSOR_NAME
         )
         val ops = models.map { WrapUtils.wrapException(it) { imageMetaService.createImageMeta(it) } }
@@ -28,24 +29,26 @@ class ImageAiMetaJobService(
 
     // gemini-1.5-flash-latest_FAIL
     // gemini-2.0-flash_FAIL
-    suspend fun processRetry(): Int {
+    suspend fun processRetryByClear(limit: Int): Int {
         val firstModel = "gemini-1.5-flash-latest_FAIL"
         val secondModel = "gemini-2.0-flash_FAIL"
-        var size = retry(firstModel)
+        var size = clear(firstModel, limit)
         if (size == 0) {
             logger.info { "SecondModel start" }
-            size = retry(secondModel)
+            size = clear(secondModel, limit)
         }
         return size;
     }
 
-    private suspend fun retry(inProcessor: String): Int {
+    private suspend fun clear(
+        inProcessor: String,
+        limit: Int
+    ): Int {
         return searchService.getPrintModelsForMetaJob(
-            limit = config.batchSize,
+            limit = limit,
             inProcessor = inProcessor
         )
-            .map { WrapUtils.wrapException(it) { imageMetaService.createRetryMeta(it, inProcessor) } }
-            .onEach { it.onException { imageMetaService.createFailImageMeta(it.source!!, it.exception!!) } }
+            .map { WrapUtils.wrapException(it) { imageMetaService.clearMeta(it) } }
             .size
     }
 

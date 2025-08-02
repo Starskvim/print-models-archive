@@ -4,7 +4,7 @@ import com.starskvim.print.models.archive.persistance.model.print_model.meta.Met
 
 class PrintModelContext(
     var version: Int? = 0,
-    var description: String?,
-    var meta: Meta
+    var description: String? = null,
+    var meta: Meta = Meta()
 ) {
 }

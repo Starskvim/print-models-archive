@@ -23,7 +23,7 @@ class ImageAiMetaJob(
     suspend fun process() {
         if (settings.getAppSettings().imageAiMetaJob) {
             logger.info { "ImageAiMetaJob started" }
-            val processed = service.process()
+            val processed = service.process(settings.getAppSettings().commonBatchSize)
             logger.info { "ImageAiMetaJob finished. Processed [$processed]" }
         } else {
             logger.info { "ImageAiMetaJob disabled" }

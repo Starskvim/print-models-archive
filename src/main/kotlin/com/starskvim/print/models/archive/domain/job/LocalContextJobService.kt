@@ -32,8 +32,8 @@ class LocalContextJobService(
                     log.info { "LocalContextJob exception with [${it.modelName}], ex: ${op.exception}" }
                 }
                 processors.add(LOCAL_CONTEXT_PROCESSOR_NAME)
-                dataService.savePrintModel(it)
             }
+            dataService.updatePrintModels(models)
             result += models.size
         } while (models.isNotEmpty())
         return result
@@ -48,7 +48,7 @@ class LocalContextJobService(
 
     companion object {
         val log = KLogging().logger()
-        const val LOCAL_CONTEXT_PROCESSOR_NAME = "LocalContextJob_1"
+        const val LOCAL_CONTEXT_PROCESSOR_NAME = "LocalContextJob_3"
     }
 
 }

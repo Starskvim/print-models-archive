@@ -3,6 +3,7 @@ package com.starskvim.print.models.archive.persistance
 import com.mongodb.client.result.DeleteResult
 import com.starskvim.print.models.archive.aop.LoggTime
 import com.starskvim.print.models.archive.persistance.model.print_model.PrintModelData
+import com.starskvim.print.models.archive.persistance.repository.PrintModelDataRepository
 import com.starskvim.print.models.archive.rest.model.request.PrintModelSearchParams
 import com.starskvim.print.models.archive.utils.Constants.Document.PRINT_MODELS
 import com.starskvim.print.models.archive.utils.Constants.Fields.FOLDER_NAME
@@ -24,11 +25,15 @@ import ru.starskvim.inrastructure.webflux.advice.exception.NotFoundException
 @Service
 class PrintModelDataService(
     private val template: ReactiveMongoTemplate,
+    private val repository: PrintModelDataRepository,
     private val searchDataService: PrintModelDataSearchService
 ) {
 
     suspend fun savePrintModel(model: PrintModelData): PrintModelData? = template.save(model)
         .awaitSingleOrNull()
+
+    suspend fun updatePrintModels(models: List<PrintModelData>) = repository.saveAll(models)
+        .awaitFirstOrNull()
 
     suspend fun saveAll(models: Collection<PrintModelData>) {
         template.insertAll(models)
