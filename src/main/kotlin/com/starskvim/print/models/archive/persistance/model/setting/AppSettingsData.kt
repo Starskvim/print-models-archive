@@ -15,7 +15,18 @@ class AppSettingsData(
     var imageAiMetaJob: Boolean, // def false
     var imageAiMetaClearJob: Boolean, // def false
     var openRouterApiKey: String = "",
-    var geminiApiKey: String = ""
+    var geminiApiKey: String = "",
+    var proxy: AppProxy = AppProxy()
 
 ) {
+
+    class AppProxy(
+        val host: String = "",
+        val port: Int = 0,
+        val user: String = "",
+        val password: String = "",
+    ) {
+
+    }
+
 }

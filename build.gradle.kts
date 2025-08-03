@@ -49,6 +49,7 @@ dependencies {
 	implementation("io.minio:minio:8.2.2")
 	implementation("org.mapstruct:mapstruct:1.5.5.Final")
 	kapt("org.mapstruct:mapstruct-processor:1.5.5.Final")
+	implementation("io.netty:netty-handler:4.1.100.Final") // или более новая версия
 	// experimental infrastructure
 	implementation("ru.starskvim:infrastructure-webflux-3-kotlin-autoconfiguration:0.1.2-EXPERIMENTAL")
 }

@@ -1,6 +1,6 @@
 package com.starskvim.print.models.archive.domain.print_model
 
-import com.starskvim.print.models.archive.config.ArchiveConfiguration
+import com.starskvim.print.models.archive.config.ArchiveConfigurationProperties
 import com.starskvim.print.models.archive.domain.files.FolderService
 import com.starskvim.print.models.archive.persistance.PrintModelDataService
 import com.starskvim.print.models.archive.persistance.model.downloads.PrintModelDownloads
@@ -22,7 +22,7 @@ class PrintModelDownloadsService(
     private val folderService: FolderService,
     private val dataService: PrintModelDataService,
     private val repository: PrintModelDownloadsRepository,
-    private val config: ArchiveConfiguration
+    private val config: ArchiveConfigurationProperties
 ) {
 
     suspend fun addToDownloads(id: String) {

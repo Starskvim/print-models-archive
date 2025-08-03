@@ -3,7 +3,7 @@ package com.starskvim.print.models.archive.config.ai
 import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties(prefix = "google.gemini")
-class GeminiClientConfiguration (
+class GeminiClientConfigurationProperties(
 
     val baseUrl: String,
     val model: String,

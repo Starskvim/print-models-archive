@@ -3,7 +3,7 @@ package com.starskvim.print.models.archive.domain.meta.gemini
 import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.starskvim.print.models.archive.config.ai.GeminiClientConfiguration
+import com.starskvim.print.models.archive.config.ai.GeminiClientConfigurationProperties
 import com.starskvim.print.models.archive.domain.setting.AppSettingsService
 import com.starskvim.print.models.archive.utils.Constants.Prompt.TAGGING_PROMPT
 import com.starskvim.print.models.archive.utils.Constants.Prompt.TAGGING_PROMPT_W_F_N
@@ -29,7 +29,7 @@ class GeminiImageTagService(
     @Qualifier("geminiWebClient")
     private val geminiWebClient: WebClient,
     private val objectMapper: ObjectMapper,
-    private val config: GeminiClientConfiguration,
+    private val config: GeminiClientConfigurationProperties,
     private val appSettingsService: AppSettingsService
 ) {
 

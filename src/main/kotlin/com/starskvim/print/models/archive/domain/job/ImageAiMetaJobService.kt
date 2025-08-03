@@ -1,6 +1,6 @@
 package com.starskvim.print.models.archive.domain.job
 
-import com.starskvim.print.models.archive.config.ai.GeminiClientConfiguration
+import com.starskvim.print.models.archive.config.ai.GeminiClientConfigurationProperties
 import com.starskvim.print.models.archive.domain.meta.ImageMetaService
 import com.starskvim.print.models.archive.domain.meta.ImageMetaService.Companion.TOTAL_PROCESSOR_NAME
 import com.starskvim.print.models.archive.persistance.PrintModelDataSearchService
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service
 class ImageAiMetaJobService(
     private val searchService: PrintModelDataSearchService,
     private val imageMetaService: ImageMetaService,
-    private val config: GeminiClientConfiguration
+    private val config: GeminiClientConfigurationProperties
 ) {
 
     suspend fun process(batchSize: Int): Int {

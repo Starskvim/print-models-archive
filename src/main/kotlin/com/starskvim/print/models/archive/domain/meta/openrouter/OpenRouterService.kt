@@ -1,6 +1,6 @@
 package com.starskvim.print.models.archive.domain.meta.openrouter
 
-import com.starskvim.print.models.archive.config.ai.OpenRouterConfiguration
+import com.starskvim.print.models.archive.config.ai.OpenRouterConfigurationProperties
 import com.starskvim.print.models.archive.domain.meta.gemini.GeminiImageTagService
 import com.starskvim.print.models.archive.utils.Constants.Prompt.TAGGING_PROMPT
 import com.starskvim.print.models.archive.utils.Constants.Prompt.TAGGING_PROMPT_W_F_N
@@ -18,7 +18,7 @@ import java.util.*
 class OpenRouterService(
     @Qualifier("openRouterWebClient")
     private val client: WebClient,
-    private val config: OpenRouterConfiguration,
+    private val config: OpenRouterConfigurationProperties,
     private val geminiImageTagService: GeminiImageTagService
 ) {
 

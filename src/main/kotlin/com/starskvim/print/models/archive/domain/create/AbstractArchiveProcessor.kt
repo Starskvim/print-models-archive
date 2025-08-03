@@ -1,6 +1,6 @@
 package com.starskvim.print.models.archive.domain.create
 
-import com.starskvim.print.models.archive.config.ArchiveConfiguration
+import com.starskvim.print.models.archive.config.ArchiveConfigurationProperties
 import com.starskvim.print.models.archive.domain.context.PrintModelLocalContextService
 import com.starskvim.print.models.archive.domain.image.MinioService
 import com.starskvim.print.models.archive.domain.model.initialize.ArchiveTaskContext
@@ -31,7 +31,7 @@ abstract class AbstractArchiveProcessor(
     open val dataService: PrintModelDataService,
     open val minioService: MinioService,
     open val taskProgressService: TaskProgressService,
-    open val config: ArchiveConfiguration,
+    open val config: ArchiveConfigurationProperties,
     open val localContextService: PrintModelLocalContextService
 ) {
 

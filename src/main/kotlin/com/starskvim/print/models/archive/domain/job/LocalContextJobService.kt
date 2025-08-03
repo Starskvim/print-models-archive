@@ -1,6 +1,6 @@
 package com.starskvim.print.models.archive.domain.job
 
-import com.starskvim.print.models.archive.config.ai.GeminiClientConfiguration
+import com.starskvim.print.models.archive.config.ai.GeminiClientConfigurationProperties
 import com.starskvim.print.models.archive.domain.context.PrintModelLocalContextService
 import com.starskvim.print.models.archive.persistance.PrintModelDataSearchService
 import com.starskvim.print.models.archive.persistance.PrintModelDataService
@@ -13,7 +13,7 @@ class LocalContextJobService(
     private val service: PrintModelLocalContextService,
     private val dataService: PrintModelDataService,
     private val searchService: PrintModelDataSearchService,
-    private val config: GeminiClientConfiguration
+    private val config: GeminiClientConfigurationProperties
 ) {
 
     suspend fun process(): Int {

@@ -1,6 +1,6 @@
 package com.starskvim.print.models.archive.domain.meta
 
-import com.starskvim.print.models.archive.config.ai.GeminiClientConfiguration
+import com.starskvim.print.models.archive.config.ai.GeminiClientConfigurationProperties
 import com.starskvim.print.models.archive.domain.meta.gemini.GeminiApiException
 import com.starskvim.print.models.archive.domain.meta.gemini.GeminiImageTagService
 import com.starskvim.print.models.archive.domain.meta.gemini.GeminiLimitRequestException
@@ -16,7 +16,7 @@ class ImageMetaService(
     private val geminiImageTagService: GeminiImageTagService,
     private val oImageTagService: OpenRouterService,
     private val dataService: PrintModelDataService,
-    private val config: GeminiClientConfiguration
+    private val config: GeminiClientConfigurationProperties
 ) {
 
     suspend fun createMetaById(modelId: String) {
