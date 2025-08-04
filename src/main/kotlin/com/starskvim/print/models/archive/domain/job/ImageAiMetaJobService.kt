@@ -27,16 +27,16 @@ class ImageAiMetaJobService(
         return ops.size
     }
 
-    // gemini-1.5-flash-latest_FAIL
-    // gemini-2.0-flash_FAIL
     suspend fun processRetryByClear(limit: Int): Int {
         val firstModel = "gemini-1.5-flash-latest_FAIL"
         val secondModel = "gemini-2.0-flash_FAIL"
+        val tModel = "google/gemini-2.5-flash"
+        logger.info { "Clear SecondModel start" }
         var size = clear(firstModel, limit)
-        if (size == 0) {
-            logger.info { "SecondModel start" }
-            size = clear(secondModel, limit)
-        }
+        logger.info { "Clear SecondModel start" }
+        size += clear(secondModel, limit)
+        logger.info { "Clear SecondModel start" }
+        size += clear(tModel, limit)
         return size;
     }
 

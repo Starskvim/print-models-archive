@@ -1,6 +1,7 @@
 package com.starskvim.print.models.archive.domain.meta
 
 import com.starskvim.print.models.archive.config.ai.GeminiClientConfigurationProperties
+import com.starskvim.print.models.archive.config.ai.OpenRouterConfigurationProperties
 import com.starskvim.print.models.archive.domain.meta.gemini.GeminiApiException
 import com.starskvim.print.models.archive.domain.meta.gemini.GeminiImageTagService
 import com.starskvim.print.models.archive.domain.meta.gemini.GeminiLimitRequestException
@@ -9,6 +10,7 @@ import com.starskvim.print.models.archive.persistance.PrintModelDataService
 import com.starskvim.print.models.archive.persistance.model.print_model.PrintModelData
 import com.starskvim.print.models.archive.persistance.model.print_model.meta.ImageMeta
 import mu.KLogging
+import org.apache.commons.collections4.CollectionUtils.isEmpty
 import org.springframework.stereotype.Service
 
 @Service
@@ -16,7 +18,8 @@ class ImageMetaService(
     private val geminiImageTagService: GeminiImageTagService,
     private val oImageTagService: OpenRouterService,
     private val dataService: PrintModelDataService,
-    private val config: GeminiClientConfigurationProperties
+    private val gConfig: GeminiClientConfigurationProperties,
+    private val oConfig: OpenRouterConfigurationProperties
 ) {
 
     suspend fun createMetaById(modelId: String) {
@@ -25,17 +28,18 @@ class ImageMetaService(
         }
     }
 
-    // exist gemini-1.5-flash-latest
-    // gemini-2.0-flash
     suspend fun createImageMeta(model: PrintModelData) {
-        val imageMeta = generateSingleImageMeta(model)
+        val imagesMeta = generateImagesMeta(model)
+        val tagsCount = imagesMeta.map { it.tags.size }.reduce { a, b -> a + b }
         model.getLazyMeta().apply {
-            images.add(imageMeta)
+            images.addAll(imagesMeta)
             processors.add(TOTAL_PROCESSOR_NAME)
-            processors.add(config.processorName)
+            processors.add(oConfig.model)
         }
         dataService.savePrintModel(model)
-        logger.info { "ImageAiMetaJob: for [${model.modelName}] meta added, tags size [${imageMeta.tags.size}]" }
+        logger.info {
+            "ImageAiMetaJob: for [${model.modelName}] meta added, imagesMeta [${imagesMeta.size}], tags size [${tagsCount}]"
+        }
     }
 
     // TODO
@@ -47,28 +51,16 @@ class ImageMetaService(
             return
         }
         if (ex is GeminiLimitRequestException) {
-            logger.info { "ImageAiMetaJob: GeminiLimitRequestException FAIL 400/500 RETURN models: ${config.getModelStats()}" }
+            logger.info { "ImageAiMetaJob: GeminiLimitRequestException FAIL 400/500 RETURN models: ${gConfig.getModelStats()}" }
             return
         }
         model.getLazyMeta().apply {
             processors.add(TOTAL_PROCESSOR_NAME)
-            processors.add(config.processorName)
-            processors.add(config.processorName + "_FAIL")
+            processors.add(oConfig.model)
+            processors.add(oConfig.model + "_FAIL")
         }
         dataService.savePrintModel(model)
         logger.info { "ImageAiMetaJob: for [${model.modelName}] FAIL meta added]" }
-    }
-
-    suspend fun createRetryMeta(model: PrintModelData, inProcessor: String) {
-        val imageMeta = generateSingleImageMeta(model)
-        model.getLazyMeta().apply {
-            images.add(imageMeta)
-            processors = processors
-                .filter { it != inProcessor && it != TOTAL_PROCESSOR_NAME } // TODO важно
-                .toMutableSet()
-        }
-        dataService.savePrintModel(model)
-        logger.info { "ImageAiMetaJobRetry: for [${model.modelName}] meta added, tags size [${imageMeta.tags.size}]" }
     }
 
     suspend fun clearMeta(model: PrintModelData) {
@@ -80,30 +72,40 @@ class ImageMetaService(
         logger.info { "ImageAiMetaJobRetryClear: for [${model.modelName}] meta cleared" }
     }
 
-    private suspend fun generateSingleImageMeta(model: PrintModelData): ImageMeta {
-        val targetImage = model.oths
-            ?.find { it.storageName == model.preview }
-        val tags = targetImage
-            ?.path
-            ?.let {
+    private suspend fun generateImagesMeta(model: PrintModelData): List<ImageMeta> {
+        if (isEmpty(model.oths)) {
+            return emptyList()
+        }
+        var count = 0
+        val meta = mutableListOf<ImageMeta>()
+        for (targetImage in model.oths!!) {
+            if (count >= oConfig.imagePerPrintModel) {
+                break
+            }
+            val tags = targetImage.path?.let {
                 clearTags(
                     //geminiImageTagService.generateTags(it, model.modelName))
                     oImageTagService.generateTags(it, model.modelName)
                 )
             }
-        return ImageMeta(
-            fileName = targetImage?.fileName ?: "",
-            processor = config.processorName,
-            tags = tags ?: listOf()
-        )
+            meta.add(
+                ImageMeta(
+                    fileName = targetImage.fileName ?: "",
+                    processor = oConfig.model,
+                    tags = tags ?: listOf()
+                )
+            )
+            count++
+        }
+        return meta
     }
 
     private suspend fun clearTags(responseTags: List<String>): List<String> {
-        return responseTags.filter { !config.excludeTags.contains(it) }
+        return responseTags.filter { !gConfig.excludeTags.contains(it) }
     }
 
     companion object {
         val logger = KLogging().logger()
-        const val TOTAL_PROCESSOR_NAME = "ImageMetaServiceJob"
+        const val TOTAL_PROCESSOR_NAME = "ImageMetaServiceJob_v2"
     }
 }
