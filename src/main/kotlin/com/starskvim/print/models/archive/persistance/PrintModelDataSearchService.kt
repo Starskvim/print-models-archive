@@ -44,8 +44,11 @@ class PrintModelDataSearchService(
             false -> null
         }
         query.with(pageable)
-        val result = template.find(query, PrintModelData::class.java).collectList().awaitSingleOrNull()
-        return PageImpl(result?.toList() ?: emptyList(), pageable, totalCount ?: 0)
+        var result = template.find(query, PrintModelData::class.java).collectList().awaitSingleOrNull()
+        if (result == null) {
+            result = emptyList();
+        }
+        return PageImpl(result, pageable, totalCount ?: 0)
     }
 
     suspend fun getPrintModelsForMetaJob(
