@@ -48,5 +48,5 @@ google:
     batch-size: 10
     base-url: https://generativelanguage.googleapis.com/v1beta/models
     model: gemini-1.5-flash-latest
-    processor-name: gemini-2.0-flash-v1
+    processor-name: gemini-1.5-flash-latest
     api-key: ""
