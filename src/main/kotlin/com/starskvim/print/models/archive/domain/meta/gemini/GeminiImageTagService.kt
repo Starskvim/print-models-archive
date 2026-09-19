@@ -33,6 +33,7 @@ class GeminiImageTagService(
     private val appSettingsService: AppSettingsService
 ) {
 
+    @Deprecated("legacy")
     suspend fun generateTags(
         imagePathString: String,
         modelName: String? = null

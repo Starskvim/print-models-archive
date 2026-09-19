@@ -8,7 +8,6 @@ import com.starskvim.print.models.archive.domain.meta.gemini.GeminiImageTagServi
 import com.starskvim.print.models.archive.domain.meta.openrouter.OpenRouterService
 import kotlinx.coroutines.ExecutorCoroutineDispatcher
 import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
 import org.springframework.web.bind.annotation.*
 
@@ -31,7 +30,7 @@ class TestApiController(
         return taggingService.generateTags(request.path, request.name);
     }
 
-    @PostMapping("/tags/open")
+    @PostMapping("/tags/openrouter")
     suspend fun testTagOpen(
         @RequestBody request: Request,
     ): List<String>? {

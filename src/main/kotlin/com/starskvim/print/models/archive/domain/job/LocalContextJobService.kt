@@ -1,6 +1,5 @@
 package com.starskvim.print.models.archive.domain.job
 
-import com.starskvim.print.models.archive.config.ai.GeminiClientConfigurationProperties
 import com.starskvim.print.models.archive.domain.context.PrintModelLocalContextService
 import com.starskvim.print.models.archive.persistance.PrintModelDataSearchService
 import com.starskvim.print.models.archive.persistance.PrintModelDataService
@@ -12,8 +11,7 @@ import org.springframework.stereotype.Service
 class LocalContextJobService(
     private val service: PrintModelLocalContextService,
     private val dataService: PrintModelDataService,
-    private val searchService: PrintModelDataSearchService,
-    private val config: GeminiClientConfigurationProperties
+    private val searchService: PrintModelDataSearchService
 ) {
 
     suspend fun process(): Int {

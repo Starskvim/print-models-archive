@@ -1,6 +1,6 @@
 package com.starskvim.print.models.archive.domain.job
 
-import com.starskvim.print.models.archive.config.ai.GeminiClientConfigurationProperties
+import com.starskvim.print.models.archive.config.ai.OpenRouterConfigurationProperties
 import com.starskvim.print.models.archive.domain.meta.ImageMetaService
 import com.starskvim.print.models.archive.domain.meta.ImageMetaService.Companion.TOTAL_PROCESSOR_NAME
 import com.starskvim.print.models.archive.persistance.PrintModelDataSearchService
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service
 class ImageAiMetaJobService(
     private val searchService: PrintModelDataSearchService,
     private val imageMetaService: ImageMetaService,
-    private val config: GeminiClientConfigurationProperties
+    private val config: OpenRouterConfigurationProperties
 ) {
 
     suspend fun process(batchSize: Int): Int {
@@ -31,12 +31,15 @@ class ImageAiMetaJobService(
         val firstModel = "gemini-1.5-flash-latest_FAIL"
         val secondModel = "gemini-2.0-flash_FAIL"
         val tModel = "google/gemini-2.5-flash"
+        val lastModel = config.model + "_FAIL"
         logger.info { "Clear SecondModel start" }
         var size = clear(firstModel, limit)
         logger.info { "Clear SecondModel start" }
         size += clear(secondModel, limit)
         logger.info { "Clear SecondModel start" }
         size += clear(tModel, limit)
+        logger.info { "Clear CurrentModel start" }
+        size += clear(lastModel, limit)
         return size;
     }
 

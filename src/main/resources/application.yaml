@@ -49,8 +49,19 @@ google:
         limit: 200
     exclude-tags: ["3d render", "3d model", "model", "figurine", "render", "stl"]
 
+job:
+  first-create-meta:
+    cron: "*/60 * * * * *"
+  retry-create-meta:
+    cron: "*/60 * * * * *"
+
 openrouter:
-  model: "google/gemini-2.5-flash"
+  base-url: "https://omnirouter.chamkin.ru/v1" # "https://openrouter.ai/api/v1"
+  #    model: "openai/gpt-4.1-nano"
+  model: "antigravity/gemini-3.7-flash-high" # "google/gemini-3-flash-preview"
+  batch-size: 10
+  image-per-print-model: 3
+  exclude-tags: [ "3d render", "model", "figurine", "zbrush" ]
 
 local-context:
   job: false

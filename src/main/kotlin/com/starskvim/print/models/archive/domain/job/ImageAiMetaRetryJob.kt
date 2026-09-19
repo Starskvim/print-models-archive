@@ -3,6 +3,7 @@ package com.starskvim.print.models.archive.domain.job
 import com.starskvim.print.models.archive.domain.setting.AppSettingsService
 import jakarta.annotation.PostConstruct
 import mu.KLogging
+import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 
 @Component
@@ -16,6 +17,7 @@ class ImageAiMetaRetryJob (
         logger.info { "ImageAiMetaRetryJob init." }
     }
 
+    @Scheduled(cron = "\${job.retry-create-meta.cron}")
     suspend fun process() {
         if (settings.getAppSettings().imageAiMetaClearJob) {
             logger.info { "ImageAiMetaRetryJobClear started" }

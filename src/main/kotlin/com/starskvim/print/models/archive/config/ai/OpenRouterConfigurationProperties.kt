@@ -6,6 +6,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 class OpenRouterConfigurationProperties(
     var baseUrl: String = "https://openrouter.ai/api/v1",
     var model: String = "google/gemini-2.5-flash",
-    var imagePerPrintModel: Int = 3
+    var imagePerPrintModel: Int = 3,
+    val batchSize: Int,
+    val excludeTags: Set<String>
 ) {
 }

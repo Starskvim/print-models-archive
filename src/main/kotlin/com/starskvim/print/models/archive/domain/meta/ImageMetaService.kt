@@ -1,9 +1,7 @@
 package com.starskvim.print.models.archive.domain.meta
 
-import com.starskvim.print.models.archive.config.ai.GeminiClientConfigurationProperties
 import com.starskvim.print.models.archive.config.ai.OpenRouterConfigurationProperties
 import com.starskvim.print.models.archive.domain.meta.gemini.GeminiApiException
-import com.starskvim.print.models.archive.domain.meta.gemini.GeminiImageTagService
 import com.starskvim.print.models.archive.domain.meta.gemini.GeminiLimitRequestException
 import com.starskvim.print.models.archive.domain.meta.openrouter.OpenRouterService
 import com.starskvim.print.models.archive.persistance.PrintModelDataService
@@ -15,10 +13,8 @@ import org.springframework.stereotype.Service
 
 @Service
 class ImageMetaService(
-    private val geminiImageTagService: GeminiImageTagService,
     private val oImageTagService: OpenRouterService,
     private val dataService: PrintModelDataService,
-    private val gConfig: GeminiClientConfigurationProperties,
     private val oConfig: OpenRouterConfigurationProperties
 ) {
 
@@ -51,7 +47,7 @@ class ImageMetaService(
             return
         }
         if (ex is GeminiLimitRequestException) {
-            logger.info { "ImageAiMetaJob: GeminiLimitRequestException FAIL 400/500 RETURN models: ${gConfig.getModelStats()}" }
+            //logger.info { "ImageAiMetaJob: GeminiLimitRequestException FAIL 400/500 RETURN models: ${oConfig.getModelStats()}" }
             return
         }
         model.getLazyMeta().apply {
@@ -83,10 +79,7 @@ class ImageMetaService(
                 break
             }
             val tags = targetImage.path?.let {
-                clearTags(
-                    //geminiImageTagService.generateTags(it, model.modelName))
-                    oImageTagService.generateTags(it, model.modelName)
-                )
+                clearTags(oImageTagService.generateTags(it, model.modelName))
             }
             meta.add(
                 ImageMeta(
@@ -101,7 +94,7 @@ class ImageMetaService(
     }
 
     private suspend fun clearTags(responseTags: List<String>): List<String> {
-        return responseTags.filter { !gConfig.excludeTags.contains(it) }
+        return responseTags.filter { !oConfig.excludeTags.contains(it) }
     }
 
     companion object {
