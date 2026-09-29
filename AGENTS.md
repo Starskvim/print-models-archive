@@ -51,5 +51,7 @@ POST `/archive/api/test/...` (`TestApiController.kt`) — run work on demand ins
 - `docker-compose-local.yaml` (Windows paths) / `docker-compose-stand.yaml` (Linux paths): archive app + mongo + minio +
   front-end (port 3000). App listens on **8081** (Dockerfile's `EXPOSE 8082` is stale). Only the stand compose
   bind-mounts model folders into `/Pigure`, `/Pack`, `/Other`.
-    - Local compose mounts Mongo at `/data` instead of `/data/db`, so Mongo data isn't persisted there.
+    - Local compose also runs Elasticsearch 8.19.19 (9200, security off) + Kibana (5601); data under
+      `C:/DbStorage/{mongo,minio,elasticsearch}`. Mount container data dirs exactly: Mongo `/data/db`, ES
+      `/usr/share/elasticsearch/data`.
 - Minio runs server on 9099, console on 9000; credentials `minioadmin/minioadmin`.
