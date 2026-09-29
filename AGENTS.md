@@ -6,22 +6,31 @@ Gemini/OpenRouter. Single-module project.
 
 ## Commands (Windows: `gradlew.bat`)
 
-- Build / verify: `./gradlew build`
+- Build / verify: `./gradlew build` (~2–3 min cold). Needs JDK 21; `JAVA_HOME` may be unset in the shell — the
+  IntelliJ-managed JDK lives at `~/.jdks/liberica-full-21.0.10` (e.g. `JAVA_HOME=~/.jdks/liberica-full-21.0.10 ./gradlew build`).
 - Run locally: `./gradlew bootRun --args='--spring.profiles.active=local'` → http://localhost:8081/archive
-    - The `local` profile points Mongo/Minio at localhost and scans `F:\[Patreon]\[test]`. The default profile targets
+    - `application-local.yaml` overlays `application.yaml` (keys it doesn't set, e.g. `job.*`, `openrouter.*`, are
+      inherited). It points Mongo/Minio at localhost and scans `F:\[Patreon]\[test]`. The default profile targets
       docker hostnames (`mongo`, `minio`) — only useful inside compose.
 - Swagger UI (enabled in `local` profile only): http://localhost:8081/archive/swagger-ui.html
 
 ## Gotchas
 
-- **No test suite exists** — there is no `src/test`; `./gradlew test` does nothing. Verify with `build` + manual API
-  checks.
-- All endpoints sit under the `/archive` base path (`spring.webflux.base-path`), e.g. models API at
-  `/archive/api/models`.
+- **No tests** — `src/test/kotlin/...` contains only empty package directories and there are no test dependencies;
+  `./gradlew test` reports `NO-SOURCE`. Verify with `build` + manual API checks.
+- All endpoints sit under the `/archive` base path (`spring.webflux.base-path`): REST under `/archive/api/...`
+  (`models`, `models/favorites`, `catalog`, `admin`, `test`), Thymeleaf pages under `/archive/models`, `/archive/admin`.
 - Thymeleaf templates load from the filesystem (`file:src/main/resources/templates/`), not the classpath — run with
   project root as working dir (bootRun is fine). The Dockerfile's `COPY src src` exists for this reason.
-- AI API keys are **not** in yaml — they live in the Mongo `app_settings` document (`geminiApiKey`, `openRouterApiKey`).
-  Cron jobs run every minute but only act when the flags in that same settings doc are enabled (e.g. `imageAiMetaJob`).
+- AI API keys are **not** in yaml — they live in Mongo collection `app_settings`, document `_id: "app_settings_id"`
+  (`geminiApiKey`, `openRouterApiKey`, plus a SOCKS5 `proxy` block). `AppSettingsService` creates/back-fills this doc
+  with defaults on startup (jobs off, `commonBatchSize: 10`).
+    - The Gemini/OpenRouter `WebClient` beans read the proxy (and the OpenRouter key) **once at startup** — restart the
+      app after changing them. The Gemini key is read per request.
+- Scheduled jobs (cron every 60s via `job.*.cron`) check settings flags on each tick:
+    - `ImageAiMetaJob` → `imageAiMetaJob`; `ImageAiMetaRetryJob` → `imageAiMetaClearJob`.
+    - `LocalContextJob` has **no** `@Scheduled` and is only created when `local-context.job=true` (false by default);
+      context processing is triggered manually via `/api/test/context`.
 - The experimental `ru.starskvim:infrastructure-webflux-3-kotlin-autoconfiguration` dependency resolves from
   mavenLocal (`~/.m2`) — builds fail on a machine without it.
 - MapStruct mappers are generated via kapt with the Spring component model; don't hand-write mapper implementations.
@@ -29,15 +38,18 @@ Gemini/OpenRouter. Single-module project.
 
 ## Manual verification endpoints
 
-POST `/archive/api/test/...` — trigger tag generation, meta retry, and context processing on demand instead of waiting
-for cron (see `TestApiController.kt`).
+POST `/archive/api/test/...` (`TestApiController.kt`) — run work on demand instead of waiting for cron:
+`/tags` and `/tags/openrouter` (body `{path, name}`), `/tags/{id}`, `/context`, `/context/{id}`, `/context/load`,
+`/meta-retry`.
 
 ## Docker / deployment
 
-- Documented flow (README): `./gradlew build` → `docker build -t starskvim/starskvim-archive-app .` → compose. The
-  Dockerfile expects the jar at `/build/libs/print-models-archive-0.0.2-SNAPSHOT.jar`.
+- Image flow: `./gradlew build` → `docker build -t starskvim/starskvim-archive-app .` → `docker push` (README lists
+  only the docker steps). The Dockerfile copies `build/libs/print-models-archive-0.0.2-SNAPSHOT.jar` (the boot jar; a
+  `-plain.jar` is also produced) — update it if `version` in `build.gradle.kts` changes.
 - JIB plugin is also configured (`jib.to.image = "archive-app"`) as an alternative image path.
 - `docker-compose-local.yaml` (Windows paths) / `docker-compose-stand.yaml` (Linux paths): archive app + mongo + minio +
-  front-end. App listens on **8081** (Dockerfile's `EXPOSE 8082` is stale). Production compose bind-mounts model folders
-  into `/Pigure`, `/Pack`, `/Other`.
+  front-end (port 3000). App listens on **8081** (Dockerfile's `EXPOSE 8082` is stale). Only the stand compose
+  bind-mounts model folders into `/Pigure`, `/Pack`, `/Other`.
+    - Local compose mounts Mongo at `/data` instead of `/data/db`, so Mongo data isn't persisted there.
 - Minio runs server on 9099, console on 9000; credentials `minioadmin/minioadmin`.
