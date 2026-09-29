@@ -16,6 +16,10 @@ minio:
   secretKey: minioadmin
   accessKey: minioadmin
 
+elasticsearch:
+  host-name: elasticsearch
+  port: 9200
+
 scan:
   address1: /Pigure
   address2: /Pack

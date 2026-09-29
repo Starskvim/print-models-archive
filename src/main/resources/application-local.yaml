@@ -25,6 +25,10 @@ minio:
   secretKey: minioadmin
   accessKey: minioadmin
 
+elasticsearch:
+  host-name: 127.0.0.1
+  port: 9200
+
 scan:
   address1: F:\[Patreon]\[test]
   address2: F:\[Patreon]\[test]

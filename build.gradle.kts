@@ -50,6 +50,11 @@ dependencies {
 	implementation("org.mapstruct:mapstruct:1.5.5.Final")
 	kapt("org.mapstruct:mapstruct-processor:1.5.5.Final")
 	implementation("io.netty:netty-handler:4.1.100.Final") // или более новая версия
+	// Elastic dependencies
+	implementation("co.elastic.clients:elasticsearch-java") // version from Spring Boot BOM
+	implementation("org.elasticsearch.client:elasticsearch-rest-client")
+	implementation("jakarta.json:jakarta.json-api")
+	implementation("com.fasterxml.jackson.core:jackson-databind")
 	// experimental infrastructure
 	implementation("ru.starskvim:infrastructure-webflux-3-kotlin-autoconfiguration:0.1.2-EXPERIMENTAL")
 }
