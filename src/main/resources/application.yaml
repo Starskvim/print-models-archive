@@ -60,9 +60,11 @@ job:
     cron: "*/60 * * * * *"
 
 openrouter:
-  base-url: "https://omnirouter.chamkin.ru/v1" # "https://openrouter.ai/api/v1"
+  #  base-url:  "https://omnirouter.chamkin.ru/v1" # "https://openrouter.ai/api/v1"
+  base-url: "https://omniroute.176.105.253.86.sslip.io/v1"
   #    model: "openai/gpt-4.1-nano"
-  model: "antigravity/gemini-3.7-flash-high" # "google/gemini-3-flash-preview"
+  #  model: "antigravity/gemini-3.7-flash-high" # "google/gemini-3-flash-preview"
+  model: "codex/gpt-6-sol"
   batch-size: 10
   image-per-print-model: 3
   exclude-tags: [ "3d render", "model", "figurine", "zbrush" ]
