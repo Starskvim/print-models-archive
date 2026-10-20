@@ -33,15 +33,15 @@ class OpenRouterConfig(
         val proxyConfig = appSetting.proxy
 
         val httpClient = HttpClient.create()
-            .proxy { proxy ->
-                proxy.type(reactor.netty.transport.ProxyProvider.Proxy.SOCKS5)
-                    .host(proxyConfig.host)
-                    .port(proxyConfig.port)
-                    .let {
-                        it.username(proxyConfig.user)
-                        it.password { proxyConfig.password }
-                    }
-            }
+//            .proxy { proxy ->
+//                proxy.type(reactor.netty.transport.ProxyProvider.Proxy.SOCKS5)
+//                    .host(proxyConfig.host)
+//                    .port(proxyConfig.port)
+//                    .let {
+//                        it.username(proxyConfig.user)
+//                        it.password { proxyConfig.password }
+//                    }
+//            }
             .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 30000)
             .responseTimeout(java.time.Duration.ofSeconds(60))
             .doOnConnected { conn ->

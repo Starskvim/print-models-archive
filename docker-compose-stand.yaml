@@ -14,6 +14,12 @@ services:
       - "/mnt/hdd8-1/Archive/Figure:/Pigure"
       - "/mnt/hdd8-1/Archive/Pack:/Pack"
       - "/mnt/hdd8-1/Archive/Other:/Other"
+    environment:
+      JAVA_TOOL_OPTIONS: >-
+        -Xms1g
+        -Xmx6g
+        -XX:MaxDirectMemorySize=6g
+      mem_limit: 10g
 
   front:
     image: starskvim/starskvim-archive-front:latest
