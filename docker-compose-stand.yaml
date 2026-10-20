@@ -22,7 +22,7 @@ services:
     depends_on:
       - archive
     ports:
-      - 3000:3000
+      - 3000:80
 
   mongo:
     image: mongo
