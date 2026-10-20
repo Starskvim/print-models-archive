@@ -2,17 +2,22 @@
 
 Spring Boot 3.4 WebFlux app (Kotlin 1.9, Java 21, Gradle 8.9 wrapper). Scans local folders of 3D print models (
 `scan.address1/2/3`), indexes them in MongoDB, stores images in Minio, and generates AI tags/metadata via
-Gemini/OpenRouter. Single-module project.
+Gemini/OpenRouter. Elasticsearch client wiring exists but nothing uses it yet (see below). Single-module project.
 
 ## Commands (Windows: `gradlew.bat`)
 
-- Build / verify: `./gradlew build` (~2–3 min cold). Needs JDK 21; `JAVA_HOME` may be unset in the shell — the
+- Build / verify: `./gradlew build` (~2–3 min cold, ~20 s warm). Needs JDK 21; `JAVA_HOME` may be unset in the shell —
+  the
   IntelliJ-managed JDK lives at `~/.jdks/liberica-full-21.0.10` (e.g. `JAVA_HOME=~/.jdks/liberica-full-21.0.10 ./gradlew build`).
 - Run locally: `./gradlew bootRun --args='--spring.profiles.active=local'` → http://localhost:8081/archive
     - `application-local.yaml` overlays `application.yaml` (keys it doesn't set, e.g. `job.*`, `openrouter.*`, are
       inherited). It points Mongo/Minio at localhost and scans `F:\[Patreon]\[test]`. The default profile targets
       docker hostnames (`mongo`, `minio`) — only useful inside compose.
 - Swagger UI (enabled in `local` profile only): http://localhost:8081/archive/swagger-ui.html
+- Startup needs only Mongo reachable (`AppSettingsService` reads/writes settings in `@PostConstruct` via
+  `runBlocking`); Minio and Elasticsearch clients connect lazily, so the app boots without them.
+- Gradle wrapper files (`gradlew`, `gradlew.bat`, `gradle/`) and `.gitignore` are currently **untracked** in git —
+  don't assume a fresh clone has the wrapper.
 
 ## Gotchas
 
@@ -35,6 +40,14 @@ Gemini/OpenRouter. Single-module project.
   mavenLocal (`~/.m2`) — builds fail on a machine without it.
 - MapStruct mappers are generated via kapt with the Spring component model; don't hand-write mapper implementations.
 - Default-profile Minio endpoint is malformed: `http:/minio:9099` (single slash) in `application.yaml`.
+- Elasticsearch (`config/elasticsearch/`): `ElasticsearchClient` bean is built from a `RestClient` + Boot's
+  auto-configured `JacksonJsonpMapper`. The custom `RestClient` from `elasticsearch.host-name/port` exists **only in
+  the `local` profile** (127.0.0.1:9200). In the default profile Boot's own auto-configured `RestClient` is used
+  (`spring.elasticsearch.uris`, default `http://localhost:9200`), so `elasticsearch.host-name: elasticsearch` in
+  `application.yaml` is currently ignored — add a non-local `RestClient` bean or set `spring.elasticsearch.uris` before
+  relying on ES inside compose. No service/repository uses the client yet.
+- Untracked scratch files: `test.json` (sample OpenRouter chat-completion response) and an empty
+  `src/main/resources/test.xml` — not part of the app.
 
 ## Manual verification endpoints
 
@@ -54,4 +67,5 @@ POST `/archive/api/test/...` (`TestApiController.kt`) — run work on demand ins
     - Local compose also runs Elasticsearch 8.19.19 (9200, security off) + Kibana (5601); data under
       `C:/DbStorage/{mongo,minio,elasticsearch}`. Mount container data dirs exactly: Mongo `/data/db`, ES
       `/usr/share/elasticsearch/data`.
+- Stand compose has no Elasticsearch/Kibana.
 - Minio runs server on 9099, console on 9000; credentials `minioadmin/minioadmin`.

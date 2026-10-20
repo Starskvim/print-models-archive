@@ -5,6 +5,11 @@ import com.starskvim.print.models.archive.domain.meta.ImageMetaService
 import com.starskvim.print.models.archive.domain.meta.ImageMetaService.Companion.TOTAL_PROCESSOR_NAME
 import com.starskvim.print.models.archive.persistance.PrintModelDataSearchService
 import com.starskvim.print.models.archive.utils.WrapUtils
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.sync.withPermit
 import mu.KLogging
 import org.springframework.stereotype.Service
 
@@ -16,14 +21,27 @@ class ImageAiMetaJobService(
 ) {
 
     suspend fun process(batchSize: Int): Int {
+        val start = System.currentTimeMillis()
         var limit = if (config.batchSize >= batchSize) config.batchSize else batchSize
         val models = searchService.getPrintModelsForMetaJob(
             limit = limit,
             ninProcessor = TOTAL_PROCESSOR_NAME
         )
-        val ops = models.map { WrapUtils.wrapException(it) { imageMetaService.createImageMeta(it) } }
+
+        val semaphore = Semaphore(PARALLELISM)
+        val ops = coroutineScope {
+            models.map {
+                async {
+                    semaphore.withPermit {
+                        WrapUtils.wrapException(it) { imageMetaService.createImageMeta(it) }
+                    }
+                }
+            }.awaitAll()
+        }
+
         ops.onEach { it.onException { imageMetaService.createFailImageMeta(it.source!!, it.exception!!) } }
         ops.filter { it.isNoSuccess() }.forEach { logger.info { "Model - ${it.source?.modelName} - ${it.exception}" } }
+        logger.info { "Batch of [${ops.size}] models processed in [${System.currentTimeMillis() - start}] ms" }
         return ops.size
     }
 
@@ -55,5 +73,8 @@ class ImageAiMetaJobService(
             .size
     }
 
-    companion object : KLogging()
+    companion object : KLogging() {
+        private const val PARALLELISM = 4
+    }
+
 }
