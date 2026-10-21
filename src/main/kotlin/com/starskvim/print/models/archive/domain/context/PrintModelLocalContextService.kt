@@ -39,12 +39,13 @@ class PrintModelLocalContextService(
     }
 
     suspend fun loadContext(modelPath: String): PrintModelContext? {
-        val contextFile = File(modelPath + "\\" + "context.json")
+        val path = modelPath + "/" + "context.json"
+        val contextFile = File(path)
         if (contextFile.exists()) {
-            logger.debug { "Local context loaded for $modelPath" }
+            logger.info { "Local context loaded for $path" }
             return objectMapper.readValue(contextFile, PrintModelContext::class.java)
         } else {
-            logger.debug { "Local context not found for $modelPath" }
+            logger.info { "Local context not found for $path" }
         }
         return null
     }
