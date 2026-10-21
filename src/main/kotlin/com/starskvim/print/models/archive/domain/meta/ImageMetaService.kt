@@ -1,6 +1,7 @@
 package com.starskvim.print.models.archive.domain.meta
 
 import com.starskvim.print.models.archive.config.ai.OpenRouterConfigurationProperties
+import com.starskvim.print.models.archive.domain.context.PrintModelLocalContextService
 import com.starskvim.print.models.archive.domain.meta.gemini.GeminiApiException
 import com.starskvim.print.models.archive.domain.meta.gemini.GeminiLimitRequestException
 import com.starskvim.print.models.archive.domain.meta.openrouter.OpenRouterService
@@ -15,7 +16,8 @@ import org.springframework.stereotype.Service
 class ImageMetaService(
     private val oImageTagService: OpenRouterService,
     private val dataService: PrintModelDataService,
-    private val oConfig: OpenRouterConfigurationProperties
+    private val oConfig: OpenRouterConfigurationProperties,
+    private val localContextService: PrintModelLocalContextService,
 ) {
 
     suspend fun createMetaById(modelId: String) {
@@ -33,6 +35,7 @@ class ImageMetaService(
             processors.add(oConfig.model)
         }
         dataService.savePrintModel(model)
+        localContextService.saveContext(model)
         logger.info {
             "ImageAiMetaJob: for [${model.modelName}] meta added, imagesMeta [${imagesMeta.size}], tags size [${tagsCount}]"
         }
