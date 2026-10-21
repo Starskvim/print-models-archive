@@ -1,0 +1,10 @@
+[
+  {
+    $match: {
+      "meta.processors": "codex/gpt-6-sol"
+    }
+  },
+  {
+    $count: "documentsWithGpt-6-sol"
+  }
+]

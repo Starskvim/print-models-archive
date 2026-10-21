@@ -1,0 +1,10 @@
+[
+  {
+    $match: {
+      "meta.processors": "ImageMetaServiceJob_v2"
+    }
+  },
+  {
+    $count: "documentsWithImageMetaServiceJob_v2"
+  }
+]
