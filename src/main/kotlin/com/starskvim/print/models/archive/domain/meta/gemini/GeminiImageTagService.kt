@@ -8,8 +8,6 @@ import com.starskvim.print.models.archive.domain.setting.AppSettingsService
 import com.starskvim.print.models.archive.utils.Constants.Prompt.TAGGING_PROMPT
 import com.starskvim.print.models.archive.utils.Constants.Prompt.TAGGING_PROMPT_W_F_N
 import com.starskvim.print.models.archive.utils.MetaUtils.splitTags
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import mu.KLogging
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.http.MediaType
@@ -18,11 +16,6 @@ import org.springframework.web.reactive.function.BodyInserters
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.WebClientResponseException
 import org.springframework.web.reactive.function.client.awaitBody
-import java.nio.file.Files
-import java.nio.file.InvalidPathException
-import java.nio.file.NoSuchFileException
-import java.nio.file.Paths
-import java.util.*
 
 @Service
 class GeminiImageTagService(
@@ -32,17 +25,6 @@ class GeminiImageTagService(
     private val config: GeminiClientConfigurationProperties,
     private val appSettingsService: AppSettingsService
 ) {
-
-    @Deprecated("legacy")
-    suspend fun generateTags(
-        imagePathString: String,
-        modelName: String? = null
-    ): List<String> { // todo
-        val (imageBytes, mimeType) = readAndValidateLocalImage(imagePathString)
-        val base64ImageData = Base64.getEncoder().encodeToString(imageBytes)
-        val requestBody = buildRequestBodyMap(mimeType, base64ImageData, modelName)
-        return request(requestBody, imagePathString)
-    }
 
     suspend fun request(
         requestBody: Map<String, Any>,
@@ -81,39 +63,6 @@ class GeminiImageTagService(
             throw RuntimeException("Unexpected error generating tags: ${e.message}", e)
         }
     }
-
-    suspend fun readAndValidateLocalImage(imagePathString: String): Pair<ByteArray, String> =
-        withContext(Dispatchers.IO) {
-            val imagePath = try {
-                Paths.get(imagePathString).normalize()
-            } catch (e: InvalidPathException) {
-                throw e
-            }
-
-            if (!Files.exists(imagePath) || !Files.isRegularFile(imagePath)) {
-                throw NoSuchFileException(imagePath.toString())
-            }
-
-            log.debug("Reading bytes from file: {}", imagePath)
-            val imageBytes = Files.readAllBytes(imagePath)
-            log.debug("Read {} bytes from file.", imageBytes.size)
-
-            val mimeType = Files.probeContentType(imagePath)?.lowercase()
-                ?: run {
-                    log.warn { "Could not determine MIME type for path: $imagePath. Attempting default." }
-                    "application/octet-stream"
-                }
-
-            if (mimeType !in SUPPORTED_MIME_TYPES) {
-                val errorMsg =
-                    "Unsupported image MIME type detected for file ${imagePath}: $mimeType. Supported: $SUPPORTED_MIME_TYPES"
-                log.error(errorMsg)
-                throw IllegalArgumentException(errorMsg)
-            }
-            log.debug("Detected MIME type: {}", mimeType)
-
-            imageBytes to mimeType
-        }
 
     private fun buildRequestBodyMap(
         mimeType: String,

@@ -23,13 +23,6 @@ class TestApiController(
     private val dispatcher: ExecutorCoroutineDispatcher,
 ) {
 
-    @PostMapping("/tags")
-    suspend fun testTag(
-        @RequestBody request: Request,
-    ): List<String> {
-        return taggingService.generateTags(request.path, request.name);
-    }
-
     @PostMapping("/tags/openrouter")
     suspend fun testTagOpen(
         @RequestBody request: Request,

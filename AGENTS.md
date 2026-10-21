@@ -32,7 +32,9 @@ Gemini/OpenRouter. Elasticsearch client wiring exists but nothing uses it yet (s
   with defaults on startup (jobs off, `commonBatchSize: 10`).
     - The Gemini/OpenRouter `WebClient` beans read the proxy (and the OpenRouter key) **once at startup** — restart the
       app after changing them. The Gemini key is read per request.
-- Scheduled jobs (cron every 60s via `job.*.cron`) check settings flags on each tick:
+- Scheduled jobs (`fixedDelay` 60s after the previous run finishes, via `job.*.fixed-delay` / `job.*.initial-delay`;
+  fixed-delay
+  rather than cron so that a slow batch is never overlapped by the next tick) check settings flags on each tick:
     - `ImageAiMetaJob` → `imageAiMetaJob`; `ImageAiMetaRetryJob` → `imageAiMetaClearJob`.
     - `LocalContextJob` has **no** `@Scheduled` and is only created when `local-context.job=true` (false by default);
       context processing is triggered manually via `/api/test/context`.

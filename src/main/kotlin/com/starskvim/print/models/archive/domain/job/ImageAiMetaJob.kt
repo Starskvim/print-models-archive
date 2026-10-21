@@ -17,7 +17,10 @@ class ImageAiMetaJob(
         logger.info { "ImageAiMetaJob init..." }
     }
 
-    @Scheduled(cron = "\${job.first-create-meta.cron}")
+    @Scheduled(
+        fixedDelayString = "\${job.first-create-meta.fixed-delay}",
+        initialDelayString = "\${job.first-create-meta.initial-delay}"
+    )
     suspend fun process() {
         if (settings.getAppSettings().imageAiMetaJob) {
             logger.info { "ImageAiMetaJob started" }

@@ -1,7 +1,7 @@
 package com.starskvim.print.models.archive.domain.meta.openrouter
 
 import com.starskvim.print.models.archive.config.ai.OpenRouterConfigurationProperties
-import com.starskvim.print.models.archive.domain.meta.gemini.GeminiImageTagService
+import com.starskvim.print.models.archive.domain.image.ImageService
 import com.starskvim.print.models.archive.utils.Constants.Prompt.TAGGING_PROMPT
 import com.starskvim.print.models.archive.utils.Constants.Prompt.TAGGING_PROMPT_W_F_N
 import com.starskvim.print.models.archive.utils.MetaUtils.splitTags
@@ -19,14 +19,14 @@ class OpenRouterService(
     @Qualifier("openRouterWebClient")
     private val client: WebClient,
     private val config: OpenRouterConfigurationProperties,
-    private val geminiImageTagService: GeminiImageTagService
+    private val imageService: ImageService
 ) {
 
     suspend fun generateTags(
         imagePathString: String,
         modelName: String? = null,
     ): List<String> {
-        val p = geminiImageTagService.readAndValidateLocalImage(imagePathString) // todo
+        val p = imageService.readAndValidateLocalImage(imagePathString) // todo
         return generateTags(images = listOf(p.first), modelName = modelName, model = config.model)
             .choices
             ?.first()

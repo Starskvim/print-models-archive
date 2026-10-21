@@ -17,7 +17,10 @@ class ImageAiMetaRetryJob (
         logger.info { "ImageAiMetaRetryJob init." }
     }
 
-    @Scheduled(cron = "\${job.retry-create-meta.cron}")
+    @Scheduled(
+        fixedDelayString = "\${job.retry-create-meta.fixed-delay}",
+        initialDelayString = "\${job.retry-create-meta.initial-delay}"
+    )
     suspend fun process() {
         if (settings.getAppSettings().imageAiMetaClearJob) {
             logger.info { "ImageAiMetaRetryJobClear started" }
